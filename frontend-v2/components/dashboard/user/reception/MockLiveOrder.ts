@@ -9,6 +9,7 @@ const initialOrders = [
     table: "T-2",
     items: [{ name: "Burger", qty: 2, price: 120 }],
     status: "ready",
+    isNew: false,
   },
 ];
 
