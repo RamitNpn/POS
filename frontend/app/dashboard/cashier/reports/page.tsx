@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import type { Order, PaymentMethod, PaymentStatus } from '@/lib/types';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 
 const paymentStatusOptions: { value: PaymentStatus | 'all'; label: string }[] = [
   { value: 'all', label: 'All payments' },
@@ -69,6 +70,7 @@ function buildInvoiceText(order: Order) {
 }
 
 export default function CashierReportsPage() {
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const { data: completedOrders = [] } = useQuery({ queryKey: ['completed-orders'], queryFn: api.getCompletedOrders });
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<PaymentStatus | 'all'>('all');
@@ -114,7 +116,7 @@ export default function CashierReportsPage() {
   };
 
   return (
-    <div className="space-y-6 mb-12">
+    <div className="space-y-6">
       <DashboardHeader title="Cashier Reports" description="Browse completed checkout records, search by order, and export invoices or full reports." />
 
       <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
@@ -194,23 +196,25 @@ export default function CashierReportsPage() {
         </CardHeader>
         <CardContent>
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order</TableHead>
-                <TableHead>Table</TableHead>
-                <TableHead>Server</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Payment</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Action</TableHead>
-              </TableRow>
-            </TableHeader>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Order</TableHead>
+                  <TableHead>Table</TableHead>
+                  <TableHead>Customer</TableHead>
+                  <TableHead>Server</TableHead>
+                  <TableHead>Total</TableHead>
+                  <TableHead>Payment</TableHead>
+                  <TableHead>Method</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Action</TableHead>
+                </TableRow>
+              </TableHeader>
             <TableBody>
               {filteredOrders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell>{order.orderNumber}</TableCell>
                   <TableCell>{order.table.number}</TableCell>
+                  <TableCell>{/* @ts-ignore */}{(order as any).customerName || '-'}</TableCell>
                   <TableCell>{order.waiter.name}</TableCell>
                   <TableCell>${order.total.toFixed(2)}</TableCell>
                   <TableCell>
@@ -221,9 +225,14 @@ export default function CashierReportsPage() {
                   <TableCell>{order.paymentMethod || 'N/A'}</TableCell>
                   <TableCell>{formatDate(order.completedAt || order.createdAt)}</TableCell>
                   <TableCell>
-                    <Button size="sm" variant="outline" onClick={() => downloadInvoice(order)}>
-                      Invoice
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button size="sm" variant="outline" onClick={() => downloadInvoice(order)}>
+                        Invoice
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => setSelectedOrder(order)}>
+                        View
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -238,6 +247,48 @@ export default function CashierReportsPage() {
           </Table>
         </CardContent>
       </Card>
+      {selectedOrder && (
+        <Dialog open={!!selectedOrder} onOpenChange={(open) => { if (!open) setSelectedOrder(null); }}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Order {selectedOrder.orderNumber}</DialogTitle>
+              <DialogDescription>Complete checkout details</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-3 mt-2">
+              <div>Customer: {/* @ts-ignore */}{(selectedOrder as any).customerName || '-'}</div>
+              <div>Table: {selectedOrder.table.number}</div>
+              <div>Server: {selectedOrder.waiter.name}</div>
+              <div>Status: {selectedOrder.paymentStatus}</div>
+
+              <div>
+                <h4 className="font-semibold">Items</h4>
+                <div className="space-y-2 mt-2">
+                  {selectedOrder.items.map(it => (
+                    <div key={it.id} className="flex items-center justify-between">
+                      <div>
+                        <div className="font-medium">{it.menuItem.name} x{it.quantity}</div>
+                      </div>
+                      <div className="text-foreground">${(it.price * it.quantity).toFixed(2)}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t pt-3">
+                <div className="flex justify-between"><span>Subtotal</span><span>${selectedOrder.subtotal.toFixed(2)}</span></div>
+                <div className="flex justify-between"><span>Tax</span><span>${selectedOrder.tax.toFixed(2)}</span></div>
+                <div className="flex justify-between font-semibold text-foreground"><span>Total</span><span>${selectedOrder.total.toFixed(2)}</span></div>
+              </div>
+
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline">Close</Button>
+                </DialogClose>
+              </DialogFooter>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

@@ -74,7 +74,7 @@ export function Topbar({ title }: TopbarProps) {
 
           <div className="ml-auto flex items-center gap-2">
             {/* Search - Hidden on mobile */}
-            <div className="hidden md:flex items-center">
+            {/* <div className="hidden md:flex items-center">
               <div className="relative">
                 <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -83,7 +83,7 @@ export function Topbar({ title }: TopbarProps) {
                   className="w-64 pl-8 bg-secondary/50 border-none focus-visible:ring-1"
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* Notifications */}
             <DropdownMenu>
@@ -150,7 +150,7 @@ export function Topbar({ title }: TopbarProps) {
             </div>
 
             {/* Mobile search button */}
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               className="md:hidden touch-target"
@@ -158,11 +158,11 @@ export function Topbar({ title }: TopbarProps) {
             >
               <Search className="size-5" />
               <span className="sr-only">Search</span>
-            </Button>
+            </Button> */}
           </div>
         </div>
       </header>
-      {showMobileSearch && (
+      {/* {showMobileSearch && (
         <div className="sticky top-16 z-30 border-b border-border bg-background px-4 py-3 md:hidden">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -180,7 +180,7 @@ export function Topbar({ title }: TopbarProps) {
             />
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

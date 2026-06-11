@@ -81,6 +81,7 @@ export default function CashierDashboard() {
 
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [transactionNotes, setTransactionNotes] = useState("");
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [paidOrders, setPaidOrders] = useState<Record<string, boolean>>({});
@@ -127,7 +128,7 @@ export default function CashierDashboard() {
   const checkoutReady = orders.filter((order) => order.status === "served");
 
   return (
-    <div className="space-y-6 print:bg-white mb-12">
+    <div className="space-y-6 print:bg-white">
       <DashboardHeader
         title="Cashier Checkout"
         description="A simplified checkout workspace with quick invoice generation and payment handling."
@@ -180,23 +181,25 @@ export default function CashierDashboard() {
         <div className="space-y-4">
           <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle>Filter checkout orders</CardTitle>
+              <CardTitle>Order Filter</CardTitle>
+              <CardDescription>
+                Find the right order quickly by status or order number.
+              </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">
-                  Search orders
+                  Search
                 </label>
                 <Input
-                  placeholder="Search by order, table, or waiter"
+                  placeholder="Order #, table, waiter"
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
-                  className="my-2"
                 />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">
-                  Order status
+                  Status
                 </label>
                 <Select
                   value={statusFilter}
@@ -204,13 +207,13 @@ export default function CashierDashboard() {
                     setStatusFilter(value as OrderStatus | "all")
                   }
                 >
-                  <SelectTrigger className="w-full my-2">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="All statuses" />
                   </SelectTrigger>
                   <SelectContent>
-                    {statusOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
+                    {statusOptions.map((status) => (
+                      <SelectItem key={status.value} value={status.value}>
+                        {status.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -221,29 +224,29 @@ export default function CashierDashboard() {
 
           <OrderList
             orders={filteredOrders}
-            title="Orders"
-            emptyMessage="No orders available"
+            title="Active orders"
+            emptyMessage="No matching orders"
             onOrderClick={(order) => setSelectedOrder(order)}
           />
         </div>
 
-        <Card className="bg-card border-border print:hidden">
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle>Invoice generator</CardTitle>
+            <CardTitle>Invoice Generator</CardTitle>
             <CardDescription>
-              Select a checkout order and print the bill.
+              Select an order and print the invoice.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {!invoiceOrder ? (
               <p className="text-center text-muted-foreground py-8">
-                Select an order to build the invoice.
+                Select an order from the list to load invoice details.
               </p>
             ) : (
               <div className="space-y-4">
                 <div className="rounded-lg border border-border bg-background p-4">
-                  <div className="grid gap-3">
-                    <div className="flex justify-between gap-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
                       <div>
                         <p className="text-sm text-muted-foreground">Order</p>
                         <p className="font-semibold text-foreground">
@@ -257,14 +260,16 @@ export default function CashierDashboard() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex justify-between gap-4">
+
+                    <div className="grid gap-3 sm:grid-cols-2">
                       <div>
                         <p className="text-sm text-muted-foreground">Server</p>
-                        <p className="font-semibold text-foreground">
+                        <p className="font-medium text-foreground">
                           {invoiceOrder.waiter.name}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Status</p>
                         <Badge
                           className={statusLabel[invoiceOrder.status].tone}
                         >
@@ -272,13 +277,21 @@ export default function CashierDashboard() {
                         </Badge>
                       </div>
                     </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Customer</p>
+                        <p className="font-medium text-foreground">
+                          {invoiceOrder.customerName || "N/A"}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="grid gap-3">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">
-                      Payment option
+                      Payment method
                     </label>
                     <Select
                       value={paymentMethod}
@@ -286,7 +299,7 @@ export default function CashierDashboard() {
                         setPaymentMethod(value as PaymentMethod)
                       }
                     >
-                      <SelectTrigger className="w-full my-2">
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Choose payment" />
                       </SelectTrigger>
                       <SelectContent>
@@ -298,17 +311,29 @@ export default function CashierDashboard() {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">
+                      Notes
+                    </label>
+                    <Input
+                      value={transactionNotes}
+                      onChange={(event) =>
+                        setTransactionNotes(event.target.value)
+                      }
+                      placeholder="Optional payment note"
+                    />
+                  </div>
                 </div>
 
                 <div className="rounded-lg border border-border bg-background p-4">
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {invoiceOrder.items.map((item) => (
                       <div
                         key={item.id}
                         className="flex items-center justify-between gap-4 text-sm"
                       >
-                        <div>
-                          <p className="font-medium text-foreground">
+                        <div className="min-w-0">
+                          <p className="font-medium text-foreground truncate">
                             {item.menuItem.name}
                           </p>
                           <p className="text-muted-foreground">
@@ -316,7 +341,7 @@ export default function CashierDashboard() {
                           </p>
                         </div>
                         <p className="text-foreground">
-                          Rs.{(item.price * item.quantity).toFixed(2)}
+                          Rs {(item.price * item.quantity).toFixed(2)}
                         </p>
                       </div>
                     ))}
@@ -324,26 +349,26 @@ export default function CashierDashboard() {
                   <div className="mt-4 border-t border-border pt-4 text-sm text-muted-foreground">
                     <div className="flex justify-between">
                       <span>Subtotal</span>
-                      <span>Rs.{invoiceOrder.subtotal.toFixed(2)}</span>
+                      <span>Rs {invoiceOrder.subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Tax</span>
-                      <span>Rs.{invoiceOrder.tax.toFixed(2)}</span>
+                      <span>Rs {invoiceOrder.tax.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between text-base font-semibold text-foreground">
+                    <div className="flex justify-between font-semibold text-foreground">
                       <span>Total</span>
-                      <span>Rs.{invoiceOrder.total.toFixed(2)}</span>
+                      <span>Rs {invoiceOrder.total.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  <Button className="flex-1 cursor-pointer" onClick={handleMarkPaid}>
-                    Mark as Paid
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button className="flex-1" onClick={handleMarkPaid}>
+                    Mark Paid
                   </Button>
                   <Button
-                    variant="outline"
-                    className="flex-1 hover:text-white cursor-pointer"
+                    variant="secondary"
+                    className="flex-1"
                     onClick={handlePrintInvoice}
                   >
                     Print Invoice

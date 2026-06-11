@@ -8,10 +8,20 @@ import { OrderList } from "@/components/dashboard/order-card";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { api } from "@/lib/api/mock-data";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, ClipboardList, Table2, Clock } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import type { Table } from "@/lib/types";
+import type { Table, TableStatus } from "@/lib/types";
 import { useState } from "react";
+
+const tableStatusOptions: { value: TableStatus | 'all'; label: string }[] = [
+  { value: 'all', label: 'All statuses' },
+  { value: 'available', label: 'Available' },
+  { value: 'occupied', label: 'Occupied' },
+  { value: 'reserved', label: 'Reserved' },
+  { value: 'cleaning', label: 'Cleaning' },
+  { value: 'out-of-service', label: 'Out of service' },
+];
 
 export default function WaiterDashboard() {
   const router = useRouter();
@@ -48,6 +58,10 @@ export default function WaiterDashboard() {
   const myOrders =
     orders?.filter((o) => o.waiterId === "2" || o.waiterId === "5") || [];
   const readyOrders = myOrders.filter((o) => o.status === "ready");
+  const [tableStatusFilter, setTableStatusFilter] = useState<TableStatus | 'all'>('all');
+  const filteredTables = tables?.filter(
+    (table) => tableStatusFilter === 'all' || table.status === tableStatusFilter,
+  );
 
   return (
     <div className="space-y-6">
@@ -91,10 +105,33 @@ export default function WaiterDashboard() {
       {/* Table Status */}
       {tables && <TableStats tables={tables} />}
 
-      {/* Tables Grid */}
       {tables && (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-sm font-medium text-foreground">Filter tables by status</h2>
+            <p className="text-sm text-muted-foreground">Show a subset of the floor plan.</p>
+          </div>
+          <div className="w-full max-w-xs">
+            <Select value={tableStatusFilter} onValueChange={(value) => setTableStatusFilter(value as TableStatus | 'all')}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="All statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                {tableStatusOptions.map((status) => (
+                  <SelectItem key={status.value} value={status.value}>
+                    {status.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      )}
+
+      {/* Tables Grid */}
+      {filteredTables !== undefined && (
         <TableGrid
-          tables={tables}
+          tables={filteredTables}
           onTableClick={handleTableClick}
           title="Floor Plan"
         />

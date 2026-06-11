@@ -146,6 +146,7 @@ export interface Order {
   table: Table;
   items: OrderItem[];
   status: OrderStatus;
+  customerName: string;
   paymentStatus: PaymentStatus;
   paymentMethod?: PaymentMethod;
   subtotal: number;

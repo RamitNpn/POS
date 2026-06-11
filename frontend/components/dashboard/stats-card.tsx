@@ -26,7 +26,7 @@ export function StatsCard({
   return (
     <Card className={cn('bg-card border-border', className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+        <CardTitle className="md:text-sm text-[10px] font-medium text-muted-foreground">
           {title}
         </CardTitle>
         {icon && (

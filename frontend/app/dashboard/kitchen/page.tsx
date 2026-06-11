@@ -8,6 +8,7 @@ import { api } from '@/lib/api/mock-data';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, ChefHat, Clock, AlertTriangle } from 'lucide-react';
 import type { Order, OrderItem } from '@/lib/types';
+import Link from 'next/link';
 
 export default function KitchenDashboard() {
   const { data: orders, refetch, isRefetching } = useQuery({
@@ -26,6 +27,16 @@ export default function KitchenDashboard() {
     console.log('[v0] Mark item ready:', order.id, item.id);
   };
 
+  const handleChangeItemStatus = (order: Order, item: OrderItem, status: Order['status']) => {
+    console.log('[v0] Change item status:', order.id, item.id, status);
+    // TODO: call API to update item status and refetch
+  };
+
+  const handleChangeOrderStatus = (order: Order, status: Order['status']) => {
+    console.log('[v0] Change order status:', order.orderNumber, status);
+    // TODO: call API to update order status and refetch
+  };
+
   const pendingCount = orders?.filter(o => o.status === 'pending').length || 0;
   const preparingCount = orders?.filter(o => o.status === 'preparing').length || 0;
   const readyCount = orders?.filter(o => o.status === 'ready').length || 0;
@@ -42,15 +53,17 @@ export default function KitchenDashboard() {
         title="Kitchen Display"
         description="Manage and track incoming orders"
       >
-        <Button 
-          variant="outline" 
-          className="touch-target"
-          onClick={() => refetch()}
-          disabled={isRefetching}
-        >
-          <RefreshCw className={`size-4 mr-2 ${isRefetching ? 'animate-spin' : ''}`} />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2"> 
+          <Button 
+            variant="outline" 
+            className="touch-target"
+            onClick={() => refetch()}
+            disabled={isRefetching}
+          >
+            <RefreshCw className={`size-4 mr-2 ${isRefetching ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+        </div>
       </DashboardHeader>
 
       {/* Quick Stats */}
@@ -83,6 +96,8 @@ export default function KitchenDashboard() {
           orders={orders}
           onMarkReady={handleMarkReady}
           onMarkItemReady={handleMarkItemReady}
+          onChangeItemStatus={handleChangeItemStatus}
+          onChangeOrderStatus={handleChangeOrderStatus}
         />
       )}
     </div>

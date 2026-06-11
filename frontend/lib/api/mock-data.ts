@@ -811,6 +811,7 @@ export const mockOrders: Order[] = [
     orderNumber: "#1042",
     tableId: "table-2",
     table: getTableById("table-2"),
+    customerName: "John Smith",
     status: "preparing",
     paymentStatus: "pending",
     items: [
@@ -853,6 +854,7 @@ export const mockOrders: Order[] = [
     orderNumber: "#1043",
     tableId: "table-3",
     table: getTableById("table-3"),
+    customerName: "Corporate Event",
     status: "pending",
     paymentStatus: "pending",
     items: [
@@ -884,8 +886,8 @@ export const mockOrders: Order[] = [
     subtotal: 84.95,
     tax: 8.5,
     total: 93.45,
-    createdAt: new Date(Date.now() - 5 * 60 * 1000),
-    updatedAt: new Date(Date.now() - 5 * 60 * 1000),
+    createdAt: new Date(Date.now() - 1 * 60 * 1000),
+    updatedAt: new Date(Date.now() - 1 * 60 * 1000),  
     waiterId: "5",
     waiter: getUserById("5"),
   },
@@ -894,6 +896,7 @@ export const mockOrders: Order[] = [
     orderNumber: "#1044",
     tableId: "table-7",
     table: getTableById("table-7"),
+    customerName: "Maria Garcia",
     status: "ready",
     paymentStatus: "pending",
     items: [
@@ -928,6 +931,7 @@ export const mockOrders: Order[] = [
     orderNumber: "#1045",
     tableId: "table-9",
     table: getTableById("table-9"),
+    customerName: "John Doe",
     status: "served",
     paymentStatus: "pending",
     items: [
@@ -970,6 +974,7 @@ export const mockOrders: Order[] = [
     orderNumber: "#1046",
     tableId: "table-11",
     table: getTableById("table-11"),
+    customerName: "Emily Rodriguez",
     status: "preparing",
     paymentStatus: "pending",
     items: [
@@ -1007,6 +1012,7 @@ export const mockCompletedOrders: Order[] = [
     orderNumber: "#1038",
     tableId: "table-1",
     table: getTableById("table-1"),
+    customerName: "John Smith",
     status: "completed",
     paymentStatus: "paid",
     paymentMethod: "card",
@@ -1659,6 +1665,21 @@ export const api = {
   getOrderById: async (id: string): Promise<Order | undefined> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
     return mockOrders.find((o) => o.id === id);
+  },
+
+  updateOrderStatus: async (id: string, status: Order['status']): Promise<Order | undefined> => {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    const order = mockOrders.find((o) => o.id === id);
+    if (!order) return undefined;
+    order.status = status;
+    order.updatedAt = new Date();
+    if (status === 'served') {
+      order.items = order.items.map((item) => ({
+        ...item,
+        status: item.status === 'ready' ? 'served' : item.status,
+      }));
+    }
+    return order;
   },
 
   getActiveOrders: async (): Promise<Order[]> => {

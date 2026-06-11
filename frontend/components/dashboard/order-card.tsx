@@ -38,12 +38,16 @@ export function OrderCard({ order, compact = false, onClick }: OrderCardProps) {
           </div>
           <div>
             <p className="text-sm font-medium text-foreground">{order.orderNumber}</p>
-            <p className="text-xs text-muted-foreground">{timeAgo}</p>
+            <p className="md:text-sm text-[10px] text-muted-foreground">{timeAgo}</p>
+            {/** @ts-ignore */}
+            {(order as any).customerName && (
+              <p className="text-[10px] text-muted-foreground">Customer: {(order as any).customerName}</p>
+            )}
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-foreground">${order.total.toFixed(2)}</span>
-          <Badge variant="outline" className={cn('text-xs', status.className)}>
+        <div className="md:flex md:items-center grid grid-cols-1 gap-1 md:gap-2">
+          <span className="text-[12px] md:text-sm font-medium text-foreground">Rs {order.total.toFixed(2)}</span>
+          <Badge variant="outline" className={cn('md:text-sm text-[10px]', status.className)}>
             {status.label}
           </Badge>
         </div>

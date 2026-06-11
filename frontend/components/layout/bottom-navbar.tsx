@@ -15,7 +15,6 @@ import {
 import { useAuth } from "@/context/auth-context";
 
 const simpleNavItems = [
-
   //waiter links
   {
     title: "Tables",
@@ -61,6 +60,12 @@ const simpleNavItems = [
     roles: ["kitchen"],
   },
   {
+    title: "Notifications",
+    href: "/dashboard/kitchen/notification",
+    icon: Bell,
+    roles: ["kitchen"],
+  },
+  {
     title: "Settings",
     href: "/dashboard/kitchen/settings",
     icon: BarChart3,
@@ -75,18 +80,18 @@ const simpleNavItems = [
     roles: ["cashier"],
     exact: true,
   },
-  {
-    title: "Orders",
-    href: "/dashboard/cashier/orders",
-    icon: ClipboardList,
-    roles: ["cashier"],
-  },
-  {
-    title: "Tables",
-    href: "/dashboard/cashier/tables",
-    icon: Table2,
-    roles: ["cashier"],
-  },
+  // {
+  //   title: "Orders",
+  //   href: "/dashboard/cashier/orders",
+  //   icon: ClipboardList,
+  //   roles: ["cashier"],
+  // },
+  // {
+  //   title: "Tables",
+  //   href: "/dashboard/cashier/tables",
+  //   icon: Table2,
+  //   roles: ["cashier"],
+  // },
   {
     title: "Reports",
     href: "/dashboard/cashier/reports",
@@ -117,8 +122,8 @@ export function BottomNavbar() {
               href={item.href}
               className={`flex-1 flex flex-col items-center text-xs py-1 ${active ? "text-primary" : "text-muted-foreground"}`}
             >
-              <Icon className="size-6" />
-              <span className="truncate">{item.title}</span>
+              <Icon className="size-5" />
+              <span className="md:block hidden truncate">{item.title}</span>
             </Link>
           );
         })}

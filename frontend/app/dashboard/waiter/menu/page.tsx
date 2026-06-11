@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import type { MenuCategory, MenuItem } from "@/lib/types";
+import { ArrowDown, ArrowUp } from "lucide-react";
 
 export const mockCategories: MenuCategory[] = [
   {
@@ -92,6 +93,7 @@ export default function WaiterMenuPage() {
   });
 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
+    const [customerName, setCustomerName] = useState("");
   const [notes, setNotes] = useState("");
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
@@ -221,20 +223,22 @@ export default function WaiterMenuPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div id="search" className="space-y-6">
       <DashboardHeader
         title="Menu"
-        description={`Creating order for Table ${selectedTable?.number || ""} ${selectedTable?.section || ""}`}
+        description={`Creating order for Table #${selectedTable?.number || ""} ${selectedTable?.section || ""}`}
       />
 
-      <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
+      <div
+        className={`${selectedTable ? "grid gap-6 xl:grid-cols-[1.6fr_1fr]" : "flex flex-col gap-6"}`}
+      >
         <div className="space-y-4">
           <Card className="border-border">
             <CardHeader>
               <CardTitle className="text-foreground">Menu items</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
-              <div className="flex gap-2 items-center">
+              <div className="md:flex gap-2 md:items-center grid md:grid-cols-[1fr_auto]">
                 <Input
                   className="flex-1"
                   placeholder="Search menu items..."
@@ -245,7 +249,7 @@ export default function WaiterMenuPage() {
                   value={categoryFilter}
                   onValueChange={(v) => setCategoryFilter(v)}
                 >
-                  <SelectTrigger className="w-44">
+                  <SelectTrigger className="md:w-44 w-auto">
                     <SelectValue>
                       {categoryFilter === "all"
                         ? "All categories"
@@ -262,13 +266,24 @@ export default function WaiterMenuPage() {
                     ))}
                   </SelectContent>
                 </Select>
+                <div className="">
+                  <a
+                    href="#checkout"
+                    className="lg:hidden text-primary text-sm font-medium bg-primary/10 px-3 py-2 rounded-full flex items-center gap-1"
+                  >
+                    Invoice
+                    <ArrowDown className="size-3" />
+                  </a>
+                </div>
               </div>
               {filteredAvailableMenuItems.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
                   No menu items match your search.
                 </p>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div
+                  className={`grid gap-4 ${selectedTable ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}
+                >
                   {filteredAvailableMenuItems.map((menuItem) => (
                     <div
                       key={menuItem.id}
@@ -298,25 +313,27 @@ export default function WaiterMenuPage() {
                             </Badge>
                           </div>
                         </div>
-                        <div className="mt-3 flex items-center justify-end gap-2 rounded-full border border-border bg-muted/20 px-3 py-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => decreaseQuantity(menuItem)}
-                          >
-                            -
-                          </Button>
-                          <span className="min-w-6 text-center text-sm font-semibold">
-                            {quantities[menuItem.id] ?? 0}
-                          </span>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => increaseQuantity(menuItem)}
-                          >
-                            +
-                          </Button>
-                        </div>
+                        {selectedTable && (
+                          <div className="mt-3 flex items-center justify-center gap-2 rounded-md border border-border bg-muted/20 px-3 py-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => decreaseQuantity(menuItem)}
+                            >
+                              -
+                            </Button>
+                            <span className="min-w-6 text-center text-sm font-semibold">
+                              {quantities[menuItem.id] ?? 0}
+                            </span>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => increaseQuantity(menuItem)}
+                            >
+                              +
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -326,82 +343,94 @@ export default function WaiterMenuPage() {
           </Card>
         </div>
 
-        <div className="space-y-4">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle className="text-foreground">Order summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2 rounded-3xl border border-border bg-muted/50 p-4">
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Table</span>
-                  <span>{selectedTable?.number}</span>
-                </div>
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Section</span>
-                  <span>{selectedTable?.section}</span>
-                </div>
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Status</span>
-                  <span className="capitalize">{selectedTable?.status}</span>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                {selectedItems.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
-                    No items selected yet.
-                  </p>
-                ) : (
-                  <div className="space-y-2">
-                    {selectedItems.map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex items-center justify-between"
-                      >
-                        <span className="text-sm text-muted-foreground">
-                          {item.name} x {quantities[item.id]}
-                        </span>
-                        <span className="text-sm font-semibold text-foreground">
-                          Rs{" "}
-                          {(item.price * (quantities[item.id] ?? 0)).toFixed(2)}
-                        </span>
-                      </div>
-                    ))}
+        {selectedItems && selectedTable && (
+          <div id="checkout" className="space-y-4">
+            <Card className="border-border">
+              <CardHeader>
+                <CardTitle className="text-foreground">Order summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2 rounded-3xl border border-border bg-muted/50 p-4">
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Table</span>
+                    <span>{selectedTable?.number}</span>
                   </div>
-                )}
-              </div>
-
-              <Separator />
-
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>Rs {subtotal.toFixed(2)}</span>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Section</span>
+                    <span>{selectedTable?.section}</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Status</span>
+                    <span className="capitalize">{selectedTable?.status}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>Tax</span>
-                  <span>Rs {tax.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between font-semibold text-foreground">
-                  <span>Total</span>
-                  <span>Rs {total.toFixed(2)}</span>
-                </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="order-notes">Order notes</Label>
-                <Textarea
-                  className="resize-none"
-                  id="order-notes"
-                  value={notes}
-                  onChange={(event) => setNotes(event.target.value)}
-                  placeholder="Add special requests or instructions"
-                  rows={4}
-                />
-              </div>
+                <div className="space-y-3">
+                  {selectedItems.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      No items selected yet.
+                    </p>
+                  ) : (
+                    <div className="space-y-2">
+                      {selectedItems.map((item) => (
+                        <div
+                          key={item.id}
+                          className="flex items-center justify-between"
+                        >
+                          <span className="text-sm text-muted-foreground">
+                            {item.name} x {quantities[item.id]}
+                          </span>
+                          <span className="text-sm font-semibold text-foreground">
+                            Rs{" "}
+                            {(item.price * (quantities[item.id] ?? 0)).toFixed(
+                              2,
+                            )}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              {selectedItems && selectedTable && (
+                <Separator />
+
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>Rs {subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Tax</span>
+                    <span>Rs {tax.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between font-semibold text-foreground">
+                    <span>Total</span>
+                    <span>Rs {total.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="customer-name">Customer Name</Label>
+                  <Input
+                    id="customer-name"
+                    value={customerName}
+                    onChange={(event) => setCustomerName(event.target.value)}
+                    placeholder="Enter customer name"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="order-notes">Order notes</Label>
+                  <Textarea
+                    className="resize-none"
+                    id="order-notes"
+                    value={notes}
+                    onChange={(event) => setNotes(event.target.value)}
+                    placeholder="Add special requests or instructions"
+                    rows={4}
+                  />
+                </div>
+
                 <Button
                   size="lg"
                   className="w-full"
@@ -414,10 +443,10 @@ export default function WaiterMenuPage() {
                     ? "Sending to Kitchen..."
                     : "Create Order"}
                 </Button>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
