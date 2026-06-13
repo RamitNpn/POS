@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
-import { api } from "@/lib/api/mock-data";
+import { api, mockCategories } from "@/lib/api/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -22,57 +22,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import type { MenuCategory, MenuItem } from "@/lib/types";
 import { ArrowDown, ArrowUp } from "lucide-react";
-
-export const mockCategories: MenuCategory[] = [
-  {
-    id: "cat-1",
-    name: "Appetizers",
-    description: "Start your meal right",
-    sortOrder: 1,
-    isActive: true,
-    itemCount: 5,
-  },
-  {
-    id: "cat-2",
-    name: "Main Course",
-    description: "Signature dishes",
-    sortOrder: 2,
-    isActive: true,
-    itemCount: 8,
-  },
-  {
-    id: "cat-3",
-    name: "Pasta",
-    description: "Fresh homemade pasta",
-    sortOrder: 3,
-    isActive: true,
-    itemCount: 6,
-  },
-  {
-    id: "cat-4",
-    name: "Desserts",
-    description: "Sweet endings",
-    sortOrder: 4,
-    isActive: true,
-    itemCount: 4,
-  },
-  {
-    id: "cat-5",
-    name: "Beverages",
-    description: "Drinks and cocktails",
-    sortOrder: 5,
-    isActive: true,
-    itemCount: 10,
-  },
-  {
-    id: "cat-6",
-    name: "Salads",
-    description: "Fresh and healthy",
-    sortOrder: 6,
-    isActive: true,
-    itemCount: 4,
-  },
-];
+import { FloatingButton } from "@/components/ui/floating-button";
 
 export default function WaiterMenuPage() {
   const router = useRouter();
@@ -93,7 +43,7 @@ export default function WaiterMenuPage() {
   });
 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-    const [customerName, setCustomerName] = useState("");
+  const [customerName, setCustomerName] = useState("");
   const [notes, setNotes] = useState("");
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
@@ -214,6 +164,7 @@ export default function WaiterMenuPage() {
       items: orderItems,
       status: "pending",
       paymentStatus: "pending",
+      customerName,
       subtotal,
       tax,
       total,
@@ -229,6 +180,7 @@ export default function WaiterMenuPage() {
         description={`Creating order for Table #${selectedTable?.number || ""} ${selectedTable?.section || ""}`}
       />
 
+      {selectedTable?.number && <FloatingButton />}
       <div
         className={`${selectedTable ? "grid gap-6 xl:grid-cols-[1.6fr_1fr]" : "flex flex-col gap-6"}`}
       >
@@ -266,15 +218,6 @@ export default function WaiterMenuPage() {
                     ))}
                   </SelectContent>
                 </Select>
-                <div className="">
-                  <a
-                    href="#checkout"
-                    className="lg:hidden text-primary text-sm font-medium bg-primary/10 px-3 py-2 rounded-full flex items-center gap-1"
-                  >
-                    Invoice
-                    <ArrowDown className="size-3" />
-                  </a>
-                </div>
               </div>
               {filteredAvailableMenuItems.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
