@@ -17,7 +17,7 @@ class TableRepository {
       return null;
     }
 
-    return Table.findById(tableID);
+    return Table.findById(tableID).populate("sectionId");
   }
 
   async getByName(name: string) {
@@ -69,11 +69,15 @@ class TableRepository {
       .find(filter)
       .sort({ number: 1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .populate("sectionId");
 
     const total = await this.model.countDocuments(filter);
 
     return { data, total };
+  }
+    async countByRoom(sectionId: string) {
+    return this.model.countDocuments({ sectionId });
   }
 }
 

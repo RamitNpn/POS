@@ -3,14 +3,13 @@ import mongoose from "mongoose";
 
 import { tableContract } from "../../contract/table/table.contract";
 import tableRepository from "../../repository/table.repository";
+import roomRepository from "../../repository/room.repository";
 
 export const createTable: AppRouteMutationImplementation<
   typeof tableContract.createTable
 > = async ({ req }) => {
   try {
-    const existing = await tableRepository.getByName(
-      req.body.name,
-    );
+    const existing = await tableRepository.getByName(req.body.name);
 
     if (existing) {
       return {
@@ -24,11 +23,7 @@ export const createTable: AppRouteMutationImplementation<
 
     await tableRepository.create({
       ...req.body,
-      sectionId: req.body.sectionId
-        ? new mongoose.Types.ObjectId(
-            req.body.sectionId,
-          )
-        : undefined,
+      sectionId: new mongoose.Types.ObjectId(req.body.sectionId)
     });
 
     return {
@@ -67,14 +62,8 @@ export const updateTable: AppRouteMutationImplementation<
       };
     }
 
-    if (
-      req.body.name &&
-      req.body.name !== table.name
-    ) {
-      const exists =
-        await tableRepository.getByName(
-          req.body.name,
-        );
+    if (req.body.name && req.body.name !== table.name) {
+      const exists = await tableRepository.getByName(req.body.name);
 
       if (exists) {
         return {
@@ -90,9 +79,7 @@ export const updateTable: AppRouteMutationImplementation<
     await tableRepository.update(tableID, {
       ...req.body,
       sectionId: req.body.sectionId
-        ? new mongoose.Types.ObjectId(
-            req.body.sectionId,
-          )
+        ? new mongoose.Types.ObjectId(req.body.sectionId)
         : undefined,
     });
 
@@ -119,8 +106,7 @@ export const removeTable: AppRouteMutationImplementation<
 > = async ({ req }) => {
   const { tableID } = req.params;
 
-  const table =
-    await tableRepository.getByID(tableID);
+  const table = await tableRepository.getByID(tableID);
 
   if (!table) {
     return {

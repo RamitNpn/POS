@@ -1,10 +1,10 @@
 import mongoose, { Document } from "mongoose";
 
+export type Status = "active" | "inactive";
 export interface IRoom extends Document {
   name: string;
   description?: string;
-  tableCount: number;
-  isActive: boolean;
+  isActive: Status;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,16 +22,11 @@ const roomSchema = new mongoose.Schema<IRoom>(
       default: "",
     },
 
-    tableCount: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-
     isActive: {
-      type: Boolean,
+      type: String,
+      enum: ["active", "inactive"],
       required: true,
-      default: true,
+      default: "active",
     },
   },
   {

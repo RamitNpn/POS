@@ -127,7 +127,6 @@
   }
 }
 
-/* Custom scrollbar for dark theme */
 @layer base {
   ::-webkit-scrollbar {
     width: 8px;
@@ -145,7 +144,6 @@
   }
 }
 
-/* Touch-friendly targets */
 @layer utilities {
   .touch-target {
     min-height: 44px;

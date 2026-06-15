@@ -8,8 +8,8 @@ export interface IUser extends Document {
   name: string;
   email: string;
   role: UserRole;
-  avatar?: string;
-  phone?: string;
+  profile?: string;
+  phone: string;
   status: UserStatus;
   createdAt: Date;
   updatedAt: Date;
@@ -37,14 +37,14 @@ const userSchema = new mongoose.Schema<IUser>(
       required: true,
     },
 
-    avatar: {
+    profile: {
       type: String,
       default: null,
     },
 
     phone: {
       type: String,
-      default: null,
+      required: true,
       trim: true,
     },
 

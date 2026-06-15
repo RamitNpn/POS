@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 import userRepository from "../../repository/user.repository";
 import { userContract } from "../../contract/user/user.contract";
 import { AppRouteMutationImplementation } from "@ts-rest/express";
@@ -8,7 +6,7 @@ const createUser: AppRouteMutationImplementation<
   typeof userContract.createUser
 > = async ({ req }) => {
   try {
-    const { name, email, role, avatar, phone, status } = req.body;
+    const { name, email, role, phone, status } = req.body;
 
     const existingUser = await userRepository.getByEmail(email.toLowerCase());
 
@@ -22,11 +20,17 @@ const createUser: AppRouteMutationImplementation<
       };
     }
 
+    const files = req.files as {
+      profile?: Express.Multer.File[];
+    };
+
+    const profileUrl = files?.profile?.[0]?.path || "";
+
     const created = await userRepository.create({
       name,
       email: email.toLowerCase(),
       role,
-      avatar,
+      profile: profileUrl,
       phone,
       status,
     });
@@ -55,7 +59,7 @@ export const updateUser: AppRouteMutationImplementation<
   try {
     const { userID } = req.params;
 
-    const { name, email, role, avatar, phone, status } = req.body;
+    const { name, email, role, phone, status } = req.body;
 
     const existingUser = await userRepository.getByID(userID);
 
@@ -82,15 +86,26 @@ export const updateUser: AppRouteMutationImplementation<
         };
       }
     }
+    
+    const files = req.files as {
+      profile?: Express.Multer.File[];
+    };
 
-    const updated = await userRepository.update(userID, {
+    const profileUrl = files?.profile?.[0]?.path;
+
+    const updateData: any = {
       name,
       email: email?.toLowerCase(),
       role,
-      avatar,
       phone,
       status,
-    });
+    };
+
+    if (profileUrl) {
+      updateData.profile = profileUrl;
+    }
+
+    const updated = await userRepository.update(userID, updateData);
 
     if (!updated) {
       return {
@@ -170,6 +185,6 @@ export const removeUser: AppRouteMutationImplementation<
 
 export const userMutationHandler = {
   createUser,
-    updateUser,
-    removeUser,
+  updateUser,
+  removeUser,
 };

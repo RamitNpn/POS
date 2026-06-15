@@ -6,7 +6,7 @@ export const createRoom: AppRouteMutationImplementation<
   typeof roomContract.createRoom
 > = async ({ req }) => {
   try {
-    const { name, description, tableCount, isActive } = req.body;
+    const { name, description, isActive } = req.body;
 
     const existingRoom = await roomRepository.getByName(name);
 
@@ -23,7 +23,6 @@ export const createRoom: AppRouteMutationImplementation<
     await roomRepository.create({
       name,
       description,
-      tableCount,
       isActive,
     });
 
@@ -63,7 +62,7 @@ export const updateRoom: AppRouteMutationImplementation<
       };
     }
 
-    const { name, description, tableCount, isActive } = req.body;
+    const { name, description, isActive } = req.body;
 
     if (name && name !== room.name) {
       const exists = await roomRepository.getByName(name);
@@ -82,7 +81,6 @@ export const updateRoom: AppRouteMutationImplementation<
     await roomRepository.update(roomID, {
       name,
       description,
-      tableCount,
       isActive,
     });
 

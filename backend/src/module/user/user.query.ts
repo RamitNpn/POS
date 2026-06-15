@@ -30,9 +30,10 @@ export const getAllUsers: AppRouteQueryImplementation<
           name: user.name,
           email: user.email,
           role: user.role,
-          avatar: user.avatar,
+          profile: user.profile,
           phone: user.phone,
           status: user.status,
+          createdAt: user.createdAt,
         })),
         pagination: {
           page,
@@ -54,7 +55,6 @@ export const getAllUsers: AppRouteQueryImplementation<
     };
   }
 };
-
 
 export const getUserByID: AppRouteQueryImplementation<
   typeof userContract.getUserByID
@@ -81,9 +81,10 @@ export const getUserByID: AppRouteQueryImplementation<
         name: user.name,
         email: user.email,
         role: user.role,
-        avatar: user.avatar,
+        profile: user.profile,
         phone: user.phone,
         status: user.status,
+        createdAt: user.createdAt,
       },
     };
   } catch (error) {

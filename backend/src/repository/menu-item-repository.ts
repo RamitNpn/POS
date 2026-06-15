@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import MenuItem, { IMenuItem } from "../model/menu-item.model";
 
 class MenuItemRepository {
@@ -28,11 +28,7 @@ class MenuItemRepository {
     return MenuItem.findByIdAndDelete(id);
   }
 
-  async getAll({
-    skip,
-    limit,
-    search,
-  }: any) {
+  async getAll({ skip, limit, search }: any) {
     const filter: any = {};
 
     if (search) {
@@ -40,15 +36,15 @@ class MenuItemRepository {
     }
 
     const [data, total] = await Promise.all([
-      MenuItem.find(filter)
-        .skip(skip)
-        .limit(limit)
-        .sort({ createdAt: -1 }),
+      MenuItem.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
 
       MenuItem.countDocuments(filter),
     ]);
 
     return { data, total };
+  }
+  async countByCategory(categoryId: string) {
+    return MenuItem.countDocuments({ categoryId });
   }
 }
 

@@ -1,30 +1,23 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 export function statusStyle(status: string) {
   switch (status) {
     case "active":
     case "paid":
     case "approved":
+    case "available":
+    case "reserved":
+    case "occupied":
     case "received":
     case "confirmed":
       return "bg-emerald-100 text-emerald-700";

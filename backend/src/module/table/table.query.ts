@@ -1,6 +1,7 @@
 import { AppRouteQueryImplementation } from "@ts-rest/express";
 import { tableContract } from "../../contract/table/table.contract";
 import tableRepository from "../../repository/table.repository";
+import roomRepository from "../../repository/room.repository";
 
 export const getAllTables: AppRouteQueryImplementation<
   typeof tableContract.getAllTables
@@ -9,26 +10,27 @@ export const getAllTables: AppRouteQueryImplementation<
     const page = Number(req.query.page ?? 1);
     const limit = Number(req.query.limit ?? 10);
 
-    const { data, total } =
-      await tableRepository.getAll({
-        skip: (page - 1) * limit,
-        limit,
-        search: req.query.search as string,
-        status: req.query.status as string,
-        sectionId: req.query.sectionId as string,
-      });
+    const { data, total } = await tableRepository.getAll({
+      skip: (page - 1) * limit,
+      limit,
+      search: req.query.search as string,
+      status: req.query.status as string,
+      sectionId: req.query.sectionId as string,
+    });
+
+    const formattedData = data.map((table: any) => ({
+      _id: table._id.toString(),
+      name: table.name,
+      capacity: table.capacity,
+      status: table.status,
+      section: table.sectionId?.name ?? null,
+      sectionId: table.sectionId?._id?.toString(),
+    }));
 
     return {
       status: 200,
       body: {
-        data: data.map((table) => ({
-          _id: table._id.toString(),
-          name: table.name,
-          capacity: table.capacity,
-          status: table.status,
-          section: table.section,
-          sectionId: table.sectionId?.toString(),
-        })),
+        data: formattedData,
         pagination: {
           page,
           limit,
@@ -51,10 +53,7 @@ export const getAllTables: AppRouteQueryImplementation<
 export const getTableByID: AppRouteQueryImplementation<
   typeof tableContract.getTableByID
 > = async ({ req }) => {
-  const table =
-    await tableRepository.getByID(
-      req.params.tableID,
-    );
+  const table = await tableRepository.getByID(req.params.tableID);
 
   if (!table) {
     return {
@@ -73,8 +72,8 @@ export const getTableByID: AppRouteQueryImplementation<
       name: table.name,
       capacity: table.capacity,
       status: table.status,
-      section: table.section,
-      sectionId: table.sectionId?.toString(),
+      section: (table.sectionId as any)?.name ?? null,
+      sectionId: (table.sectionId as any)?._id?.toString(),
     },
   };
 };

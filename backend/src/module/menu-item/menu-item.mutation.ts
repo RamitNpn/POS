@@ -2,6 +2,7 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { menuItemContract } from "../../contract/menu-item/menu-item.contract";
 import menuItemRepository from "../../repository/menu-item-repository";
 import mongoose from "mongoose";
+import menuCategoryRepository from "../../repository/menu-category.repository";
 
 export const createMenuItem: AppRouteMutationImplementation<
   typeof menuItemContract.createMenuItem
@@ -19,14 +20,21 @@ export const createMenuItem: AppRouteMutationImplementation<
       };
     }
 
+    const amount = Number(req.body.price);
+
+    const files = req.files as {
+      image?: Express.Multer.File[];
+    };
+
+    const profileUrl = files?.image?.[0]?.path || "";
+
     await menuItemRepository.create({
       ...req.body,
       categoryId: req.body.categoryId
         ? new mongoose.Types.ObjectId(req.body.categoryId)
         : undefined,
-      subCategoryId: req.body.subCategoryId
-        ? new mongoose.Types.ObjectId(req.body.subCategoryId)
-        : undefined,
+      image: profileUrl,
+      price: amount,
     });
 
     return {
@@ -79,14 +87,21 @@ export const updateMenuItem: AppRouteMutationImplementation<
       }
     }
 
+    const amount = Number(req.body.price);
+
+    const files = req.files as {
+      image?: Express.Multer.File[];
+    };
+
+    const profileUrl = files?.image?.[0]?.path || "";
+
     await menuItemRepository.update(itemID, {
       ...req.body,
       categoryId: req.body.categoryId
         ? new mongoose.Types.ObjectId(req.body.categoryId)
         : undefined,
-      subCategoryId: req.body.subCategoryId
-        ? new mongoose.Types.ObjectId(req.body.subCategoryId)
-        : undefined,
+      image: profileUrl,
+      price: amount,
     });
 
     return {

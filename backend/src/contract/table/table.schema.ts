@@ -12,7 +12,6 @@ export const createTableSchema = z.object({
   name: z.string().min(1),
   capacity: z.number().min(1),
   status: tableStatusEnum.optional(),
-  section: z.string().trim().min(1),
   sectionId: z.string().optional(),
 });
 
@@ -33,6 +32,5 @@ export const updateTableSchema = z.object({
   name: z.string().min(1).optional(),
   capacity: z.number().min(1).optional(),
   status: tableStatusEnum.optional(),
-  section: z.string().optional(),
   sectionId: z.string().optional(),
 });

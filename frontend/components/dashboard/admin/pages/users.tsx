@@ -1,10 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
-import { RevenueChart } from "@/components/dashboard/revenue-chart";
-import { api } from "@/lib/api/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,42 +14,104 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CardFooter } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { statusStyle, MetricCard, PageSection, SearchField, TableBadge, formatDate } from "@/components/dashboard/admin/shared";
-import type { AdminDashboardStats, Branch, Expense, Ingredient, MenuCategory, MenuItem, MenuModifier, Notification, Order, PurchaseOrder, Reservation, Role, SalesByCategory, StaffMember, StockMovement, Supplier, Table as DiningTable, TableSection, ManagedUser, RevenueData } from "@/lib/types";
+  statusStyle,
+  PageSection,
+  SearchField,
+  formatDate,
+} from "@/components/dashboard/admin/shared";
+import { useAllUsers } from "@/hooks/admin/users/getAllUsers";
+import { TUser } from "@/lib/types/user.types";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  createUserSchema,
+  TCreateUserSchema,
+} from "@/lib/validations/user.validation";
+import { userApi } from "@/lib/api/user.api";
+import { toast } from "@/hooks/use-toast";
+import Image from "next/image";
+import { Edit, Eye, Trash, Trash2 } from "lucide-react";
+import ConfirmDialog from "@/components/shared/confirmDialog";
+import { useDeleteUser } from "@/hooks/admin/users/removeUser";
+import UserEditForm from "../editForm/user.edit";
 
 export default function UsersPage() {
-  const { data: users = [] } = useQuery<ManagedUser[]>({ queryKey: ['users'], queryFn: () => api.getUsers() });
-  const [filter, setFilter] = useState('');
-  const [selectedRole, setSelectedRole] = useState('all');
-  const [newUser, setNewUser] = useState({ name: '', email: '', role: 'waiter', branchId: '', status: 'active' });
+  const [filter, setFilter] = useState("");
+  const [selectedRole, setSelectedRole] = useState("all");
+  const [formVisible, setFormVisible] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
 
-  const roles = useMemo(
-    () => Array.from(new Set(users.map((user) => user.role))).sort(),
-    [users],
-  );
+  console.log(editId);
 
-  const filteredUsers = useMemo(
-    () =>
-      users
-        .filter((user) =>
-          [user.name, user.email, user.role, user.status]
-            .filter(Boolean)
-            .some((value) => value.toLowerCase().includes(filter.toLowerCase())),
-        )
-        .filter((user) => (selectedRole === 'all' ? true : user.role === selectedRole)),
-    [users, filter, selectedRole],
-  );
+  const { data: userData } = useAllUsers({ role: selectedRole });
+  const users = userData?.data ?? [];
 
-  const handleCreateUser = () => {
-    setNewUser({ name: '', email: '', role: 'waiter', branchId: '', status: 'active' });
+  const { mutate: deleteUser } = useDeleteUser();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(createUserSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      profile: "",
+      role: "waiter",
+      status: "active",
+    },
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: userApi.createUser,
+    onSuccess: () => {
+      toast({
+        title: "User Created",
+        description: "The user was added successfully.",
+      });
+      reset();
+      setFormVisible(false);
+    },
+    onError: (err) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add user.",
+      });
+    },
+  });
+
+  const onSubmit = (data: TCreateUserSchema) => {
+    const formData = new FormData();
+
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("phone", data.phone);
+
+    if (data.profile?.[0]) {
+      formData.append("profile", data.profile[0]);
+    }
+
+    formData.append("role", data.role);
+    formData.append("status", data.status);
+
+    mutate(formData as any);
+  };
+
+  const confirmDelete = () => {
+    if (!itemToRemove) return;
+
+    deleteUser(itemToRemove, {
+      onSuccess: () => {
+        setItemToRemove(null);
+      },
+    });
   };
 
   return (
@@ -59,74 +119,125 @@ export default function UsersPage() {
       <DashboardHeader
         title="User Management"
         description="Manage access, role assignments and employee details."
-      >
-        {/* <Button>New user</Button> */}
-      </DashboardHeader>
+      ></DashboardHeader>
 
-      <PageSection title="Register New User">
-        <div className="grid gap-4 lg:grid-cols-2">
-          <div>
-            <Label htmlFor="new-user-name">Name</Label>
-            <Input
-              id="new-user-name"
-              value={newUser.name}
-              onChange={(event) => setNewUser({ ...newUser, name: event.target.value })}
-              placeholder="Enter full name"
-            />
-          </div>
-          <div>
-            <Label htmlFor="new-user-email">Email</Label>
-            <Input
-              id="new-user-email"
-              type="email"
-              value={newUser.email}
-              onChange={(event) => setNewUser({ ...newUser, email: event.target.value })}
-              placeholder="Enter email"
-            />
-          </div>
-          <div>
-            <Label htmlFor="new-user-role">Role</Label>
-            <select
-              id="new-user-role"
-              className="mt-2 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              value={newUser.role}
-              onChange={(event) => setNewUser({ ...newUser, role: event.target.value })}
-            >
-              <option value="admin">Administrator</option>
-              <option value="waiter">Server</option>
-              <option value="kitchen">Kitchen Staff</option>
-              <option value="cashier">Cashier</option>
-            </select>
-          </div>
-          <div>
-            <Label htmlFor="new-user-status">Status</Label>
-            <select
-              id="new-user-status"
-              className="mt-2 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              value={newUser.status}
-              onChange={(event) => setNewUser({ ...newUser, status: event.target.value })}
-            >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-          </div>
-          <div className="lg:col-span-2">
-            <Label htmlFor="new-user-branch">Branch</Label>
-            <Input
-              id="new-user-branch"
-              value={newUser.branchId}
-              onChange={(event) => setNewUser({ ...newUser, branchId: event.target.value })}
-              placeholder="Branch or location"
-            />
-          </div>
+      {!formVisible && (
+        <div className="flex items-center justify-end">
+          <Button
+            variant="default"
+            className="bg-yellow-400 rounded-lg"
+            onClick={() => setFormVisible(true)}
+          >
+            Add User
+          </Button>
         </div>
-        <CardFooter className="justify-end pt-4">
-          <Button onClick={handleCreateUser}>Register user</Button>
-        </CardFooter>
-      </PageSection>
+      )}
+
+      {formVisible && (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <PageSection title="Register New User">
+            <div className="grid gap-4 lg:grid-cols-2">
+              <div>
+                <Label htmlFor="new-user-name">Name</Label>
+                <Input
+                  id="new-user-name"
+                  {...register("name")}
+                  placeholder="Enter full name"
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-[12px] mt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="new-user-email">Email</Label>
+                <Input
+                  id="new-user-email"
+                  type="email"
+                  {...register("email")}
+                  placeholder="Enter email"
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-[12px] mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="new-user-phone">Phone</Label>
+                <Input
+                  id="new-user-phone"
+                  type="phone"
+                  {...register("phone")}
+                  placeholder="Enter phone"
+                />
+                {errors.phone && (
+                  <p className="text-red-500 text-[12px] mt-1">
+                    {errors.phone.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="new-user-role">Role</Label>
+                <select
+                  id="new-user-role"
+                  className="mt-2 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  {...register("role")}
+                >
+                  <option value="admin">Administrator</option>
+                  <option value="waiter">Server</option>
+                  <option value="kitchen">Kitchen Staff</option>
+                  <option value="cashier">Cashier</option>
+                </select>
+                {errors.role && (
+                  <p className="text-red-500 text-[12px] mt-1">
+                    {errors.role.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="new-user-status">Status</Label>
+                <select
+                  id="new-user-status"
+                  className="mt-2 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  {...register("status")}
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+                {errors.status && (
+                  <p className="text-red-500 text-[12px] mt-1">
+                    {errors.status.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="new-user-email">Profile</Label>
+                <Input
+                  id="new-user-profile"
+                  type="file"
+                  {...register("profile")}
+                />
+              </div>
+            </div>
+            <CardFooter className="justify-end pt-4">
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Creating..." : "Create User"}
+              </Button>
+            </CardFooter>
+          </PageSection>
+        </form>
+      )}
 
       <div className="grid gap-4 md:grid-cols-[1fr_auto] items-end">
-        <SearchField id="user-search" label="Search users" value={filter} onChange={setFilter} placeholder="Search by name, email, role or status" />
+        <SearchField
+          id="user-search"
+          label="Search users"
+          value={filter}
+          onChange={setFilter}
+          placeholder="Search by name, email, role or status"
+        />
         <div>
           <Label htmlFor="user-role-filter">Filter by role</Label>
           <select
@@ -136,9 +247,10 @@ export default function UsersPage() {
             onChange={(event) => setSelectedRole(event.target.value)}
           >
             <option value="all">All roles</option>
-            {roles.map((role) => (
-              <option key={role} value={role}>{role}</option>
-            ))}
+            <option value="admin">Administrator</option>
+            <option value="waiter">Server</option>
+            <option value="kitchen">Kitchen Staff</option>
+            <option value="cashier">Cashier</option>
           </select>
         </div>
       </div>
@@ -147,31 +259,95 @@ export default function UsersPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Profile</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead>Phone</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Branch</TableHead>
-              <TableHead>Last login</TableHead>
+              <TableHead>CreatedAt</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredUsers.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>
-                  <span className={`rounded-full px-2 py-1 text-xs font-semibold ${statusStyle(user.status)}`}>
-                    {user.status}
-                  </span>
+            {users.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center text-gray-500">
+                  No users found
                 </TableCell>
-                <TableCell>{user.branchId ?? 'All locations'}</TableCell>
-                <TableCell>{user.lastLogin ? formatDate(user.lastLogin) : 'Never'}</TableCell>
               </TableRow>
-            ))}
+            ) : (
+              users.map((user: TUser) => (
+                <TableRow key={user._id}>
+                  <TableCell>
+                    <a
+                      href={user.profile || user.name}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block"
+                    >
+                      <Image
+                        src={user.profile || user.name}
+                        width={80}
+                        height={100}
+                        alt="Profile"
+                        className="rounded border border-border cursor-zoom-in"
+                      />
+                    </a>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-col leading-tight">
+                      <span className="font-medium">{user.name}</span>
+                      <span className="text-xs text-muted-foreground truncate max-w-[200px]">
+                        {user.email}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>{user.phone}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`rounded-full px-2 py-1 text-xs font-semibold ${statusStyle(user.status)}`}
+                    >
+                      {user.status}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    {user.createdAt ? formatDate(user.createdAt) : "Never"}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-4">
+                      <button className="flex items center text-primary/90 hover:text-primary/80 justify-center p-1 rounded">
+                        <Eye className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={() => setEditId(user._id)}
+                        className="flex items center text-green-600 hover:text-green-700 p-1 rounded"
+                      >
+                        <Edit className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={() => setItemToRemove(user._id)}
+                        className="flex items center text-red-600 hover:text-red-700 p-1 rounded"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
+        {editId && (
+          <UserEditForm userId={editId} onClose={() => setEditId(null)} />
+        )}
+        <ConfirmDialog
+          open={itemToRemove !== null}
+          title="Remove User"
+          message="Are you sure you want to remove this user?"
+          onConfirm={confirmDelete}
+          onCancel={() => setItemToRemove(null)}
+        />
       </PageSection>
     </div>
   );

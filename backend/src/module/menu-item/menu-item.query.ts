@@ -24,12 +24,9 @@ export const getAllMenuItems: AppRouteQueryImplementation<
           description: item.description,
           price: item.price,
           categoryId: item.categoryId.toString(),
-          subCategoryId: item.subCategoryId.toString(),
           image: item.image,
           status: item.status,
-          costPrice: item.costPrice,
-          variantType: item.variantType,
-          variantValue: item.variantValue,
+          createdAt: item.createdAt,
         })),
         pagination: {
           page,
@@ -73,12 +70,9 @@ export const getMenuItemByID: AppRouteQueryImplementation<
       description: item.description,
       price: item.price,
       categoryId: item.categoryId.toString(),
-      subCategoryId: item.subCategoryId.toString(),
       image: item.image,
       status: item.status,
-      costPrice: item.costPrice,
-      variantType: item.variantType,
-      variantValue: item.variantValue,
+      createdAt: item.createdAt,
     },
   };
 };

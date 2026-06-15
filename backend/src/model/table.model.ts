@@ -5,8 +5,6 @@ export interface ITable extends Document {
   capacity: number;
   status: "available" | "occupied" | "reserved" | "cleaning" | "out-of-service";
 
-  section: string;
-
   sectionId?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -33,15 +31,10 @@ const tableSchema = new mongoose.Schema<ITable>(
       default: "available",
     },
 
-    section: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
     sectionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Room",
+      required: true,
     },
   },
   {

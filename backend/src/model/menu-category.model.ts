@@ -3,7 +3,6 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface IMenuCategory extends Document {
   name: string;
   description?: string;
-  itemCount?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,11 +17,6 @@ const menuCategorySchema = new mongoose.Schema<IMenuCategory>(
 
     description: {
       type: String,
-    },
-
-    itemCount: {
-      type: Number,
-      default: 0,
     },
   },
   {

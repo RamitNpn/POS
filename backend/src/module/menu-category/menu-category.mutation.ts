@@ -2,6 +2,7 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 
 import { menuCategoryContract } from "../../contract/menu-category/menu-category.contract";
 import menuCategoryRepository from "../../repository/menu-category.repository";
+import menuItemRepository from "../../repository/menu-item-repository";
 
 export const createMenuCategory: AppRouteMutationImplementation<
   typeof menuCategoryContract.createMenuCategory

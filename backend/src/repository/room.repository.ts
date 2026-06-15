@@ -29,10 +29,11 @@ class RoomRepository {
     const query: any = {};
 
     if (search) {
-      query.name = {
-        $regex: search,
-        $options: "i",
-      };
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { isActive: { $regex: search, $options: "i" } },
+      ];
     }
 
     const data = await this.model
@@ -83,6 +84,10 @@ class RoomRepository {
     }
 
     return await Room.findByIdAndDelete(roomID);
+  }
+
+  async countByRoom(roomID: string) {
+    return this.model.countDocuments({ roomID });
   }
 }
 

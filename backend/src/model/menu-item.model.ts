@@ -5,12 +5,10 @@ export interface IMenuItem extends Document {
   description: string;
   price: number;
   categoryId: mongoose.Types.ObjectId;
-  subCategoryId: mongoose.Types.ObjectId;
   image?: string;
-  status: "available" | "out-of-stock" | "hidden";
-  costPrice?: number;
-  variantType?: "ml" | "veg" | "non-veg" | "chili" | "fry" | "boil";
-  variantValue?: string;
+  status: "available" | "out-of-stock";
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const menuItemSchema = new mongoose.Schema<IMenuItem>(
@@ -23,23 +21,12 @@ const menuItemSchema = new mongoose.Schema<IMenuItem>(
       ref: "MenuCategory",
       required: true,
     },
-    subCategoryId: {
-      type: Schema.Types.ObjectId,
-      ref: "MenuSubCategory",
-      required: true,
-    },
     image: String,
     status: {
       type: String,
-      enum: ["available", "out-of-stock", "hidden"],
+      enum: ["available", "out-of-stock"],
       default: "available",
     },
-    costPrice: Number,
-    variantType: {
-      type: String,
-      enum: ["ml", "veg", "non-veg", "chili", "fry", "boil"],
-    },
-    variantValue: String,
   },
   {
     timestamps: true,

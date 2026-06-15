@@ -73,6 +73,9 @@ class MenuCategoryRepository {
       total,
     };
   }
+  async count(id: string) {
+    return this.model.countDocuments({ _id: id });
+  }
 }
 
 export default new MenuCategoryRepository();

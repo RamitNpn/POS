@@ -1,10 +1,11 @@
 import { z } from "zod";
 
+export const Status =  z.enum(["active", "inactive"]);
+
 export const createRoomSchema = z.object({
   name: z.string().trim().min(2).max(100),
   description: z.string().trim().optional(),
-  tableCount: z.number().min(0).default(0),
-  isActive: z.boolean().optional(),
+  isActive: Status.default("active"),
 });
 
 export const roomSchema = z.object({
@@ -12,15 +13,17 @@ export const roomSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   tableCount: z.number(),
-  isActive: z.boolean(),
+  isActive: z.string().refine((v) => Status.safeParse(v).success),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 export const getAllRoomsSchema = z.array(roomSchema);
 
 export const getRoomByIdSchema = roomSchema;
+
 export const updateRoomSchema = z.object({
   name: z.string().trim().min(2).max(100).optional(),
   description: z.string().trim().optional(),
-  tableCount: z.number().min(0).optional(),
-  isActive: z.boolean().optional(),
+  isActive: Status.optional(),
 });

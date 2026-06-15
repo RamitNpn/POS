@@ -1,6 +1,7 @@
 import { AppRouteQueryImplementation } from "@ts-rest/express";
 import { roomContract } from "../../contract/room/room.contract";
 import roomRepository from "../../repository/room.repository";
+import tableRepository from "../../repository/table.repository";
 
 export const getAllRooms: AppRouteQueryImplementation<
   typeof roomContract.getAllRooms
@@ -18,16 +19,26 @@ export const getAllRooms: AppRouteQueryImplementation<
       search,
     });
 
-    return {
-      status: 200,
-      body: {
-        data: data.map((room) => ({
+    const formattedData = await Promise.all(
+      data.map(async (room) => {
+        const tableCount = await tableRepository.countByRoom(
+          room._id.toString(),
+        );
+
+        return {
           _id: room._id.toString(),
           name: room.name,
           description: room.description,
-          tableCount: room.tableCount,
+          tableCount,
           isActive: room.isActive,
-        })),
+        };
+      }),
+    );
+
+    return {
+      status: 200,
+      body: {
+        data: formattedData,
         pagination: {
           page,
           limit,
@@ -65,13 +76,15 @@ export const getRoomByID: AppRouteQueryImplementation<
       };
     }
 
+    const tableCount = await roomRepository.countByRoom(room._id.toString());
+
     return {
       status: 200,
       body: {
         _id: room._id.toString(),
         name: room.name,
         description: room.description,
-        tableCount: room.tableCount,
+        tableCount: tableCount,
         isActive: room.isActive,
       },
     };
