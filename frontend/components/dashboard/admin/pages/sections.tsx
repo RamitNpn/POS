@@ -156,9 +156,15 @@ export default function SectionsPage() {
                 )}
               </div>
             </div>
-            <CardFooter className="justify-end pt-4">
+            <CardFooter className="justify-end flex gap-3 pt-4">
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={() => setFormVisible(false)}
+              >
+                Close
+              </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? "Creating..." : "Create Room"}
+                {isPending ? "Adding..." : "Add Room"}
               </Button>
             </CardFooter>
           </PageSection>

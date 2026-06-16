@@ -1,10 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
-import { api } from "@/lib/api/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -20,59 +19,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import type { MenuCategory, MenuItem } from "@/lib/types";
-import { ArrowDown, ArrowUp } from "lucide-react";
-
-export const mockCategories: MenuCategory[] = [
-  {
-    id: "cat-1",
-    name: "Appetizers",
-    description: "Start your meal right",
-    sortOrder: 1,
-    isActive: true,
-    itemCount: 5,
-  },
-  {
-    id: "cat-2",
-    name: "Main Course",
-    description: "Signature dishes",
-    sortOrder: 2,
-    isActive: true,
-    itemCount: 8,
-  },
-  {
-    id: "cat-3",
-    name: "Pasta",
-    description: "Fresh homemade pasta",
-    sortOrder: 3,
-    isActive: true,
-    itemCount: 6,
-  },
-  {
-    id: "cat-4",
-    name: "Desserts",
-    description: "Sweet endings",
-    sortOrder: 4,
-    isActive: true,
-    itemCount: 4,
-  },
-  {
-    id: "cat-5",
-    name: "Beverages",
-    description: "Drinks and cocktails",
-    sortOrder: 5,
-    isActive: true,
-    itemCount: 10,
-  },
-  {
-    id: "cat-6",
-    name: "Salads",
-    description: "Fresh and healthy",
-    sortOrder: 6,
-    isActive: true,
-    itemCount: 4,
-  },
-];
+import { ArrowDown } from "lucide-react";
+import { useAllMenuCategories } from "@/hooks/admin/menu-category/getAllMenuCategories";
+import { TMenuCategory } from "@/lib/types/menu-category.types";
+import { useTableById } from "@/hooks/admin/table/getTableById";
+import { useAllMenuItems } from "@/hooks/admin/menu-item/getAllMenuItems";
+import { TMenuItem } from "@/lib/types/menu-item.types";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createOrderSchema } from "@/lib/validations/order.validation";
+import { orderApi } from "@/lib/api/order.api";
 
 export default function WaiterMenuPage() {
   const router = useRouter();
@@ -82,49 +38,41 @@ export default function WaiterMenuPage() {
 
   const tableId = searchParams.get("tableId");
 
-  const { data: tables } = useQuery({
-    queryKey: ["tables"],
-    queryFn: api.getTables,
-  });
+  const { data: selectedTable } = useTableById(tableId || "");
+  const { data: menuCategories } = useAllMenuCategories({});
+  const mockCategories = menuCategories?.data ?? [];
 
-  const { data: menuItems } = useQuery({
-    queryKey: ["menu-items"],
-    queryFn: api.getMenuItems,
-  });
+  const { data: menuData } = useAllMenuItems({});
+  const menuItems = menuData?.data ?? [];
 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-    const [customerName, setCustomerName] = useState("");
-  const [notes, setNotes] = useState("");
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
-  const selectedTable = useMemo(
-    () => tables?.find((table) => table.id === tableId),
-    [tables, tableId],
-  );
-
   const enrichedMenuItems = useMemo(() => {
-    return (menuItems ?? []).map((item) => ({
+    return (menuItems ?? []).map((item: TMenuItem) => ({
       ...item,
-      category: mockCategories.find((c) => c.id === item.categoryId),
+      category: mockCategories.find(
+        (c: TMenuCategory) => c._id === item.categoryId,
+      ),
     }));
-  }, [menuItems]);
+  }, [menuItems, mockCategories]);
 
   const availableMenuItems = useMemo(
-    () => enrichedMenuItems.filter((item) => item.isAvailable),
+    () =>
+      enrichedMenuItems.filter(
+        (item: TMenuItem) => item.status === "available",
+      ),
     [enrichedMenuItems],
   );
 
   const filteredAvailableMenuItems = useMemo(() => {
     const term = search.trim().toLowerCase();
-    return availableMenuItems.filter((item) => {
+    return availableMenuItems.filter((item: TMenuItem) => {
       const matchesSearch =
-        term === "" ||
-        item.name.toLowerCase().includes(term) ||
-        item.description.toLowerCase().includes(term) ||
-        (item.category?.name ?? "").toLowerCase().includes(term);
+        term === "" || item.name.toLowerCase().includes(term);
       const matchesCategory =
-        categoryFilter === "all" || item.category?.id === categoryFilter;
+        categoryFilter === "all" || item.categoryId === categoryFilter;
       return matchesSearch && matchesCategory;
     });
   }, [availableMenuItems, search, categoryFilter]);
@@ -132,93 +80,122 @@ export default function WaiterMenuPage() {
   const selectedItems = useMemo(
     () =>
       availableMenuItems.filter(
-        (menuItem) => (quantities[menuItem.id] ?? 0) > 0,
+        (menuItem: TMenuItem) => (quantities[menuItem._id] ?? 0) > 0,
       ),
     [availableMenuItems, quantities],
   );
 
   const subtotal = selectedItems.reduce(
-    (sum, menuItem) => sum + menuItem.price * (quantities[menuItem.id] ?? 0),
+    (sum: number, menuItem: TMenuItem) =>
+      sum + menuItem.price * (quantities[menuItem._id] ?? 0),
     0,
   );
 
   const tax = Number((subtotal * 0.1).toFixed(2));
   const total = subtotal + tax;
 
-  const createOrderMutation = useMutation({
-    mutationFn: api.createOrder,
+  const orderItems = useMemo(() => {
+    return selectedItems.map((item: TMenuItem) => {
+      const qty = quantities[item._id] ?? 1;
+      return {
+        menuItemId: item._id,
+        name: item.name,
+        price: item.price,
+        quantity: qty,
+        total: item.price * qty,
+      };
+    });
+  }, [selectedItems, quantities]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(createOrderSchema),
+    defaultValues: {
+      customerName: "",
+      notes: "",
+      tableId: selectedTable?._id || "",
+      waiterId: "2",
+      items: [],
+    },
+    values: {
+      customerName: "",
+      notes: "",
+      tableId: selectedTable?._id || "",
+      waiterId: "6a303de73846ee3208d09a8d",
+      items: orderItems,
+    },
+  });
+
+  const { mutate, isPending: isCreatingOrder } = useMutation({
+    mutationFn: orderApi.createOrder,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["active-orders"] });
       queryClient.invalidateQueries({ queryKey: ["tables"] });
+
+      setQuantities({});
+
       toast({
         title: "Order created",
-        description: `Order has been sent to kitchen for Table ${selectedTable?.number}.`,
+        description: `Order sent to kitchen for Table ${selectedTable?.name}.`,
       });
+
       router.push("/dashboard/waiter/orders");
     },
     onError: () => {
       toast({
         title: "Unable to create order",
-        description: "Please try again or select a different table.",
+        description: "Please try again or select another table.",
+        variant: "destructive",
       });
     },
   });
 
-  const increaseQuantity = (menuItem: MenuItem) => {
+  const increaseQuantity = (menuItem: TMenuItem) => {
     setQuantities((current) => ({
       ...current,
-      [menuItem.id]: (current[menuItem.id] ?? 0) + 1,
+      [menuItem._id]: (current[menuItem._id] ?? 0) + 1,
     }));
   };
 
-  const decreaseQuantity = (menuItem: MenuItem) => {
+  const decreaseQuantity = (menuItem: TMenuItem) => {
     setQuantities((current) => {
-      const nextCount = (current[menuItem.id] ?? 0) - 1;
+      const nextCount = (current[menuItem._id] ?? 0) - 1;
       if (nextCount <= 0) {
-        const { [menuItem.id]: _, ...rest } = current;
+        const { [menuItem._id]: _, ...rest } = current;
         return rest;
       }
-      return { ...current, [menuItem.id]: nextCount };
+      return { ...current, [menuItem._id]: nextCount };
     });
   };
 
-  const handleCreateOrder = () => {
-    if (!selectedTable || selectedTable.status !== "available") {
+  const onSubmit = (data: any) => {
+    if (!selectedTable) {
       toast({
         title: "Select a table",
-        description:
-          "Please open the waiter dashboard and choose an available table first.",
+        description: "Please choose a table first.",
+        variant: "destructive",
       });
       return;
     }
 
-    if (selectedItems.length === 0) {
+    if (data.items.length === 0) {
       toast({
         title: "No items selected",
-        description: "Choose at least one menu item before creating the order.",
+        description: "Add at least one item.",
+        variant: "destructive",
       });
       return;
     }
 
-    const orderItems = selectedItems.map((menuItem) => ({
-      id: `order-item-${menuItem.id}-${Date.now()}`,
-      menuItemId: menuItem.id,
-      menuItem,
-      quantity: quantities[menuItem.id] ?? 1,
-      price: menuItem.price,
-      status: "pending" as const,
-    }));
-
-    createOrderMutation.mutate({
-      tableId: selectedTable.id,
-      items: orderItems,
-      status: "pending",
-      paymentStatus: "pending",
-      subtotal,
-      tax,
-      total,
-      notes,
-      waiterId: "2",
+    mutate({
+      tableId: data.tableId,
+      customerName: data.customerName || "Guest",
+      waiterId: data.waiterId,
+      notes: data.notes || undefined,
+      items: data.items,
     });
   };
 
@@ -226,11 +203,15 @@ export default function WaiterMenuPage() {
     <div id="search" className="space-y-6">
       <DashboardHeader
         title="Menu"
-        description={`Creating order for Table #${selectedTable?.number || ""} ${selectedTable?.section || ""}`}
+        description={`Creating order for Table ${selectedTable?.name ?? ""} ${selectedTable?.section ?? ""}`}
       />
 
       <div
-        className={`${selectedTable ? "grid gap-6 xl:grid-cols-[1.6fr_1fr]" : "flex flex-col gap-6"}`}
+        className={
+          selectedTable
+            ? "grid gap-6 xl:grid-cols-[1.6fr_1fr]"
+            : "flex flex-col gap-6"
+        }
       >
         <div className="space-y-4">
           <Card className="border-border">
@@ -253,20 +234,21 @@ export default function WaiterMenuPage() {
                     <SelectValue>
                       {categoryFilter === "all"
                         ? "All categories"
-                        : mockCategories.find((c) => c.id === categoryFilter)
-                            ?.name}
+                        : mockCategories.find(
+                            (c: TMenuCategory) => c._id === categoryFilter,
+                          )?.name}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All categories</SelectItem>
-                    {mockCategories.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>
+                    {mockCategories.map((c: TMenuCategory) => (
+                      <SelectItem key={c._id} value={c._id}>
                         {c.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <div className="">
+                <div>
                   <a
                     href="#checkout"
                     className="lg:hidden text-primary text-sm font-medium bg-primary/10 px-3 py-2 rounded-full flex items-center gap-1"
@@ -276,6 +258,7 @@ export default function WaiterMenuPage() {
                   </a>
                 </div>
               </div>
+
               {filteredAvailableMenuItems.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
                   No menu items match your search.
@@ -284,9 +267,9 @@ export default function WaiterMenuPage() {
                 <div
                   className={`grid gap-4 ${selectedTable ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}
                 >
-                  {filteredAvailableMenuItems.map((menuItem) => (
+                  {filteredAvailableMenuItems.map((menuItem: TMenuItem) => (
                     <div
-                      key={menuItem.id}
+                      key={menuItem._id}
                       className="rounded-3xl border border-border p-4 flex flex-col"
                     >
                       <div className="mb-3 overflow-hidden rounded-md">
@@ -309,7 +292,8 @@ export default function WaiterMenuPage() {
                               Rs {menuItem.price.toFixed(2)}
                             </Badge>
                             <Badge variant="outline">
-                              {menuItem.category?.name}
+                              {menuItem.status.charAt(0).toUpperCase() +
+                                menuItem.status.slice(1)}
                             </Badge>
                           </div>
                         </div>
@@ -323,7 +307,7 @@ export default function WaiterMenuPage() {
                               -
                             </Button>
                             <span className="min-w-6 text-center text-sm font-semibold">
-                              {quantities[menuItem.id] ?? 0}
+                              {quantities[menuItem._id] ?? 0}
                             </span>
                             <Button
                               size="sm"
@@ -343,107 +327,119 @@ export default function WaiterMenuPage() {
           </Card>
         </div>
 
-        {selectedItems && selectedTable && (
+        {tableId && (
           <div id="checkout" className="space-y-4">
             <Card className="border-border">
               <CardHeader>
                 <CardTitle className="text-foreground">Order summary</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2 rounded-3xl border border-border bg-muted/50 p-4">
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Table</span>
-                    <span>{selectedTable?.number}</span>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2 rounded-3xl border border-border bg-muted/50 p-4">
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>Table</span>
+                      <span>{selectedTable?.name}</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>Section</span>
+                      <span>{selectedTable?.section}</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>Status</span>
+                      <span className="capitalize">
+                        {selectedTable?.status}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Section</span>
-                    <span>{selectedTable?.section}</span>
-                  </div>
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Status</span>
-                    <span className="capitalize">{selectedTable?.status}</span>
-                  </div>
-                </div>
 
-                <div className="space-y-3">
-                  {selectedItems.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                      No items selected yet.
-                    </p>
-                  ) : (
-                    <div className="space-y-2">
-                      {selectedItems.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center justify-between"
-                        >
-                          <span className="text-sm text-muted-foreground">
-                            {item.name} x {quantities[item.id]}
-                          </span>
-                          <span className="text-sm font-semibold text-foreground">
-                            Rs{" "}
-                            {(item.price * (quantities[item.id] ?? 0)).toFixed(
-                              2,
-                            )}
-                          </span>
-                        </div>
-                      ))}
+                  <div className="space-y-3">
+                    {selectedItems.map((item: TMenuItem) => (
+                      <div
+                        key={item._id}
+                        className="flex items-center justify-between"
+                      >
+                        <span className="text-sm text-muted-foreground">
+                          {item.name} x {quantities[item._id]}
+                        </span>
+                        <span className="text-sm font-semibold text-foreground">
+                          Rs{" "}
+                          {(item.price * (quantities[item._id] ?? 0)).toFixed(
+                            2,
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-2 text-sm text-muted-foreground">
+                    <div className="flex justify-between">
+                      <span>Subtotal</span>
+                      <span>Rs {subtotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Tax</span>
+                      <span>Rs {tax.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between font-semibold text-foreground">
+                      <span>Total</span>
+                      <span>Rs {total.toFixed(2)}</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="customerName">Customer Name</Label>
+                    <Input
+                      id="customerName"
+                      {...register("customerName")}
+                      placeholder="Enter customer name"
+                    />
+                    {errors.customerName && (
+                      <p className="text-xs text-destructive">
+                        {errors.customerName.message?.toString()}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="notes">Order notes</Label>
+                    <Textarea
+                      id="notes"
+                      {...register("notes")}
+                      placeholder="Add special requests or instructions"
+                      rows={4}
+                    />
+                    {errors.notes && (
+                      <p className="text-xs text-destructive">
+                        {errors.notes.message?.toString()}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* 3. Added helpful error alerts at bottom if anything fails schema rules */}
+                  {Object.keys(errors).length > 0 && (
+                    <div className="p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg text-xs space-y-1">
+                      <p className="font-semibold">
+                        Please fix validation errors:
+                      </p>
+                      {errors.tableId && <p>• Table selection is missing.</p>}
+                      {errors.items && (
+                        <p>• You must add menu items to the order.</p>
+                      )}
                     </div>
                   )}
-                </div>
 
-                <Separator />
-
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="flex justify-between">
-                    <span>Subtotal</span>
-                    <span>Rs {subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Tax</span>
-                    <span>Rs {tax.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between font-semibold text-foreground">
-                    <span>Total</span>
-                    <span>Rs {total.toFixed(2)}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="customer-name">Customer Name</Label>
-                  <Input
-                    id="customer-name"
-                    value={customerName}
-                    onChange={(event) => setCustomerName(event.target.value)}
-                    placeholder="Enter customer name"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="order-notes">Order notes</Label>
-                  <Textarea
-                    className="resize-none"
-                    id="order-notes"
-                    value={notes}
-                    onChange={(event) => setNotes(event.target.value)}
-                    placeholder="Add special requests or instructions"
-                    rows={4}
-                  />
-                </div>
-
-                <Button
-                  size="lg"
-                  className="w-full"
-                  onClick={handleCreateOrder}
-                  disabled={
-                    createOrderMutation.isPending || selectedItems.length === 0
-                  }
-                >
-                  {createOrderMutation.isPending
-                    ? "Sending to Kitchen..."
-                    : "Create Order"}
-                </Button>
-              </CardContent>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full"
+                    disabled={isCreatingOrder}
+                  >
+                    {isCreatingOrder ? "Creating..." : "Create Order"}
+                  </Button>
+                </CardContent>
+              </form>
             </Card>
           </div>
         )}

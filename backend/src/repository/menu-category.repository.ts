@@ -61,7 +61,6 @@ class MenuCategoryRepository {
     const data = await this.model
       .find(filter)
       .sort({
-        sortOrder: 1,
         createdAt: -1,
       })
       .skip(skip)

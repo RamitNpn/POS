@@ -74,7 +74,6 @@ export default function TablesPage() {
         description: "The table was added successfully.",
       });
       reset();
-      setFormVisible(false);
     },
     onError: (err) => {
       toast({
@@ -152,9 +151,11 @@ export default function TablesPage() {
                   className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   {...register("sectionId")}
                 >
-                  <option value="">--Choose Table Status--</option>
+                  <option value="">-- Choose Rooms --</option>
                   {rooms.map((room: TRoom) => (
-                    <option value={room._id}>{room.name}</option>
+                    <option key={room._id} value={room._id}>
+                      {room.name}
+                    </option>
                   ))}
                 </select>
                 {errors.sectionId && (

@@ -22,16 +22,17 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { Order, OrderStatus, PaymentMethod } from "@/lib/types";
+import type { Order, PaymentMethod } from "@/lib/types";
 import PrintInvoice from "@/components/dashboard/billing-modal";
 import { useReactToPrint } from "react-to-print";
+import { orderStatusEnum } from "@/lib/types/order.types";
+import { useAllTables } from "@/hooks/admin/table/getAllTables";
 
-const statusOptions: { value: OrderStatus | "all"; label: string }[] = [
+const statusOptions: { value: orderStatusEnum | "all"; label: string }[] = [
   { value: "all", label: "All statuses" },
-  { value: "pending", label: "Pending" },
-  { value: "preparing", label: "Preparing" },
-  { value: "ready", label: "Ready" },
-  { value: "served", label: "Served" },
+  { value: "active", label: "Active" },
+  { value: "completed", label: "Completed" },
+  { value: "cancelled", label: "Cancelled" },
 ];
 
 const paymentOptions: { value: PaymentMethod; label: string }[] = [
@@ -41,21 +42,9 @@ const paymentOptions: { value: PaymentMethod; label: string }[] = [
   { value: "split", label: "Split" },
 ];
 
-const statusLabel: Record<OrderStatus, { label: string; tone: string }> = {
-  pending: {
-    label: "Pending",
-    tone: "bg-warning/20 text-warning border-warning/30",
-  },
-  preparing: {
-    label: "Preparing",
-    tone: "bg-info/20 text-info border-info/30",
-  },
-  ready: {
-    label: "Ready",
-    tone: "bg-success/20 text-success border-success/30",
-  },
-  served: {
-    label: "Served",
+const statusLabel: Record<orderStatusEnum, { label: string; tone: string }> = {
+  active: {
+    label: "Active",
     tone: "bg-primary/20 text-primary border-primary/30",
   },
   completed: {
@@ -74,15 +63,14 @@ export default function CashierDashboard() {
     queryFn: api.getActiveOrders,
   });
 
-  const { data: tables = [] } = useQuery({
-    queryKey: ["tables"],
-    queryFn: api.getTables,
-  });
+  const { data: tableData } = useAllTables({ filter: "available"});
+
+  const tables = tableData?.data ?? [];
 
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [transactionNotes, setTransactionNotes] = useState("");
-  const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<orderStatusEnum | "all">("all");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [paidOrders, setPaidOrders] = useState<Record<string, boolean>>({});
   const printRef = useRef<HTMLDivElement>(null);
@@ -110,7 +98,7 @@ export default function CashierDashboard() {
   const invoiceOrder = selectedOrder && {
     ...selectedOrder,
     paymentStatus: paidOrders[selectedOrder.id]
-      ? "paid"
+      ? "completed"
       : selectedOrder.paymentStatus,
     paymentMethod,
   };
@@ -204,7 +192,7 @@ export default function CashierDashboard() {
                 <Select
                   value={statusFilter}
                   onValueChange={(value) =>
-                    setStatusFilter(value as OrderStatus | "all")
+                    setStatusFilter(value as orderStatusEnum | "all")
                   }
                 >
                   <SelectTrigger className="w-full">
@@ -268,14 +256,14 @@ export default function CashierDashboard() {
                           {invoiceOrder.waiter.name}
                         </p>
                       </div>
-                      <div>
+                      {/* <div>
                         <p className="text-sm text-muted-foreground">Status</p>
                         <Badge
                           className={statusLabel[invoiceOrder.status].tone}
                         >
                           {statusLabel[invoiceOrder.status].label}
                         </Badge>
-                      </div>
+                      </div> */}
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div>

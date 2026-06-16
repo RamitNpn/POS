@@ -86,12 +86,12 @@ const simpleNavItems = [
   //   icon: ClipboardList,
   //   roles: ["cashier"],
   // },
-  // {
-  //   title: "Tables",
-  //   href: "/dashboard/cashier/tables",
-  //   icon: Table2,
-  //   roles: ["cashier"],
-  // },
+  {
+    title: "Tables",
+    href: "/dashboard/cashier/tables",
+    icon: Table2,
+    roles: ["cashier"],
+  },
   {
     title: "Reports",
     href: "/dashboard/cashier/reports",

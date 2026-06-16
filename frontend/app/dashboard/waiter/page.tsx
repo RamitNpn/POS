@@ -8,19 +8,24 @@ import { OrderList } from "@/components/dashboard/order-card";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { api } from "@/lib/api/mock-data";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Plus, ClipboardList, Table2, Clock } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import type { Table, TableStatus } from "@/lib/types";
 import { useState } from "react";
+import { useAllTables } from "@/hooks/admin/table/getAllTables";
+import { TableStatus, TTable } from "@/lib/types/table.types";
 
-const tableStatusOptions: { value: TableStatus | 'all'; label: string }[] = [
-  { value: 'all', label: 'All statuses' },
-  { value: 'available', label: 'Available' },
-  { value: 'occupied', label: 'Occupied' },
-  { value: 'reserved', label: 'Reserved' },
-  { value: 'cleaning', label: 'Cleaning' },
-  { value: 'out-of-service', label: 'Out of service' },
+const tableStatusOptions: { value: TableStatus | "all"; label: string }[] = [
+  { value: "all", label: "All statuses" },
+  { value: "available", label: "Available" },
+  { value: "occupied", label: "Occupied" },
+  { value: "reserved", label: "Reserved" },
 ];
 
 export default function WaiterDashboard() {
@@ -32,35 +37,37 @@ export default function WaiterDashboard() {
     setShowTablePrompt(true);
   };
 
-  const { data: tables } = useQuery({
-    queryKey: ["tables"],
-    queryFn: api.getTables,
-  });
+  const { data: tableData } = useAllTables({});
+
+  const tables = tableData?.data ?? [];
 
   const { data: orders } = useQuery({
     queryKey: ["active-orders"],
     queryFn: api.getActiveOrders,
   });
 
-  const handleTableClick = (table: Table) => {
-    if (table.status !== "available") {
+  const handleTableClick = (table: TTable) => {
+    if (table.status === "reserved") {
       toast({
-        title: "Table unavailable",
+        title: "Table reserved",
         description:
           "Please select an available table before creating an order.",
       });
       return;
     }
 
-    router.push(`/dashboard/waiter/menu?tableId=${table.id}`);
+    router.push(`/dashboard/waiter/menu?tableId=${table._id}`);
   };
 
   const myOrders =
     orders?.filter((o) => o.waiterId === "2" || o.waiterId === "5") || [];
   const readyOrders = myOrders.filter((o) => o.status === "ready");
-  const [tableStatusFilter, setTableStatusFilter] = useState<TableStatus | 'all'>('all');
+  const [tableStatusFilter, setTableStatusFilter] = useState<
+    TableStatus | "all"
+  >("all");
   const filteredTables = tables?.filter(
-    (table) => tableStatusFilter === 'all' || table.status === tableStatusFilter,
+    (table: TTable) =>
+      tableStatusFilter === "all" || table.status === tableStatusFilter,
   );
 
   return (
@@ -78,7 +85,8 @@ export default function WaiterDashboard() {
 
         {showTablePrompt && (
           <div className="rounded-md border border-red-500 p-4 bg-muted/30 text-sm text-muted-foreground">
-            Please choose an available table from the below listing to create an order.
+            Please choose an available table from the below listing to create an
+            order.
           </div>
         )}
       </div>
@@ -97,7 +105,7 @@ export default function WaiterDashboard() {
         />
         <StatsCard
           title="Available Tables"
-          value={tables?.filter((t) => t.status === "available").length || 0}
+          value={tables?.filter((t: TTable) => t.status === "available").length || 0}
           icon={<Table2 className="size-4" />}
         />
       </div>
@@ -108,11 +116,20 @@ export default function WaiterDashboard() {
       {tables && (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-sm font-medium text-foreground">Filter tables by status</h2>
-            <p className="text-sm text-muted-foreground">Show a subset of the floor plan.</p>
+            <h2 className="text-sm font-medium text-foreground">
+              Filter tables by status
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Show a subset of the floor plan.
+            </p>
           </div>
           <div className="w-full max-w-xs">
-            <Select value={tableStatusFilter} onValueChange={(value) => setTableStatusFilter(value as TableStatus | 'all')}>
+            <Select
+              value={tableStatusFilter}
+              onValueChange={(value) =>
+                setTableStatusFilter(value as TableStatus | "all")
+              }
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="All statuses" />
               </SelectTrigger>

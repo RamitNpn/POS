@@ -36,6 +36,7 @@ import MenuCategoryEditForm from "@/components/dashboard/admin/editForm/menu-cat
 
 export default function MenuCategoriesPage() {
   const [filter, setFilter] = useState("");
+  const [formVisible, setFormVisible] = useState(false);
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
   const [editId, setEditId] = useState<string | null>(null);
 
@@ -105,43 +106,63 @@ export default function MenuCategoriesPage() {
         description="Manage category structure for the ordering menu."
       />
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <PageSection title="Add Category">
-          <div className="grid gap-4 lg:grid-cols-2">
-            <div>
-              <Label htmlFor="new-category-name">Category name</Label>
-              <Input
-                id="new-category-name"
-                {...register("name")}
-                placeholder="e.g. Main Course"
-              />
-              {errors.name && (
-                <p className="text-red-500 text-[12px] mt-1">
-                  {errors.name.message}
-                </p>
-              )}
+      {!formVisible && (
+        <div className="flex items-center justify-end">
+          <Button
+            variant="default"
+            className="bg-yellow-400 rounded-lg"
+            onClick={() => setFormVisible(true)}
+          >
+            Add Category
+          </Button>
+        </div>
+      )}
+
+      {formVisible && (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <PageSection title="Add Category">
+            <div className="grid gap-4 lg:grid-cols-2">
+              <div>
+                <Label htmlFor="new-category-name">Category name</Label>
+                <Input
+                  id="new-category-name"
+                  {...register("name")}
+                  placeholder="e.g. Main Course"
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-[12px] mt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="new-category-description">Description</Label>
+                <Input
+                  id="new-category-description"
+                  {...register("description")}
+                  placeholder="Optional category description"
+                />
+                {errors.description && (
+                  <p className="text-red-500 text-[12px] mt-1">
+                    {errors.description.message}
+                  </p>
+                )}
+              </div>
             </div>
-            <div>
-              <Label htmlFor="new-category-description">Description</Label>
-              <Input
-                id="new-category-description"
-                {...register("description")}
-                placeholder="Optional category description"
-              />
-              {errors.description && (
-                <p className="text-red-500 text-[12px] mt-1">
-                  {errors.description.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <CardFooter className="justify-end pt-4">
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Creating..." : "Create category"}
-            </Button>
-          </CardFooter>
-        </PageSection>
-      </form>
+            <CardFooter className="justify-end flex gap-3 pt-4">
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={() => setFormVisible(false)}
+              >
+                Close
+              </Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Adding..." : "Add Category"}
+              </Button>
+            </CardFooter>
+          </PageSection>
+        </form>
+      )}
 
       <PageSection title="Category Catalog">
         <div className="space-y-4">
@@ -191,7 +212,10 @@ export default function MenuCategoriesPage() {
       </PageSection>
 
       {editId && (
-        <MenuCategoryEditForm categoryId={editId} onClose={() => setEditId(null)} />
+        <MenuCategoryEditForm
+          categoryId={editId}
+          onClose={() => setEditId(null)}
+        />
       )}
 
       <ConfirmDialog

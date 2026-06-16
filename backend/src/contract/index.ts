@@ -7,6 +7,7 @@ import { menuSubCategoryContract } from "./menu-subcategory/menu-subcategory.con
 import { menuItemContract } from "./menu-item/menu-item.contract";
 import { inventoryContract } from "./inventory/inventory.contract";
 import { orderContract } from "./order/order.contract";
+import { ticketContract } from "./ticket/ticket.contract";
 
 const c = initContract();
 
@@ -19,4 +20,5 @@ export const contract = c.router({
     menuItem: menuItemContract,
     inventory: inventoryContract,
     order: orderContract,
+    ticket: ticketContract,
 });

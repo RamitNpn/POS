@@ -10,6 +10,7 @@ import { menuSubCategoryRouter } from "./menu-subcategory/menu-subcategory.route
 import { menuItemRouter } from "./menu-item/menu-item.router";
 import { inventoryRouter } from "./inventory/inventory.router";
 import orderRouter from "./order/order.router";
+import { ticketRouter } from "./ticket/ticket.router";
 
 const s = initServer();
 
@@ -22,4 +23,5 @@ export const router = s.router(contract, {
   menuItem: menuItemRouter,
   inventory: inventoryRouter,
   order: orderRouter,
+  ticket: ticketRouter,
 });

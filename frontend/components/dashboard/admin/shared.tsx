@@ -69,9 +69,9 @@ export function PageSection({ title, children }: { title: string; children: Reac
   );
 }
 
-export function SearchField({ id, label, value, onChange, placeholder }: { id: string; label: string; value: string; onChange: (value: string) => void; placeholder?: string }) {
+export function SearchField({ id, label, value, onChange, placeholder, className }: { id: string; label?: string; value: string; onChange: (value: string) => void; placeholder?: string; className?: string }) {
   return (
-    <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+    <div className={`grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end ${className}`}>
       <div>
         <Label htmlFor={id}>{label}</Label>
         <Input id={id} value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder ?? 'Search...'} />

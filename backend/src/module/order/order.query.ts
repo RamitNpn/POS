@@ -3,6 +3,54 @@ import { AppRouteQueryImplementation } from "@ts-rest/express";
 import { orderContract } from "../../contract/order/order.contract";
 import orderRepository from "../../repository/order.repository";
 
+const mapOrder = (order: any) => {
+  return {
+    _id: order._id.toString(),
+    orderNumber: order.orderNumber,
+
+    tableId: order.tableId?._id?.toString?.() || order.tableId,
+    table: order.tableId,
+
+    items: (order.items ?? []).map((item: any) => ({
+      _id: item._id?.toString(),
+      menuItemId:
+        item.menuItemId?._id?.toString?.() ||
+        item.menuItemId?.toString?.() ||
+        item.menuItemId,
+
+      menuItem: item.menuItemId,
+      quantity: item.quantity,
+      notes: item.notes ?? "",
+      price: item.price,
+      total: item.total ?? item.price * item.quantity,
+    })),
+
+    customerName: order.customerName,
+    paymentStatus: order.paymentStatus,
+    paymentMethod: order.paymentMethod,
+
+    subtotal: order.subtotal,
+    tax: order.tax,
+    discount: order.discount ?? 0,
+    serviceCharge: order.serviceCharge ?? 0,
+    total: order.total,
+
+    notes: order.notes ?? "",
+
+    waiterId: order.waiterId?._id?.toString?.() || order.waiterId,
+
+    waiter: order.waiterId,
+
+    status: order.status,
+
+    ticketCount: order.ticketCount ?? 0,
+
+    createdAt: order.createdAt,
+    updatedAt: order.updatedAt,
+    completedAt: order.completedAt,
+  };
+};
+
 export const getAllOrders: AppRouteQueryImplementation<
   typeof orderContract.getAllOrders
 > = async ({ req }) => {
@@ -23,39 +71,10 @@ export const getAllOrders: AppRouteQueryImplementation<
       search,
     });
 
-    const formatted = data.map((order) => ({
-      _id: order._id.toString(),
-      orderNumber: order.orderNumber,
-      tableId: order.tableId?.toString(),
-      table: order.tableId,
-      items: order.items.map((item: any) => ({
-        _id: item._id?.toString(),
-        menuItemId: item.menuItemId?._id?.toString() || item.menuItemId,
-        menuItem: item.menuItemId,
-        quantity: item.quantity,
-        notes: item.notes,
-        price: item.price,
-      })),
-      customerName: order.customerName,
-      paymentStatus: order.paymentStatus,
-      paymentMethod: order.paymentMethod,
-      subtotal: order.subtotal,
-      tax: order.tax,
-      discount: order.discount,
-      serviceCharge: order.serviceCharge,
-      total: order.total,
-      notes: order.notes,
-      waiterId: order.waiterId?.toString(),
-      waiter: order.waiterId,
-      createdAt: order.createdAt,
-      updatedAt: order.updatedAt,
-      completedAt: order.completedAt,
-    }));
-
     return {
       status: 200,
       body: {
-        data: formatted,
+        data: data.map(mapOrder),
         pagination: {
           page,
           limit,
@@ -93,38 +112,9 @@ export const getOrderByID: AppRouteQueryImplementation<
       };
     }
 
-    const formatted = {
-      _id: order._id.toString(),
-      orderNumber: order.orderNumber,
-      tableId: order.tableId?.toString(),
-      table: order.tableId,
-      items: order.items.map((item: any) => ({
-        _id: item._id?.toString(),
-        menuItemId: item.menuItemId?._id?.toString() || item.menuItemId,
-        menuItem: item.menuItemId,
-        quantity: item.quantity,
-        notes: item.notes,
-        price: item.price,
-      })),
-      customerName: order.customerName,
-      paymentStatus: order.paymentStatus,
-      paymentMethod: order.paymentMethod,
-      subtotal: order.subtotal,
-      tax: order.tax,
-      discount: order.discount,
-      serviceCharge: order.serviceCharge,
-      total: order.total,
-      notes: order.notes,
-      waiterId: order.waiterId?.toString(),
-      waiter: order.waiterId,
-      createdAt: order.createdAt,
-      updatedAt: order.updatedAt,
-      completedAt: order.completedAt,
-    };
-
     return {
       status: 200,
-      body: formatted,
+      body: mapOrder(order),
     };
   } catch (error) {
     return {
@@ -137,7 +127,62 @@ export const getOrderByID: AppRouteQueryImplementation<
   }
 };
 
+export const getActiveOrderByTable: AppRouteQueryImplementation<
+  typeof orderContract.getActiveOrderByTable
+> = async ({ req }) => {
+  try {
+    const { tableID } = req.params;
+
+    const order = await orderRepository.getActiveOrderByTable(tableID);
+
+    if (!order) {
+      return {
+        status: 404,
+        body: {
+          success: false,
+          error: "No active order found for this table",
+        },
+      };
+    }
+
+    return {
+      status: 200,
+      body: {
+        _id: order._id.toString(),
+        orderNumber: order.orderNumber,
+        tableId: order.tableId.toString(),
+        customerName: order.customerName,
+        waiterId: order.waiterId.toString(),
+        notes: order.notes,
+        items: order.items.map((item: any) => ({
+          menuItemId: item.menuItemId.toString(),
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          total: item.total,
+        })),
+        subtotal: order.subtotal,
+        tax: order.tax,
+        total: order.total,
+        ticketCount: order.ticketCount,
+        status: order.status,
+        paymentStatus: order.paymentStatus,
+        createdAt: order.createdAt,
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      body: {
+        success: false,
+        error: (error as Error).message,
+      },
+    };
+  }
+};
+
 export const orderQueryHandler = {
   getAllOrders,
   getOrderByID,
+  getActiveOrderByTable,
 };

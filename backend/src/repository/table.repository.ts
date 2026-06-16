@@ -67,7 +67,7 @@ class TableRepository {
 
     const data = await this.model
       .find(filter)
-      .sort({ number: 1 })
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .populate("sectionId");

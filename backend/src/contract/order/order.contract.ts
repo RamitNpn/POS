@@ -3,23 +3,20 @@ import { z } from "zod";
 
 import {
   createOrderSchema,
-  updateOrderSchema,
-  getOrderByIdSchema,
   getAllOrdersSchema,
+  getOrderByIdSchema,
+  updateOrderSchema,
 } from "./order.schema";
 
-import {
-  successSchema,
-  errorSchema,
-} from "../commonSchema";
+import { errorSchema, successSchema } from "../commonSchema";
 
 const c = initContract();
 
 export const orderContract = c.router({
   createOrder: {
     method: "POST",
-    path: "/orders",
-    summary: "Create an order",
+    path: "/order",
+    summary: "Create order or reorder",
     body: createOrderSchema,
     responses: {
       201: successSchema,
@@ -30,8 +27,8 @@ export const orderContract = c.router({
 
   getAllOrders: {
     method: "GET",
-    path: "/orders",
-    summary: "Get all orders by pagination",
+    path: "/order",
+    summary: "Get all orders",
     query: z.object({
       page: z.coerce.number().optional(),
       limit: z.coerce.number().optional(),
@@ -42,12 +39,6 @@ export const orderContract = c.router({
     responses: {
       200: z.object({
         data: getAllOrdersSchema,
-        pagination: z.object({
-          page: z.number(),
-          limit: z.number(),
-          total: z.number(),
-          totalPages: z.number(),
-        }),
       }),
       500: errorSchema,
     },
@@ -55,8 +46,8 @@ export const orderContract = c.router({
 
   getOrderByID: {
     method: "GET",
-    path: "/orders/:orderID",
-    summary: "Get an order by its ID",
+    path: "/order/:orderID",
+    summary: "Get order by id",
     pathParams: z.object({
       orderID: z.string(),
     }),
@@ -66,10 +57,23 @@ export const orderContract = c.router({
     },
   },
 
+  getActiveOrderByTable: {
+    method: "GET",
+    path: "/order/table/:tableID",
+    summary: "Get active order by table",
+    pathParams: z.object({
+      tableID: z.string(),
+    }),
+    responses: {
+      200: getOrderByIdSchema,
+      404: errorSchema,
+    },
+  },
+
   updateOrder: {
     method: "PUT",
-    path: "/orders/:orderID",
-    summary: "Update an order",
+    path: "/order/:orderID",
+    summary: "Update order",
     pathParams: z.object({
       orderID: z.string(),
     }),
@@ -78,14 +82,13 @@ export const orderContract = c.router({
       200: successSchema,
       400: errorSchema,
       404: errorSchema,
-      500: errorSchema,
     },
   },
 
   removeOrder: {
     method: "DELETE",
-    path: "/orders/:orderID",
-    summary: "Delete an order",
+    path: "/order/:orderID",
+    summary: "Delete order",
     pathParams: z.object({
       orderID: z.string(),
     }),
@@ -93,7 +96,6 @@ export const orderContract = c.router({
     responses: {
       200: successSchema,
       404: errorSchema,
-      500: errorSchema,
     },
   },
 });

@@ -33,7 +33,7 @@ import { toast } from "@/hooks/use-toast";
 import { TMenuItem } from "@/lib/types/menu-item.types";
 import { TMenuCategory } from "@/lib/types/menu-category.types";
 import Image from "next/image";
-import { Edit, Trash2 } from "lucide-react";
+import { Download, Edit, Trash2 } from "lucide-react";
 import ConfirmDialog from "@/components/shared/confirmDialog";
 import { useDeleteMenuItem } from "@/hooks/admin/menu-item/removeMenuItem";
 import MenuItemEditForm from "@/components/dashboard/admin/editForm/menu-item.edit";
@@ -78,11 +78,14 @@ export default function MenuItemsPage() {
       reset();
       setFormVisible(false);
     },
-    onError: () => {
+    onError: (error: any) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to add menu item.",
+        description:
+          error?.response?.data?.error ||
+          error?.message ||
+          "Failed to add menu item.",
       });
     },
   });
@@ -109,7 +112,6 @@ export default function MenuItemsPage() {
     if (data.image?.[0]) {
       formData.append("image", data.image[0]);
     }
-
     mutate(formData as any);
   };
 
@@ -176,6 +178,20 @@ export default function MenuItemsPage() {
                 )}
               </div>
               <div>
+                <Label htmlFor="new-item-price">Price</Label>
+                <Input
+                  id="new-item-price"
+                  type="number"
+                  step="0.01"
+                  {...register("price", { valueAsNumber: true })}
+                />
+                {errors.price && (
+                  <p className="text-red-500 text-[12px] mt-1">
+                    {errors.price.message}
+                  </p>
+                )}
+              </div>
+              <div>
                 <Label htmlFor="new-item-category">Category</Label>
                 <select
                   id="new-item-category"
@@ -195,20 +211,7 @@ export default function MenuItemsPage() {
                   </p>
                 )}
               </div>
-              <div>
-                <Label htmlFor="new-item-price">Price</Label>
-                <Input
-                  id="new-item-price"
-                  type="number"
-                  step="0.01"
-                  {...register("price", { valueAsNumber: true })}
-                />
-                {errors.price && (
-                  <p className="text-red-500 text-[12px] mt-1">
-                    {errors.price.message}
-                  </p>
-                )}
-              </div>
+
               {/* <div>
               <Label htmlFor="new-item-prep-time">Prep time (minutes)</Label>
               <Input
@@ -222,7 +225,7 @@ export default function MenuItemsPage() {
                 </p>
               )}
             </div> */}
-              <div className="lg:col-span-2">
+              <div>
                 <Label htmlFor="new-item-description">Description</Label>
                 <Input
                   id="new-item-description"
@@ -235,7 +238,7 @@ export default function MenuItemsPage() {
                   </p>
                 )}
               </div>
-              <div className="lg:col-span-2">
+              <div>
                 <Label htmlFor="new-item-status">Status</Label>
                 <select
                   id="new-item-status"
@@ -267,13 +270,23 @@ export default function MenuItemsPage() {
 
       <PageSection title="Menu Items">
         <div className="space-y-4">
-          <SearchField
-            id="food-search"
-            label="Search food items"
-            value={filter}
-            onChange={setFilter}
-            placeholder="Search by name, category or status"
-          />
+          <div className="flex items-center justify-between gap-3">
+            <SearchField
+              id="food-search"
+              value={filter}
+              onChange={setFilter}
+              className="w-full sm:w-auto flex-1"
+              placeholder="Search by name, category or status"
+            />
+            <Button
+              variant="default"
+              className="bg-green-600 text-white hover:bg-green-700"
+              onClick={() => setFilter("")}
+            >
+              Export
+              <Download className="h-4 w-4" />
+            </Button>
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
@@ -283,54 +296,60 @@ export default function MenuItemsPage() {
                 <TableHead>Price</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
-                {/* <TableHead>Prep Time</TableHead> */}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((item: TMenuItem) => (
-                <TableRow key={item._id}>
-                  <TableCell>
-                    <Image
-                      height={0}
-                      width={120}
-                      src={item.image || "itemimage.png"}
-                      alt={item.image || item.name}
-                      className="rounded-md"
-                    />
+              {filtered.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center">
+                    No menu items found.
                   </TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>
-                    {categoryMap[item.categoryId] ?? "Unknown"}
-                  </TableCell>
-                  <TableCell>${item.price.toFixed(2)}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`rounded-full px-2 py-1 text-xs font-semibold ${statusStyle(item.status)}`}
-                    >
-                      {item.status}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setEditId(item._id)}
-                        className="text-green-600 hover:text-green-700"
-                      >
-                        <Edit className="h-5 w-5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setItemToRemove(item._id)}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </button>
-                    </div>
-                  </TableCell>
-                  {/* <TableCell>{item.preparationTime ? `${item.preparationTime} min` : "N/A"}</TableCell> */}
                 </TableRow>
-              ))}
+              ) : (
+                filtered.map((item: TMenuItem) => (
+                  <TableRow key={item._id}>
+                    <TableCell>
+                      <Image
+                        height={0}
+                        width={120}
+                        src={item.image || "itemimage.png"}
+                        alt={item.image || item.name}
+                        className="rounded-md object-cover h-16 w-24"
+                      />
+                    </TableCell>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>
+                      {categoryMap[item.categoryId] ?? "Unknown"}
+                    </TableCell>
+                    <TableCell className="italic"><span className="text-[13px]">Rs </span>{item.price.toFixed(2)}</TableCell>
+                    <TableCell>
+                      <span
+                        className={`rounded-full px-2 py-1 text-xs font-semibold ${statusStyle(item.status)}`}
+                      >
+                        {item.status}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setEditId(item._id)}
+                          className="text-green-600 outline-none hover:text-green-700"
+                        >
+                          <Edit className="h-5 w-5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setItemToRemove(item._id)}
+                          className="text-red-600 outline-none hover:text-red-700"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>

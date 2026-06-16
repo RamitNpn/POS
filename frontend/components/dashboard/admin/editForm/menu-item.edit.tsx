@@ -14,7 +14,10 @@ import { useAllMenuCategories } from "@/hooks/admin/menu-category/getAllMenuCate
 import { menuItemApi } from "@/lib/api/menu-item.api";
 import { toast } from "@/hooks/use-toast";
 import FormHeader from "@/components/shared/formHeader";
-import { TUpdateMenuItemSchema, updateMenuItemSchema } from "@/lib/validations/menu-item.validation";
+import {
+  TUpdateMenuItemSchema,
+  updateMenuItemSchema,
+} from "@/lib/validations/menu-item.validation";
 import { TMenuCategory } from "@/lib/types/menu-category.types";
 import clsx from "clsx";
 
@@ -24,9 +27,13 @@ type Props = {
   size?: "sm" | "md" | "lg" | "xl";
 };
 
-export default function MenuItemEditForm({ menuItemId, onClose, size = "lg" }: Props) {
+export default function MenuItemEditForm({
+  menuItemId,
+  onClose,
+  size = "lg",
+}: Props) {
   const { data: itemData } = useMenuItemById(menuItemId);
-  const item = itemData?.data;
+  const item = itemData?.data ?? itemData;
   const { data: categoriesData } = useAllMenuCategories({});
   const categories = categoriesData?.data ?? [];
 
@@ -63,8 +70,13 @@ export default function MenuItemEditForm({ menuItemId, onClose, size = "lg" }: P
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ menuItemId, formData }: { menuItemId: string; formData: FormData }) =>
-      menuItemApi.updateMenuItemApi(menuItemId, formData),
+    mutationFn: ({
+      menuItemId,
+      formData,
+    }: {
+      menuItemId: string;
+      formData: FormData;
+    }) => menuItemApi.updateMenuItemApi(menuItemId, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["menu-items"] });
       toast({
@@ -78,7 +90,8 @@ export default function MenuItemEditForm({ menuItemId, onClose, size = "lg" }: P
         variant: "destructive",
         title: "Error",
         description:
-          error?.response?.data?.error || error?.message ||
+          error?.response?.data?.error ||
+          error?.message ||
           "Failed to update menu item.",
       });
     },
@@ -99,8 +112,6 @@ export default function MenuItemEditForm({ menuItemId, onClose, size = "lg" }: P
     mutate({ menuItemId, formData });
   };
 
-  if (!item) return null;
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <form
@@ -115,15 +126,27 @@ export default function MenuItemEditForm({ menuItemId, onClose, size = "lg" }: P
           },
         )}
       >
-        <FormHeader title="Edit Menu Item" subtitle="Update menu item details." onClose={onClose} />
+        <FormHeader
+          title="Edit Menu Item"
+          subtitle="Update menu item details."
+          onClose={onClose}
+        />
 
         <div className="max-h-[75vh] overflow-y-auto p-6">
           <PageSection title="Item Details">
             <div className="grid gap-5 lg:grid-cols-2">
               <div>
                 <Label htmlFor="edit-item-name">Item Name</Label>
-                <Input id="edit-item-name" {...register("name")} placeholder="e.g. Spaghetti" />
-                {errors.name && <p className="mt-1 text-xs text-destructive">{errors.name.message}</p>}
+                <Input
+                  id="edit-item-name"
+                  {...register("name")}
+                  placeholder="e.g. Spaghetti"
+                />
+                {errors.name && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
               <div>
                 <Label htmlFor="edit-item-category">Category</Label>
@@ -139,7 +162,11 @@ export default function MenuItemEditForm({ menuItemId, onClose, size = "lg" }: P
                     </option>
                   ))}
                 </select>
-                {errors.categoryId && <p className="mt-1 text-xs text-destructive">{errors.categoryId.message}</p>}
+                {errors.categoryId && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {errors.categoryId.message}
+                  </p>
+                )}
               </div>
               <div>
                 <Label htmlFor="edit-item-price">Price</Label>
@@ -149,7 +176,11 @@ export default function MenuItemEditForm({ menuItemId, onClose, size = "lg" }: P
                   step="0.01"
                   {...register("price", { valueAsNumber: true })}
                 />
-                {errors.price && <p className="mt-1 text-xs text-destructive">{errors.price.message}</p>}
+                {errors.price && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {errors.price.message}
+                  </p>
+                )}
               </div>
               <div>
                 <Label htmlFor="edit-item-status">Status</Label>
@@ -161,7 +192,11 @@ export default function MenuItemEditForm({ menuItemId, onClose, size = "lg" }: P
                   <option value="available">Available</option>
                   <option value="out-of-stock">Out of stock</option>
                 </select>
-                {errors.status && <p className="mt-1 text-xs text-destructive">{errors.status.message}</p>}
+                {errors.status && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {errors.status.message}
+                  </p>
+                )}
               </div>
               <div className="lg:col-span-2">
                 <Label htmlFor="edit-item-description">Description</Label>
@@ -170,15 +205,23 @@ export default function MenuItemEditForm({ menuItemId, onClose, size = "lg" }: P
                   {...register("description")}
                   placeholder="Optional description"
                 />
-                {errors.description && <p className="mt-1 text-xs text-destructive">{errors.description.message}</p>}
+                {errors.description && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {errors.description.message}
+                  </p>
+                )}
               </div>
               <div className="lg:col-span-2">
                 <Label htmlFor="edit-item-image">Image</Label>
-                <Input id="edit-item-image" type="file" {...register("image")} />
-                {item.image && (
+                <Input
+                  id="edit-item-image"
+                  type="file"
+                  {...register("image")}
+                />
+                {item?.image && (
                   <img
-                    src={item.image}
-                    alt={item.name}
+                    src={item?.image}
+                    alt={item?.name}
                     className="mt-3 h-24 w-24 rounded border border-border object-cover"
                   />
                 )}

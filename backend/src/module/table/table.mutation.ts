@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 
 import { tableContract } from "../../contract/table/table.contract";
 import tableRepository from "../../repository/table.repository";
-import roomRepository from "../../repository/room.repository";
 
 export const createTable: AppRouteMutationImplementation<
   typeof tableContract.createTable

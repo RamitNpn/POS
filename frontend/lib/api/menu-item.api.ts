@@ -2,7 +2,7 @@ import { apiClient } from "@/utils/apiClient";
 import { UsePaginationParams } from "../types/usePagination";
 import { TCreateMenuItemSchema, TDeleteMenuItemSchema, TGetMenuItemByIdSchema } from "../validations/menu-item.validation";
 
-export const createMenuItem = async (data: TCreateMenuItemSchema) => {
+export const createMenuItem = async (data: FormData) => {
   const res = await apiClient.post("/menu-item", data);
   return res.data;
 };

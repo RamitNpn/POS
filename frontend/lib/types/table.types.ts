@@ -1,8 +1,10 @@
+export type TableStatus = "available" | "occupied" | "reserved";
+
 export interface TTable {
   _id: string;
   name: string;
   capacity: number;
-  status: string;
+  status: TableStatus;
   section: string;
   sectionId?: string;
   createdAt: Date;

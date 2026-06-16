@@ -117,7 +117,7 @@ const adminNavGroups: NavGroup[] = [
         roles: ["admin"],
       },
       {
-        title: "Sections",
+        title: "Rooms",
         href: "/dashboard/admin/sections",
         icon: Grid3X3,
         roles: ["admin"],

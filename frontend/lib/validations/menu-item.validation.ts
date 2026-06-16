@@ -32,6 +32,7 @@ export type TGetMenuItemByIdSchema = z.infer<typeof getMenuItemByIdSchema>;
 export const updateMenuItemSchema = z.object({
   name: z.string().trim().min(2).max(200).optional(),
   description: z.string().trim().optional(),
+  categoryId: z.string().min(1).optional(),
   price: z.number().min(0).optional(),
   status: z.enum(["available", "out-of-stock"]).optional(),
   image: z.any().optional(),

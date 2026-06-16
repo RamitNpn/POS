@@ -32,7 +32,7 @@ import {
 import { userApi } from "@/lib/api/user.api";
 import { toast } from "@/hooks/use-toast";
 import Image from "next/image";
-import { Edit, Eye, Trash, Trash2 } from "lucide-react";
+import { Download, Edit, Eye, Trash, Trash2 } from "lucide-react";
 import ConfirmDialog from "@/components/shared/confirmDialog";
 import { useDeleteUser } from "@/hooks/admin/users/removeUser";
 import UserEditForm from "../editForm/user.edit";
@@ -76,7 +76,6 @@ export default function UsersPage() {
         description: "The user was added successfully.",
       });
       reset();
-      setFormVisible(false);
     },
     onError: (err) => {
       toast({
@@ -221,9 +220,15 @@ export default function UsersPage() {
                 />
               </div>
             </div>
-            <CardFooter className="justify-end pt-4">
+            <CardFooter className="justify-end flex gap-3 pt-4">
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={() => setFormVisible(false)}
+              >
+                Close
+              </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? "Creating..." : "Create User"}
+                {isPending ? "Adding..." : "Add User"}
               </Button>
             </CardFooter>
           </PageSection>
@@ -231,27 +236,32 @@ export default function UsersPage() {
       )}
 
       <div className="grid gap-4 md:grid-cols-[1fr_auto] items-end">
-        <SearchField
-          id="user-search"
-          label="Search users"
-          value={filter}
-          onChange={setFilter}
-          placeholder="Search by name, email, role or status"
-        />
-        <div>
-          <Label htmlFor="user-role-filter">Filter by role</Label>
-          <select
-            id="user-role-filter"
-            className="mt-2 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-            value={selectedRole}
-            onChange={(event) => setSelectedRole(event.target.value)}
-          >
-            <option value="all">All roles</option>
-            <option value="admin">Administrator</option>
-            <option value="waiter">Server</option>
-            <option value="kitchen">Kitchen Staff</option>
-            <option value="cashier">Cashier</option>
-          </select>
+        <div className="flex items-center justify-between gap-2">
+          <SearchField
+            id="user-search"
+            value={filter}
+            onChange={setFilter}
+              className="w-full sm:w-auto flex-1"
+            placeholder="Search by name, email, role or status"
+          />
+          <div className="flex items-center gap-3">
+            <select
+              id="user-role-filter"
+              className="block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              value={selectedRole}
+              onChange={(event) => setSelectedRole(event.target.value)}
+            >
+              <option value="all">All roles</option>
+              <option value="admin">Administrator</option>
+              <option value="waiter">Server</option>
+              <option value="kitchen">Kitchen Staff</option>
+              <option value="cashier">Cashier</option>
+            </select>
+            <Button variant="default" className="bg-green-600 text-white hover:bg-green-700" onClick={() => setFilter("")}>
+              Export
+              <Download className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
 

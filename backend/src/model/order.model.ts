@@ -1,40 +1,46 @@
-import mongoose, { Document, Schema } from "mongoose";
-
-export type PaymentStatus = "pending" | "paid" | "refunded";
-
-export type PaymentMethod = "cash" | "card" | "mobile" | "split";
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IOrderItem {
   menuItemId: mongoose.Types.ObjectId;
-  quantity: number;
-  notes?: string;
+  name: string;
   price: number;
+  quantity: number;
+  total: number;
 }
 
 export interface IOrder extends Document {
   orderNumber: string;
   tableId: mongoose.Types.ObjectId;
-  items: IOrderItem[];
   customerName: string;
-  paymentStatus: PaymentStatus;
-  paymentMethod?: PaymentMethod;
+  waiterId: mongoose.Types.ObjectId;
+  notes?: string;
+  items: IOrderItem[];
+  orderType: "dine-in" | "takeaway";
   subtotal: number;
   tax: number;
-  discount?: number;
-  serviceCharge?: number;
   total: number;
-  notes?: string;
-  completedAt?: Date;
-  waiterId: mongoose.Types.ObjectId;
+  ticketCount: number;
+  status: "active" | "completed" | "cancelled";
+  paymentStatus: "pending" | "paid" | "partial";
   createdAt: Date;
-  updatedAt: Date;
 }
 
-const orderItemSchema = new Schema(
+const OrderItemSchema = new Schema<IOrderItem>(
   {
     menuItemId: {
       type: Schema.Types.ObjectId,
       ref: "MenuItem",
+      required: true,
+    },
+
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    price: {
+      type: Number,
       required: true,
     },
 
@@ -44,21 +50,17 @@ const orderItemSchema = new Schema(
       min: 1,
     },
 
-    notes: {
-      type: String,
-    },
-
-    price: {
+    total: {
       type: Number,
       required: true,
     },
   },
   {
-    _id: true,
+    _id: false,
   },
 );
 
-const orderSchema = new Schema<IOrder>(
+const OrderSchema = new Schema<IOrder>(
   {
     orderNumber: {
       type: String,
@@ -72,61 +74,9 @@ const orderSchema = new Schema<IOrder>(
       required: true,
     },
 
-    items: {
-      type: [orderItemSchema],
-      required: true,
-      default: [],
-    },
-
     customerName: {
       type: String,
-      required: true,
-      trim: true,
-    },
-
-    paymentStatus: {
-      type: String,
-      enum: ["pending", "paid", "refunded"],
-      default: "pending",
-      required: true,
-    },
-
-    paymentMethod: {
-      type: String,
-      enum: ["cash", "card", "mobile", "split"],
-    },
-
-    subtotal: {
-      type: Number,
-      required: true,
-    },
-
-    tax: {
-      type: Number,
-      required: true,
-    },
-
-    discount: {
-      type: Number,
-      default: 0,
-    },
-
-    serviceCharge: {
-      type: Number,
-      default: 0,
-    },
-
-    total: {
-      type: Number,
-      required: true,
-    },
-
-    notes: {
-      type: String,
-    },
-
-    completedAt: {
-      type: Date,
+      default: "Guest",
     },
 
     waiterId: {
@@ -134,10 +84,63 @@ const orderSchema = new Schema<IOrder>(
       ref: "User",
       required: true,
     },
+
+    notes: {
+      type: String,
+      default: "",
+    },
+
+    items: {
+      type: [OrderItemSchema],
+      default: [],
+    },
+
+    orderType: {
+      type: String,
+      enum: ["dine-in", "takeaway"],
+      default: "dine-in",
+    },
+
+    subtotal: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+
+    tax: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+
+    total: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+
+    ticketCount: {
+      type: Number,
+      default: 1,
+    },
+
+    status: {
+      type: String,
+      enum: ["active", "completed", "cancelled"],
+      default: "active",
+    },
+
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "partial"],
+      default: "pending",
+    },
   },
   {
     timestamps: true,
   },
 );
 
-export default mongoose.model<IOrder>("Order", orderSchema);
+const OrderModel = mongoose.model<IOrder>("Order", OrderSchema);
+
+export default OrderModel;

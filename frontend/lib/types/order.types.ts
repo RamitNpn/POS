@@ -1,3 +1,4 @@
+export type orderStatusEnum = "active" | "completed" | "cancelled";
 export interface TOrder {
   _id: string;
   orderNumber: string;
@@ -13,7 +14,7 @@ export interface TOrder {
     quantity: number;
     price: number;
   }>;
-  status: string;
+  status: orderStatusEnum;
   userId?: string;
   total: number;
   createdAt: Date;
@@ -28,7 +29,7 @@ export interface TCreateOrder {
     quantity: number;
     price: number;
   }>;
-  status: string;
+  status: orderStatusEnum;
   userId?: string;
   total: number;
 }

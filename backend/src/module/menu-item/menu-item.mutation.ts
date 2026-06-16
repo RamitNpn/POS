@@ -2,7 +2,6 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { menuItemContract } from "../../contract/menu-item/menu-item.contract";
 import menuItemRepository from "../../repository/menu-item-repository";
 import mongoose from "mongoose";
-import menuCategoryRepository from "../../repository/menu-category.repository";
 
 export const createMenuItem: AppRouteMutationImplementation<
   typeof menuItemContract.createMenuItem
@@ -22,9 +21,14 @@ export const createMenuItem: AppRouteMutationImplementation<
 
     const amount = Number(req.body.price);
 
+    console.log("BODY:", req.body);
+    console.log("FILES:", req.files);
+
     const files = req.files as {
       image?: Express.Multer.File[];
     };
+
+    console.log("IMAGE:", files?.image?.[0]);
 
     const profileUrl = files?.image?.[0]?.path || "";
 

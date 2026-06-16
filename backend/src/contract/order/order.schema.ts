@@ -1,69 +1,53 @@
 import { z } from "zod";
 
-export const paymentStatusEnum = z.enum(["pending", "paid", "refunded"]);
+export const orderStatusEnum = z.enum(["active", "completed", "cancelled"]);
 
-export const paymentMethodEnum = z.enum(["cash", "card", "mobile", "split"]);
+export const paymentStatusEnum = z.enum(["pending", "partial", "paid"]);
 
 export const orderItemSchema = z.object({
   menuItemId: z.string(),
-  quantity: z.number().min(1),
-  notes: z.string().optional(),
+  name: z.string(),
   price: z.number(),
+  quantity: z.number().min(1),
+  total: z.number(),
 });
 
 export const createOrderSchema = z.object({
-  orderNumber: z.string(),
   tableId: z.string(),
-  items: z.array(orderItemSchema),
-  customerName: z.string(),
-  paymentStatus: paymentStatusEnum.optional(),
-  paymentMethod: paymentMethodEnum.optional(),
-  subtotal: z.number(),
-  tax: z.number(),
-  discount: z.number().optional(),
-  serviceCharge: z.number().optional(),
-  total: z.number(),
-  notes: z.string().optional(),
-  completedAt: z.coerce.date().optional(),
+  customerName: z.string().optional(),
   waiterId: z.string(),
+  notes: z.string().optional(),
+  items: z.array(orderItemSchema).min(1),
 });
 
 export const orderSchema = z.object({
   _id: z.string(),
   orderNumber: z.string(),
   tableId: z.string(),
-  items: z.array(orderItemSchema),
   customerName: z.string(),
-  paymentStatus: paymentStatusEnum,
-  paymentMethod: paymentMethodEnum.optional(),
+  waiterId: z.string(),
+  notes: z.string().optional(),
+  items: z.array(orderItemSchema),
   subtotal: z.number(),
   tax: z.number(),
-  discount: z.number().optional(),
-  serviceCharge: z.number().optional(),
   total: z.number(),
-  notes: z.string().optional(),
-  completedAt: z.coerce.date().optional(),
-  waiterId: z.string(),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
+  ticketCount: z.number(),
+  status: orderStatusEnum,
+  paymentStatus: paymentStatusEnum,
+  createdAt: z.date().optional(),
 });
-
-export const getOrderByIdSchema = orderSchema;
 
 export const getAllOrdersSchema = z.array(orderSchema);
 
+export const getOrderByIdSchema = orderSchema;
+
 export const updateOrderSchema = z.object({
-  tableId: z.string().optional(),
-  items: z.array(orderItemSchema).optional(),
   customerName: z.string().optional(),
-  paymentStatus: paymentStatusEnum.optional(),
-  paymentMethod: paymentMethodEnum.optional(),
-  subtotal: z.number().optional(),
-  tax: z.number().optional(),
-  discount: z.number().optional(),
-  serviceCharge: z.number().optional(),
-  total: z.number().optional(),
   notes: z.string().optional(),
-  completedAt: z.coerce.date().optional(),
-  waiterId: z.string().optional(),
+  status: orderStatusEnum.optional(),
+  paymentStatus: paymentStatusEnum.optional(),
+});
+
+export const deleteOrderSchema = z.object({
+  _id: z.string(),
 });
