@@ -30,8 +30,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createOrderSchema } from "@/lib/validations/order.validation";
 import { orderApi } from "@/lib/api/order.api";
 import { FloatingButton } from "@/components/ui/floating-button";
+import { useAuth } from "@/context/auth-context";
 
 export default function WaiterMenuPage() {
+  const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
@@ -125,7 +127,7 @@ export default function WaiterMenuPage() {
       customerName: "",
       notes: "",
       tableId: selectedTable?._id || "",
-      waiterId: "6a303de73846ee3208d09a8d",
+      waiterId: user?.id || "",
       items: orderItems,
     },
   });

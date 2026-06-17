@@ -109,7 +109,6 @@ export default function CashierDashboard() {
   const [printedTicket, setPrintedTicket] = useState<any | null>(null);
 
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [paidOrders, setPaidOrders] = useState<Record<string, boolean>>({});
 
@@ -261,9 +260,8 @@ export default function CashierDashboard() {
                 onView={setSelectedTicket}
                 onPrint={(ticket) => {
                   setPrintedTicket(ticket);
-
                   setTimeout(() => {
-                    document.getElementById("ticket-printer")?.click();
+                    handlePrintInvoice();
                   }, 100);
                 }}
               />

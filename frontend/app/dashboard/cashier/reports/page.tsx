@@ -409,7 +409,7 @@ export default function CashierReportsPage() {
                         >
                           <Download className="h-4 w-4" />
                         </Button>
-                      ) : (
+                      ) : ( 
                         <Button
                           variant="secondary"
                           className="text-gray-300 cursor-pointer hover:bg-green-700 hover:text-white"

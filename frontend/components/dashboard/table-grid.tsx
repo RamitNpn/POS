@@ -57,16 +57,6 @@ export function TableCard({ table, onClick }: TableCardProps) {
         <Badge variant="outline" className={cn("text-xs", status.className)}>
           {status.label}
         </Badge>
-        {table.status === "occupied" && (
-          <div className="lg:flex grid grid-cols items center gap-2 text-[10px] lg:text-[13px] mt-2">
-            <button className="border-none outline-none cursor-pointer rounded-md bg-yellow-800 px-2 py-1">
-              Free Space
-            </button>
-            <a href={`/dashboard/waiter/menu?tableId=${table._id}`} className="border-none outline-none cursor-pointer rounded-md bg-lime-800 px-2 py-1">
-              Re-Order
-            </a>
-          </div>
-        )}{" "}
       </CardContent>
     </Card>
   );
