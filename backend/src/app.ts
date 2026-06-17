@@ -9,13 +9,14 @@ import { createExpressEndpoints } from "@ts-rest/express";
 import morgan from "morgan";
 import { openApiDocument } from "./config/swagger.config";
 import { router } from "./module";
+import env from "./config/env";
 
 const app = express();
 
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",
+      env.frontend_url || "https://thedineflow.vercel.app",
     ],
     credentials: true,
   })
