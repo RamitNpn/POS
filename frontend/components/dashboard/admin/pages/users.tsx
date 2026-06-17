@@ -52,15 +52,16 @@ export default function UsersPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
-  } = useForm({
+    formState: { errors },
+  } = useForm<TCreateUserSchema>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       profile: "",
+      password: "",
       role: "waiter",
       status: "active",
     },
@@ -79,12 +80,13 @@ export default function UsersPage() {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to add user.",
+        description: err.message || "Failed to add user.",
       });
     },
   });
 
   const onSubmit = (data: TCreateUserSchema) => {
+    console.log("submitted data", data);
     const formData = new FormData();
 
     formData.append("name", data.name);
@@ -95,6 +97,7 @@ export default function UsersPage() {
       formData.append("profile", data.profile[0]);
     }
 
+    formData.append("password", data.password);
     formData.append("role", data.role);
     formData.append("status", data.status);
 
@@ -158,6 +161,20 @@ export default function UsersPage() {
                 {errors.email && (
                   <p className="text-red-500 text-[12px] mt-1">
                     {errors.email.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="new-user-password">Password</Label>
+                <Input
+                  id="new-user-password"
+                  type="password"
+                  {...register("password")}
+                  placeholder="Enter password"
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-[12px] mt-1">
+                    {errors.password.message}
                   </p>
                 )}
               </div>

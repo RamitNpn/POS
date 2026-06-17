@@ -11,15 +11,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import type { UserRole } from '@/lib/types';
 
 const demoAccounts: { email: string; role: UserRole; name: string }[] = [
-  { email: 'admin@dineflow.com', role: 'admin', name: 'Sarah Chen' },
-  { email: 'waiter@dineflow.com', role: 'waiter', name: 'Marcus Johnson' },
-  { email: 'kitchen@dineflow.com', role: 'kitchen', name: 'Chef Antonio' },
-  { email: 'cashier@dineflow.com', role: 'cashier', name: 'Emily Rodriguez' },
+  { email: 'admin@gmail.com', role: 'admin', name: 'Admin' },
+  { email: 'waiter@gmail.com', role: 'waiter', name: 'Marcus Johnson' },
+  // { email: 'kitchen@gmail.com', role: 'kitchen', name: 'Chef Antonio' },
+  { email: 'cashier@gmail.com', role: 'cashier', name: 'Emily Rodriguez' },
 ];
 
 function LoginForm() {
   const router = useRouter();
-  const { login, isLoading } = useAuth();
+  const { login, isLoading, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -29,28 +29,11 @@ function LoginForm() {
     e.preventDefault();
     setError('');
 
-    const success = await login(email, password);
-    if (success) {
-      // Redirect based on role
-      const account = demoAccounts.find(a => a.email === email);
-      if (account) {
-        router.push(`/dashboard/${account.role}`);
-      } else {
-        router.push('/dashboard/admin');
-      }
+    const loggedInUser = await login(email, password);
+    if (loggedInUser) {
+      router.push(`/dashboard/${loggedInUser.role}`);
     } else {
-      setError('Invalid email or password. Use demo123 as password.');
-    }
-  };
-
-  const handleDemoLogin = async (account: typeof demoAccounts[0]) => {
-    setEmail(account.email);
-    setPassword('demo123');
-    setError('');
-
-    const success = await login(account.email, 'demo123');
-    if (success) {
-      router.push(`/dashboard/${account.role}`);
+      setError('Invalid email or password. Please try again.');
     }
   };
 
@@ -158,11 +141,10 @@ function LoginForm() {
                   key={account.email}
                   variant="outline"
                   className="flex flex-col h-auto py-3 text-white hover:text-none touch-target"
-                  onClick={() => handleDemoLogin(account)}
                   disabled={isLoading}
                 >
                   <span className="font-medium capitalize">{account.role}</span>
-                  <span className="text-xs text-muted-foreground">{account.name}</span>
+                  <span className="text-xs text-muted-foreground">{account.email}</span>
                 </Button>
               ))}
             </div>
@@ -171,7 +153,7 @@ function LoginForm() {
 
         {/* Footer */}
         <p className="text-center text-xs text-muted-foreground">
-          Demo credentials: any email above + password: demo123
+          Demo credentials: any email above + password: [admin@123, waiter@123, cashier@123]
         </p>
       </div>
     </div>

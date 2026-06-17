@@ -35,9 +35,9 @@ class UserRepository {
 
       if (search) {
         query.$or = [
-          { userName: { $regex: search, $options: "i" } },
-          { userEmail: { $regex: search, $options: "i" } },
-          { userPhone: { $regex: search, $options: "i" } },
+          { name: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
+          { phone: { $regex: search, $options: "i" } },
         ];
       }
 
@@ -63,11 +63,10 @@ class UserRepository {
     }
   }
 
-  async getByEmail(email: string) {
+  async getByEmail(email: string, includePassword = false) {
     try {
-      return await this.model.findOne({
-        userEmail: email,
-      });
+      const query = this.model.findOne({ email });
+      return includePassword ? query.select("+password") : query;
     } catch (error) {
       throw new Error(`Error fetching user: ${error}`);
     }

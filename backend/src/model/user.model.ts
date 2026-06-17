@@ -10,6 +10,7 @@ export interface IUser extends Document {
   role: UserRole;
   profile?: string;
   phone: string;
+  password: string;
   status: UserStatus;
   createdAt: Date;
   updatedAt: Date;
@@ -46,6 +47,12 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       required: true,
       trim: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
+      select: false,
     },
 
     status: {

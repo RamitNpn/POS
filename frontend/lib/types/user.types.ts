@@ -19,6 +19,7 @@ export interface TCreateUser {
   email: string;
   role: UserRole;
   profile?: FileList;
+  password: string;
   phone: string;
   status: UserStatus;
 }

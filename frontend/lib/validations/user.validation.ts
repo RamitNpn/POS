@@ -7,6 +7,7 @@ export const createUserSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
   email: z.string().trim().email("Invalid email address"),
   phone: z.string().trim().min(7).max(20),
+  password: z.string().min(6, "Password must be atleast 6 character long"),
   role: userRoleEnum,
   profile: z.any().optional(),
   status: userStatusEnum,
@@ -38,6 +39,7 @@ export const updateUserSchema = z.object({
   email: z.string().email().optional(),
   role: userRoleEnum.optional(),
   profile: z.any().optional(),
+  password: z.string().optional(),
   phone: z.string().min(7).max(20).optional(),
   status: userStatusEnum.optional(),
 });

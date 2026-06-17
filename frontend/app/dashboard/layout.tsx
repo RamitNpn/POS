@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { AuthProvider, useAuth } from '@/context/auth-context';
 import { QueryProvider } from '@/providers/query-provider';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
@@ -12,12 +12,42 @@ import { Topbar } from '@/components/layout/topbar';
 function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   const { user, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push('/login');
     }
   }, [isLoading, isAuthenticated, router]);
+
+  useEffect(() => {
+    if (isLoading || !user) return;
+
+    const role = user.role;
+
+    const sectionGuards: { prefix: string; allowed: string[] }[] = [
+      { prefix: '/dashboard/admin', allowed: ['admin'] },
+      { prefix: '/dashboard/cashier', allowed: ['cashier', 'admin'] },
+      { prefix: '/dashboard/waiter', allowed: ['waiter', 'admin'] },
+      { prefix: '/dashboard/kitchen', allowed: ['kitchen', 'admin'] },
+    ];
+
+    if (!pathname) return;
+
+    for (const guard of sectionGuards) {
+      if (pathname.startsWith(guard.prefix)) {
+        if (!guard.allowed.includes(role)) {
+          router.back();
+          setTimeout(() => {
+            if (typeof window !== 'undefined' && window.location.pathname.startsWith(guard.prefix)) {
+              router.replace('/dashboard');
+            }
+          }, 100);
+        }
+        break;
+      }
+    }
+  }, [isLoading, user, pathname, router]);
 
   if (isLoading) {
     return (

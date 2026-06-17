@@ -8,6 +8,7 @@ export const createUserSchema = z.object({
   email: z.string().trim().email("Invalid email address"),
   role: userRoleEnum,
   profile: z.any().optional(),
+  password: z.string().min(6),
   phone: z.string().trim().min(7).max(20),
   status: userStatusEnum.optional(),
 });
@@ -23,6 +24,27 @@ export const userSchema = z.object({
   createdAt: z.date().optional(),
 });
 
+export const loginSchema = z.object({
+  email: z.string().trim().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+export const loginResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+  user: userSchema,
+});
+
+export const logoutResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+});
+
+export const getMeResponseSchema = z.object({
+  success: z.boolean(),
+  user: userSchema,
+});
+
 export const getAllUsersSchema = z.array(userSchema);
 
 export const getUserByIdSchema = userSchema;
@@ -32,6 +54,7 @@ export const updateUserSchema = z.object({
   email: z.string().email().optional(),
   role: userRoleEnum.optional(),
   profile: z.any().optional(),
+  password: z.string().optional(),
   phone: z.string().min(7).max(20).optional(),
   status: userStatusEnum.optional(),
 });

@@ -1,12 +1,18 @@
 import userRepository from "../../repository/user.repository";
 import { userContract } from "../../contract/user/user.contract";
-import { AppRouteMutationImplementation } from "@ts-rest/express";
+import {
+  AppRouteMutationImplementation,
+  AppRouteQueryImplementation,
+} from "@ts-rest/express";
+import bcrypt from "bcryptjs";
 
 const createUser: AppRouteMutationImplementation<
   typeof userContract.createUser
 > = async ({ req }) => {
   try {
-    const { name, email, role, phone, status } = req.body;
+    const { name, email, role, password, phone, status } = req.body;
+    console.log("BODY:", req.body);
+console.log("FILES:", req.files);
 
     const existingUser = await userRepository.getByEmail(email.toLowerCase());
 
@@ -16,9 +22,12 @@ const createUser: AppRouteMutationImplementation<
         body: {
           success: false,
           error: "Email already exists",
+          message: "Email already exist",
         },
       };
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const files = req.files as {
       profile?: Express.Multer.File[];
@@ -31,6 +40,7 @@ const createUser: AppRouteMutationImplementation<
       email: email.toLowerCase(),
       role,
       profile: profileUrl,
+      password: hashedPassword,
       phone,
       status,
     });
@@ -59,8 +69,6 @@ export const updateUser: AppRouteMutationImplementation<
   try {
     const { userID } = req.params;
 
-    const { name, email, role, phone, status } = req.body;
-
     const existingUser = await userRepository.getByID(userID);
 
     if (!existingUser) {
@@ -73,36 +81,24 @@ export const updateUser: AppRouteMutationImplementation<
       };
     }
 
-    if (email && email.toLowerCase() !== existingUser.email.toLowerCase()) {
-      const emailExists = await userRepository.getByEmail(email.toLowerCase());
+    const { name, email, role, password, phone, status } = req.body;
 
-      if (emailExists) {
-        return {
-          status: 400,
-          body: {
-            success: false,
-            error: "Email already exists",
-          },
-        };
-      }
-    }
-    
     const files = req.files as {
       profile?: Express.Multer.File[];
     };
 
     const profileUrl = files?.profile?.[0]?.path;
 
-    const updateData: any = {
-      name,
-      email: email?.toLowerCase(),
-      role,
-      phone,
-      status,
-    };
+    const updateData: Record<string, any> = {};
 
-    if (profileUrl) {
-      updateData.profile = profileUrl;
+    if (name) updateData.name = name;
+    if (email) updateData.email = email.toLowerCase();
+    if (role) updateData.role = role;
+    if (phone) updateData.phone = phone;
+    if (status) updateData.status = status;
+    if (profileUrl) updateData.profile = profileUrl;
+    if (password) {
+      updateData.password = await bcrypt.hash(password, 10);
     }
 
     const updated = await userRepository.update(userID, updateData);
@@ -135,7 +131,7 @@ export const updateUser: AppRouteMutationImplementation<
   }
 };
 
-export const removeUser: AppRouteMutationImplementation<
+export const removeUser: AppRouteQueryImplementation<
   typeof userContract.removeUser
 > = async ({ req }) => {
   try {
