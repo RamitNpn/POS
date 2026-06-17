@@ -19,7 +19,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { FloatingButton } from "@/components/ui/floating-button";
 import { ArrowDown } from "lucide-react";
 import { useAllMenuCategories } from "@/hooks/admin/menu-category/getAllMenuCategories";
 import { TMenuCategory } from "@/lib/types/menu-category.types";
@@ -30,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createOrderSchema } from "@/lib/validations/order.validation";
 import { orderApi } from "@/lib/api/order.api";
+import { FloatingButton } from "@/components/ui/floating-button";
 
 export default function WaiterMenuPage() {
   const router = useRouter();
@@ -47,8 +47,6 @@ export default function WaiterMenuPage() {
   const menuItems = menuData?.data ?? [];
 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const [customerName, setCustomerName] = useState("");
-  const [notes, setNotes] = useState("");
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
