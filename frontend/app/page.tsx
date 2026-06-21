@@ -1,7 +1,6 @@
 export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden relative">
-
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
         <img
           src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg"
@@ -13,8 +12,8 @@ export default function Home() {
           HACKED
         </h1>
 
-        <p className="max-w-4xl text-xl md:text-3xl leading-relaxed text-gray-200">
-          This website has been compromised.
+        <p className="max-w-4xl uppercase text-xl md:text-3xl leading-relaxed text-gray-200">
+           fucked by dickuuu
         </p>
 
         <div className="mt-12 border border-red-700 bg-red-950/30 backdrop-blur-sm p-8 rounded-lg max-w-3xl w-full">
