@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { AuthProvider, useAuth } from '@/context/auth-context';
 import { QueryProvider } from '@/providers/query-provider';
+import { SocketProvider } from '@/providers/socket-provider';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { BottomNavbar } from '@/components/layout/bottom-navbar';
@@ -86,7 +87,9 @@ export default function DashboardLayout({
   return (
     <QueryProvider>
       <AuthProvider>
-        <DashboardLayoutContent>{children}</DashboardLayoutContent>
+        <SocketProvider>
+          <DashboardLayoutContent>{children}</DashboardLayoutContent>
+        </SocketProvider>
       </AuthProvider>
     </QueryProvider>
   );

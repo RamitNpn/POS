@@ -1,6 +1,7 @@
 import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { roomContract } from "../../contract/room/room.contract";
 import roomRepository from "../../repository/room.repository";
+import { getIO } from "../../utils/socket";
 
 export const createRoom: AppRouteMutationImplementation<
   typeof roomContract.createRoom
@@ -20,11 +21,18 @@ export const createRoom: AppRouteMutationImplementation<
       };
     }
 
-    await roomRepository.create({
+    const data = await roomRepository.create({
       name,
       description,
       isActive,
     });
+
+    try {
+      const io = getIO();
+      io.emit("room:updated", data);
+    } catch (err) {
+      console.error("Socket emit error in createRoom:", err);
+    }
 
     return {
       status: 201,
@@ -78,11 +86,18 @@ export const updateRoom: AppRouteMutationImplementation<
       }
     }
 
-    await roomRepository.update(roomID, {
+    const updated = await roomRepository.update(roomID, {
       name,
       description,
       isActive,
     });
+
+    try {
+      const io = getIO();
+      io.emit("room:updated", updated);
+    } catch (err) {
+      console.error("Socket emit error in updateRoom:", err);
+    }
 
     return {
       status: 200,
@@ -121,6 +136,13 @@ export const removeRoom: AppRouteMutationImplementation<
     }
 
     await roomRepository.delete(roomID);
+
+    try {
+      const io = getIO();
+      io.emit("room:updated", { _id: roomID, action: "delete" });
+    } catch (err) {
+      console.error("Socket emit error in removeRoom:", err);
+    }
 
     return {
       status: 200,

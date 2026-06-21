@@ -1,6 +1,7 @@
 import { AppRouteMutationImplementation } from "@ts-rest/express";
 import kitchenTicketRepository from "../../repository/ticket.repository";
 import { ticketContract } from "../../contract/ticket/ticket.contract";
+import { getIO } from "../../utils/socket";
 
 export const updateTicketStatus: AppRouteMutationImplementation<
   typeof ticketContract.updateTicketStatus
@@ -25,6 +26,13 @@ export const updateTicketStatus: AppRouteMutationImplementation<
       ticketID,
       status,
     );
+
+    try {
+      const io = getIO();
+      io.emit("ticket:updated", updated);
+    } catch (err) {
+      console.error("Socket emit error in updateTicketStatus:", err);
+    }
 
     return {
       status: 200,
@@ -64,6 +72,13 @@ export const removeTicket: AppRouteMutationImplementation<
     }
 
     await kitchenTicketRepository.updateStatus(ticketID, "cancelled");
+
+    try {
+      const io = getIO();
+      io.emit("ticket:updated", { _id: ticketID, status: "cancelled" });
+    } catch (err) {
+      console.error("Socket emit error in removeTicket:", err);
+    }
 
     return {
       status: 200,

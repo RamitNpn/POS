@@ -6,6 +6,7 @@ import kitchenTicketRepository from "../../repository/ticket.repository";
 import TableModel from "../../model/table.model";
 import MenuItem from "../../model/menu-item.model";
 import mongoose from "mongoose";
+import { getIO } from "../../utils/socket";
 
 const createOrder: AppRouteMutationImplementation<
   typeof orderContract.createOrder
@@ -65,7 +66,7 @@ const createOrder: AppRouteMutationImplementation<
         paymentStatus: "pending",
       });
 
-      await kitchenTicketRepository.create({
+      const ticket = await kitchenTicketRepository.create({
         orderId: order._id,
         tableId: new mongoose.Types.ObjectId(tableId),
         ticketNumber: 1,
@@ -82,6 +83,15 @@ const createOrder: AppRouteMutationImplementation<
       await TableModel.findByIdAndUpdate(new mongoose.Types.ObjectId(tableId), {
         status: "occupied",
       });
+
+      try {
+        const io = getIO();
+        io.emit("order:created", order);
+        io.emit("ticket:created", ticket);
+        io.emit("table:updated", { _id: tableId, status: "occupied" });
+      } catch (err) {
+        console.error("Socket emit error in createOrder:", err);
+      }
 
       return {
         status: 201,
@@ -117,7 +127,7 @@ const createOrder: AppRouteMutationImplementation<
 
     await order.save();
 
-    await kitchenTicketRepository.create({
+    const ticket = await kitchenTicketRepository.create({
       orderId: order._id,
       tableId: new mongoose.Types.ObjectId(tableId),
       ticketNumber: order.ticketCount,
@@ -130,6 +140,15 @@ const createOrder: AppRouteMutationImplementation<
       printed: false,
       status: "pending",
     });
+
+    try {
+      const io = getIO();
+      io.emit("order:updated", order);
+      io.emit("ticket:created", ticket);
+      io.emit("table:updated", { _id: tableId, status: "occupied" });
+    } catch (err) {
+      console.error("Socket emit error in reorder:", err);
+    }
 
     return {
       status: 200,
@@ -175,6 +194,13 @@ export const updatePaymentStatus: AppRouteMutationImplementation<
       paymentStatus,
     );
 
+    try {
+      const io = getIO();
+      io.emit("order:updated", updated);
+    } catch (err) {
+      console.error("Socket emit error in updatePaymentStatus:", err);
+    }
+
     return {
       status: 200,
       body: {
@@ -213,6 +239,13 @@ export const removeOrder: AppRouteMutationImplementation<
     }
 
     await orderRepository.delete(orderID);
+
+    try {
+      const io = getIO();
+      io.emit("order:updated", { _id: orderID, status: "cancelled" });
+    } catch (err) {
+      console.error("Socket emit error in removeOrder:", err);
+    }
 
     return {
       status: 200,

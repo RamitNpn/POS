@@ -2,6 +2,7 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { menuItemContract } from "../../contract/menu-item/menu-item.contract";
 import menuItemRepository from "../../repository/menu-item-repository";
 import mongoose from "mongoose";
+import { getIO } from "../../utils/socket";
 
 export const createMenuItem: AppRouteMutationImplementation<
   typeof menuItemContract.createMenuItem
@@ -32,7 +33,7 @@ export const createMenuItem: AppRouteMutationImplementation<
 
     const profileUrl = files?.image?.[0]?.path || "";
 
-    await menuItemRepository.create({
+    const data = await menuItemRepository.create({
       ...req.body,
       categoryId: req.body.categoryId
         ? new mongoose.Types.ObjectId(req.body.categoryId)
@@ -40,6 +41,13 @@ export const createMenuItem: AppRouteMutationImplementation<
       image: profileUrl,
       price: amount,
     });
+
+    try {
+      const io = getIO();
+      io.emit("menu-item:updated", data);
+    } catch (err) {
+      console.error("Socket emit error in createMenuItem:", err);
+    }
 
     return {
       status: 201,
@@ -99,7 +107,7 @@ export const updateMenuItem: AppRouteMutationImplementation<
 
     const profileUrl = files?.image?.[0]?.path || "";
 
-    await menuItemRepository.update(itemID, {
+    const updated = await menuItemRepository.update(itemID, {
       ...req.body,
       categoryId: req.body.categoryId
         ? new mongoose.Types.ObjectId(req.body.categoryId)
@@ -107,6 +115,13 @@ export const updateMenuItem: AppRouteMutationImplementation<
       image: profileUrl,
       price: amount,
     });
+
+    try {
+      const io = getIO();
+      io.emit("menu-item:updated", updated);
+    } catch (err) {
+      console.error("Socket emit error in updateMenuItem:", err);
+    }
 
     return {
       status: 200,
@@ -145,6 +160,13 @@ export const removeMenuItem: AppRouteMutationImplementation<
     }
 
     await menuItemRepository.delete(itemID);
+
+    try {
+      const io = getIO();
+      io.emit("menu-item:updated", { _id: itemID, action: "delete" });
+    } catch (err) {
+      console.error("Socket emit error in removeMenuItem:", err);
+    }
 
     return {
       status: 200,

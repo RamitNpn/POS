@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { tableContract } from "../../contract/table/table.contract";
 import tableRepository from "../../repository/table.repository";
 import ticketRepository from "../../repository/ticket.repository";
+import { getIO } from "../../utils/socket";
 
 export const createTable: AppRouteMutationImplementation<
   typeof tableContract.createTable
@@ -21,10 +22,17 @@ export const createTable: AppRouteMutationImplementation<
       };
     }
 
-    await tableRepository.create({
+    const data = await tableRepository.create({
       ...req.body,
       sectionId: new mongoose.Types.ObjectId(req.body.sectionId),
     });
+
+    try {
+      const io = getIO();
+      io.emit("table:updated", data);
+    } catch (err) {
+      console.error("Socket emit error in createTable:", err);
+    }
 
     return {
       status: 201,
@@ -76,12 +84,19 @@ export const updateTable: AppRouteMutationImplementation<
       }
     }
 
-    await tableRepository.update(tableID, {
+    const updated = await tableRepository.update(tableID, {
       ...req.body,
       sectionId: req.body.sectionId
         ? new mongoose.Types.ObjectId(req.body.sectionId)
         : undefined,
     });
+
+    try {
+      const io = getIO();
+      io.emit("table:updated", updated);
+    } catch (err) {
+      console.error("Socket emit error in updateTable:", err);
+    }
 
     return {
       status: 200,
@@ -139,6 +154,13 @@ export const updateTableStatus: AppRouteMutationImplementation<
 
     const updated = await tableRepository.updateStatus(tableID, status);
 
+    try {
+      const io = getIO();
+      io.emit("table:updated", updated);
+    } catch (err) {
+      console.error("Socket emit error in updateTableStatus:", err);
+    }
+
     return {
       status: 200,
       body: {
@@ -176,6 +198,13 @@ export const removeTable: AppRouteMutationImplementation<
   }
 
   await tableRepository.delete(tableID);
+
+  try {
+    const io = getIO();
+    io.emit("table:updated", { _id: tableID, action: "delete" });
+  } catch (err) {
+    console.error("Socket emit error in removeTable:", err);
+  }
 
   return {
     status: 200,

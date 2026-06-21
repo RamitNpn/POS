@@ -3,6 +3,7 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { menuCategoryContract } from "../../contract/menu-category/menu-category.contract";
 import menuCategoryRepository from "../../repository/menu-category.repository";
 import menuItemRepository from "../../repository/menu-item-repository";
+import { getIO } from "../../utils/socket";
 
 export const createMenuCategory: AppRouteMutationImplementation<
   typeof menuCategoryContract.createMenuCategory
@@ -20,7 +21,14 @@ export const createMenuCategory: AppRouteMutationImplementation<
       };
     }
 
-    await menuCategoryRepository.create(req.body);
+    const data = await menuCategoryRepository.create(req.body);
+
+    try {
+      const io = getIO();
+      io.emit("menu-category:updated", data);
+    } catch (err) {
+      console.error("Socket emit error in createMenuCategory:", err);
+    }
 
     return {
       status: 201,
@@ -72,7 +80,14 @@ export const updateMenuCategory: AppRouteMutationImplementation<
       }
     }
 
-    await menuCategoryRepository.update(categoryID, req.body);
+    const updated = await menuCategoryRepository.update(categoryID, req.body);
+
+    try {
+      const io = getIO();
+      io.emit("menu-category:updated", updated);
+    } catch (err) {
+      console.error("Socket emit error in updateMenuCategory:", err);
+    }
 
     return {
       status: 200,
@@ -111,6 +126,13 @@ export const removeMenuCategory: AppRouteMutationImplementation<
     }
 
     await menuCategoryRepository.delete(categoryID);
+
+    try {
+      const io = getIO();
+      io.emit("menu-category:updated", { _id: categoryID, action: "delete" });
+    } catch (err) {
+      console.error("Socket emit error in removeMenuCategory:", err);
+    }
 
     return {
       status: 200,

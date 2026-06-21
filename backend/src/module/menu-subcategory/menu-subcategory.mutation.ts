@@ -3,6 +3,7 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { menuSubCategoryContract } from "../../contract/menu-subcategory/menu-subcategory.contract";
 import menuSubcategoryRepository from "../../repository/menu-subcategory.repository";
 import mongoose from "mongoose";
+import { getIO } from "../../utils/socket";
 
 export const createMenuSubCategory: AppRouteMutationImplementation<
   typeof menuSubCategoryContract.createMenuSubCategory
@@ -20,12 +21,19 @@ export const createMenuSubCategory: AppRouteMutationImplementation<
       };
     }
 
-    await menuSubcategoryRepository.create({
+    const data = await menuSubcategoryRepository.create({
       ...req.body,
       categoryId: req.body.categoryId
         ? new mongoose.Types.ObjectId(req.body.categoryId)
         : undefined,
     });
+
+    try {
+      const io = getIO();
+      io.emit("menu-subcategory:updated", data);
+    } catch (err) {
+      console.error("Socket emit error in createMenuSubCategory:", err);
+    }
 
     return {
       status: 201,
@@ -77,7 +85,14 @@ export const updateMenuSubCategory: AppRouteMutationImplementation<
       }
     }
 
-    await menuSubcategoryRepository.update(subCategoryID, req.body);
+    const updated = await menuSubcategoryRepository.update(subCategoryID, req.body);
+
+    try {
+      const io = getIO();
+      io.emit("menu-subcategory:updated", updated);
+    } catch (err) {
+      console.error("Socket emit error in updateMenuSubCategory:", err);
+    }
 
     return {
       status: 200,
@@ -116,6 +131,13 @@ export const removeMenuSubCategory: AppRouteMutationImplementation<
     }
 
     await menuSubcategoryRepository.delete(subCategoryID);
+
+    try {
+      const io = getIO();
+      io.emit("menu-subcategory:updated", { _id: subCategoryID, action: "delete" });
+    } catch (err) {
+      console.error("Socket emit error in removeMenuSubCategory:", err);
+    }
 
     return {
       status: 200,
