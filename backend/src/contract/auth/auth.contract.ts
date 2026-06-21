@@ -25,7 +25,8 @@ export const authContract = c.router({
     method: "POST",
     path: "/auth/logout",
     summary: "Clear authentication session",
-    body: z.object({}),
+    body: z.object({
+    }),
     responses: {
       200: logoutResponseSchema,
       500: errorSchema,

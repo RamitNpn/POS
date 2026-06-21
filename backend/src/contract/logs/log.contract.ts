@@ -29,6 +29,7 @@ export const activityLogContract = c.router({
     query: z.object({
       page: z.coerce.number().optional(),
       limit: z.coerce.number().optional(),
+      search: z.string().optional(),
       module: z.string().optional(),
       userId: z.string().optional(),
     }),

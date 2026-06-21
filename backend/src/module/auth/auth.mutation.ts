@@ -85,7 +85,9 @@ export const login: AppRouteMutationImplementation<
     await logRepository.create({
       userId: new mongoose.Types.ObjectId(userId),
       action: "User Login",
-      details: `${user.name} logged in at ${new Date(Date.now() - 2 * 60 * 60 * 1000)}`,
+      details: `${user.name} logged in at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
       module: "Auth",
       entityId: "",
       entityType: "",
@@ -118,11 +120,37 @@ export const login: AppRouteMutationImplementation<
 
 export const logout: AppRouteMutationImplementation<
   typeof authContract.logout
-> = async ({ res }) => {
+> = async ({ req, res }) => { 
+
+  const userId = req.user?.id;
+
+  const user = await userRepository.getByID(userId || "");
+
+  if (!user) {
+    return {
+      status: 401,
+      body: {
+        success: false,
+        error: "User not found.",
+      },
+    };
+  }
+
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
+  });
+
+  await logRepository.create({
+    userId: new mongoose.Types.ObjectId(userId),
+    action: "User Log Out",
+    details: `${user.name} logged out at ${new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Kathmandu",
+    })}`,
+    module: "Auth",
+    entityId: "",
+    entityType: "",
   });
 
   return {

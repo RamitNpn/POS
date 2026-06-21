@@ -41,9 +41,18 @@ export default function CashierTablesPage() {
 
   const { data: tableStats } = useTableStats();
 
-  const filteredTables = tables?.filter(
-    (table: TTable) => statusFilter === "all" || table.status === statusFilter,
-  );
+  const filteredTables = tables?.filter((table: TTable) => {
+    const q = query.trim().toLowerCase();
+
+    const matchesStatus = statusFilter === "all" || table.status === statusFilter;
+
+    const matchesQuery =
+      !q ||
+      (table.name || "").toString().toLowerCase().includes(q) ||
+      (table.section || "").toString().toLowerCase().includes(q);
+
+    return matchesStatus && matchesQuery;
+  });
 
   const { mutate: markServed, isPending } = useUpdateTableStatus();
 

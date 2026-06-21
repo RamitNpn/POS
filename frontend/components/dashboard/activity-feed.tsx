@@ -31,11 +31,11 @@ export function ActivityFeed({
   description = 'Latest updates from your team'
 }: ActivityFeedProps) {
 
-  const { data: logData } = useActivityLogs({});
+  const { data: logData } = useActivityLogs({ limit: 10 });
   const logs = logData?.data ?? [];
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-card border-border h-[90vh] overflow-y-scroll">
       <CardHeader>
         <CardTitle className="text-foreground">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

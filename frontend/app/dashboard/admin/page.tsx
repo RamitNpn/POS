@@ -38,16 +38,6 @@ export default function AdminDashboard() {
   const { data: getRevenue } = useRevenueChart(period);
   const revenueData = getRevenue?.data;
 
-  const { data: orders } = useQuery<Order[]>({
-    queryKey: ["active-orders"],
-    queryFn: () => api.getActiveOrders(),
-  });
-
-  const { data: activities } = useQuery<ActivityLog[]>({
-    queryKey: ["activity-log"],
-    queryFn: () => api.getActivityLog(),
-  });
-
   return (
     <div className="space-y-6">
       <DashboardHeader
@@ -94,24 +84,20 @@ export default function AdminDashboard() {
           />
         </div>
         <div className="lg:col-span-3">
-          {activities && <ActivityFeed />}
+           <ActivityFeed />
         </div>
       </div>
 
       {/* Recent Orders */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {orders && (
           <KitchenOrderList
             title="Active Orders"
             emptyMessage="No active orders right now"
           />
-        )}
-        {orders && (
           <OrderList
             title="Completed Order"
             emptyMessage="No orders today"
           />
-        )}
       </div>
     </div>
   );

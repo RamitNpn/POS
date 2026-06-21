@@ -18,11 +18,13 @@ class ActivityLogRepository {
   async getAll({
     skip,
     limit,
+    search,
     module,
     userId,
   }: {
     skip: number;
     limit: number;
+    search: string;
     module?: string;
     userId?: string;
   }) {
@@ -31,6 +33,14 @@ class ActivityLogRepository {
 
       if (module) query.module = module;
       if (userId) query.userId = userId;
+
+      if (search) {
+        query.$or = [
+          { action: { $regex: search, $options: "i" } },
+          { details: { $regex: search, $options: "i" } },
+          { module: { $regex: search, $options: "i" } },
+        ];
+      }
 
       const data = await this.model
         .find(query)

@@ -38,7 +38,7 @@ export default function TablePagination({
 
       <div className="flex items-center gap-2">
         <Button
-          variant="outline"
+          variant="secondary"
           disabled={page === 1}
           onClick={() => onPageChange(page - 1)}
           className="h-9 px-3"
@@ -49,7 +49,7 @@ export default function TablePagination({
         {getPages().map((pageNumber) => (
           <Button
             key={pageNumber}
-            variant={pageNumber === page ? "default" : "outline"}
+            variant={pageNumber === page ? "default" : "secondary"}
             onClick={() => onPageChange(pageNumber)}
             className="h-9 min-w-9 px-3"
           >
@@ -58,7 +58,7 @@ export default function TablePagination({
         ))}
 
         <Button
-          variant="outline"
+          variant="secondary"
           disabled={page === totalPages}
           onClick={() => onPageChange(page + 1)}
           className="h-9 px-3"

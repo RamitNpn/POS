@@ -16,6 +16,7 @@ import { stockMovementContract } from "./stock-movement/stock-movement.contract"
 import { expenseContract } from "./expenses/expenses.contract";
 import { authContract } from "./auth/auth.contract";
 import { activityLogContract } from "./logs/log.contract";
+import { reportContract } from "./daily-report/report.contract";
 
 const c = initContract();
 
@@ -37,4 +38,5 @@ export const contract = c.router({
     stockMovement: stockMovementContract,
     expenses: expenseContract,
     logs: activityLogContract,
+    report: reportContract,
 });

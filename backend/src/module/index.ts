@@ -19,6 +19,7 @@ import { stockMovementRouter } from "./stock-movement/stock-movement.router";
 import { expenseRouter } from "./expenses/espenses.router";
 import { authRouter } from "./auth/auth.router";
 import { activityLogRouter } from "./logs/log.router";
+import { reportRouter } from "./daily-report/report.router";
 
 const s = initServer();
 
@@ -40,4 +41,5 @@ export const router = s.router(contract, {
   stockMovement: stockMovementRouter,
   expenses: expenseRouter,
   logs: activityLogRouter,
+  report: reportRouter,
 });

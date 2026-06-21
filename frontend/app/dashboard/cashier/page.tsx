@@ -32,28 +32,36 @@ export default function CashierDashboard() {
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
 
-  const { data: ticketData } = useLiveTickets({
-    search: searchTerm,
-  });
+  const { data: ticketData } = useLiveTickets({});
 
   const tickets = ticketData?.data ?? [];
 
   const filteredTickets = tickets.filter((ticket: TTicket) => {
     const createdAt = new Date(ticket.createdAt || "");
 
+    const q = searchTerm.trim().toLowerCase();
+
     const matchesSearch =
-      !searchTerm ||
-      ticket.orderNumber?.includes(searchTerm) ||
-      ticket.table?.tableName?.includes(searchTerm) ||
-      ticket.waiter?.name?.includes(searchTerm);
+      !q ||
+      (ticket.orderNumber || "").toLowerCase().includes(q) ||
+      (ticket.table?.tableName || "").toLowerCase().includes(q) ||
+      (ticket.waiter?.name || "").toLowerCase().includes(q) ||
+      ticket.items?.some((item: any) =>
+        (item.name || "").toLowerCase().includes(q),
+      );
 
     // DATE
     const from = fromDate ? new Date(fromDate) : null;
     const to = toDate ? new Date(toDate) : null;
 
+    let toEnd: Date | null = null;
+    if (to) {
+      toEnd = new Date(to);
+      toEnd.setHours(23, 59, 59, 999);
+    }
+
     const matchesDate =
-      (!from || createdAt >= from) &&
-      (!to || createdAt <= new Date(to.setHours(23, 59, 59, 999)));
+      (!from || createdAt >= from) && (!toEnd || createdAt <= toEnd);
 
     return matchesSearch && matchesDate;
   });

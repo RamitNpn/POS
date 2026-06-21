@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 export function useActivityLogs({
   page = 1,
   limit,
+  search,
   module,
   userId,
 }: UsePaginationParams & {
@@ -14,11 +15,12 @@ export function useActivityLogs({
   userId?: string;
 }) {
   return useQuery({
-    queryKey: ["activity-logs", page, limit, module, userId],
+    queryKey: ["activity-logs", page, limit, search, module, userId],
     queryFn: () =>
       activityLogApi.getActivityLogsApi({
         page,
         limit,
+        search,
         module,
         userId,
       }),

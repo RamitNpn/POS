@@ -7,11 +7,12 @@ export const getAllActivityLogs: AppRouteQueryImplementation<
 > = async ({ req }) => {
   try {
     const page = Number(req.query.page ?? 1);
-    const limit = Number(req.query.limit ?? 10);
+    const limit = Number(req.query.limit);
 
     const { data, total } = await logRepository.getAll({
       skip: (page - 1) * limit,
       limit,
+      search: req.query.search as string,
       module: req.query.module as string,
       userId: req.query.userId as string,
     });

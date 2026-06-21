@@ -72,7 +72,7 @@ export default function CashierReportsPage() {
   const { data: PrintOrder } = useAllOrders({});
 
   const { data: orderData } = useAllOrders({
-    page: 1,
+    page: page,
     limit: 10,
   });
   const orders = orderData?.data || [];
@@ -85,19 +85,21 @@ export default function CashierReportsPage() {
   });
 
   const filteredOrders = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+
     return orders.filter((order: TOrder) => {
       const matchesSearch =
-        searchTerm.trim().length === 0 ||
-        order.customerName?.toString().includes(searchTerm) ||
-        order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.table?.name.toString().includes(searchTerm) ||
-        order.waiter?.name.toLowerCase().includes(searchTerm.toLowerCase());
+        !q ||
+        (order.customerName || "").toString().toLowerCase().includes(q) ||
+        (order.orderNumber || "").toString().toLowerCase().includes(q) ||
+        (order.table?.name || "").toString().toLowerCase().includes(q) ||
+        (order.waiter?.name || "").toString().toLowerCase().includes(q);
 
-      const matchesStatus =
-        statusFilter === "all" || order.paymentStatus === statusFilter;
+      const matchesStatus = statusFilter === "all" || order.paymentStatus === statusFilter;
+
       return matchesSearch && matchesStatus;
     });
-  }, [orders, searchTerm, statusFilter]);
+  }, [orders, searchTerm, statusFilter, methodFilter]);
 
   const { mutate: updateOrderStatus, isPending } = useUpdatePaymentStatus();
 
