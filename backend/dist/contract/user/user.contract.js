@@ -7,39 +7,6 @@ const user_schema_1 = require("./user.schema");
 const commonSchema_1 = require("../commonSchema");
 const c = (0, core_1.initContract)();
 exports.userContract = c.router({
-    login: {
-        method: "POST",
-        path: "/user/login",
-        summary: "Authenticate a user and return user profile",
-        body: user_schema_1.loginSchema,
-        responses: {
-            200: user_schema_1.loginResponseSchema,
-            400: commonSchema_1.errorSchema,
-            401: commonSchema_1.errorSchema,
-            403: commonSchema_1.errorSchema,
-            500: commonSchema_1.errorSchema,
-        },
-    },
-    logout: {
-        method: "POST",
-        path: "/user/logout",
-        summary: "Clear authentication session",
-        body: zod_1.z.object({}),
-        responses: {
-            200: user_schema_1.logoutResponseSchema,
-            500: commonSchema_1.errorSchema,
-        },
-    },
-    getMe: {
-        method: "GET",
-        path: "/user/me",
-        summary: "Get the authenticated user profile",
-        responses: {
-            200: user_schema_1.getMeResponseSchema,
-            401: commonSchema_1.errorSchema,
-            500: commonSchema_1.errorSchema,
-        },
-    },
     createUser: {
         method: "POST",
         path: "/user",

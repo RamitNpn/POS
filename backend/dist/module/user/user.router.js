@@ -7,19 +7,8 @@ const user_mutation_1 = require("./user.mutation");
 const user_contract_1 = require("../../contract/user/user.contract");
 const cloudinary_middleware_1 = require("../../middleware/cloudinary.middleware");
 const auth_middleware_1 = require("../../middleware/auth.middleware");
-const user_auth_1 = require("./user.auth");
 const s = (0, express_1.initServer)();
 exports.userRouter = s.router(user_contract_1.userContract, {
-    login: user_auth_1.userAuthHandler.login,
-    logout: {
-        middleware: [auth_middleware_1.verifyToken],
-        handler: user_auth_1.userAuthHandler.logout,
-    },
-    getMe: {
-        middleware: [auth_middleware_1.verifyToken],
-        handler: user_auth_1.userAuthHandler.getMe,
-    },
-    // createUser: userMutationHandler.createUser,
     createUser: {
         middleware: [auth_middleware_1.verifyToken, (0, auth_middleware_1.authorizeRoles)("admin"), cloudinary_middleware_1.userUploadFields],
         handler: user_mutation_1.userMutationHandler.createUser,

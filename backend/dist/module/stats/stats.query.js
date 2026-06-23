@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.statsQueryHandler = exports.getProfitLossStats = exports.getRevenueStats = exports.getRevenueChart = exports.getTableStats = exports.getDashboardStats = void 0;
+exports.statsQueryHandler = exports.getCashierCheckoutStats = exports.getProfitLossStats = exports.getRevenueStats = exports.getRevenueChart = exports.getTableStats = exports.getDashboardStats = void 0;
 const order_repository_1 = __importDefault(require("../../repository/order.repository"));
 const table_repository_1 = __importDefault(require("../../repository/table.repository"));
 const reservation_repository_1 = __importDefault(require("../../repository/reservation.repository"));
 const expenses_repository_1 = __importDefault(require("../../repository/expenses.repository"));
+const ticket_repository_1 = __importDefault(require("../../repository/ticket.repository"));
 const getDashboardStats = async () => {
     const stats = await order_repository_1.default.getDashboardStats();
     const currentRevenue = stats.currentMonth.totalRevenue;
@@ -82,7 +83,7 @@ const getRevenueStats = async () => {
             return d >= startOfToday && d <= endOfToday;
         });
         const totalRevenue = todayOrders.reduce((sum, order) => {
-            if (order.status === "completed") {
+            if (order.paymentStatus === "paid") {
                 return sum + (order.subtotal || 0);
             }
             return sum;
@@ -215,10 +216,56 @@ const getProfitLossStats = async ({ req }) => {
     }
 };
 exports.getProfitLossStats = getProfitLossStats;
+const getCashierCheckoutStats = async () => {
+    try {
+        const [totalActiveOrders, readyForCheckout, pendingPayments, tableStats,] = await Promise.all([
+            ticket_repository_1.default.count({
+                status: {
+                    $in: ["pending", "served"],
+                },
+            }),
+            order_repository_1.default.count({
+                status: "completed",
+                paymentStatus: {
+                    $ne: "paid",
+                },
+            }),
+            order_repository_1.default.count({
+                paymentStatus: {
+                    $ne: "paid",
+                },
+            }),
+            table_repository_1.default.getTableStats(),
+        ]);
+        return {
+            status: 200,
+            body: {
+                success: true,
+                data: {
+                    totalActiveOrders,
+                    readyForCheckout,
+                    pendingPayments,
+                    tablesInHouse: tableStats.total,
+                },
+            },
+        };
+    }
+    catch (error) {
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Failed to fetch cashier checkout stats",
+            },
+        };
+    }
+};
+exports.getCashierCheckoutStats = getCashierCheckoutStats;
 exports.statsQueryHandler = {
     getDashboardStats: exports.getDashboardStats,
     getTableStats: exports.getTableStats,
     getRevenueChart: exports.getRevenueChart,
     getRevenueStats: exports.getRevenueStats,
     getProfitLossStats: exports.getProfitLossStats,
+    getCashierCheckoutStats: exports.getCashierCheckoutStats,
 };

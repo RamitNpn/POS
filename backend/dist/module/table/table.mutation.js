@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tableMutationHandler = exports.removeTable = exports.updateTicketStatus = exports.updateTable = exports.createTable = void 0;
+exports.tableMutationHandler = exports.removeTable = exports.updateTableStatus = exports.updateTable = exports.createTable = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const table_repository_1 = __importDefault(require("../../repository/table.repository"));
+const ticket_repository_1 = __importDefault(require("../../repository/ticket.repository"));
 const createTable = async ({ req }) => {
     try {
         const existing = await table_repository_1.default.getByName(req.body.name);
@@ -20,7 +21,7 @@ const createTable = async ({ req }) => {
         }
         await table_repository_1.default.create({
             ...req.body,
-            sectionId: new mongoose_1.default.Types.ObjectId(req.body.sectionId)
+            sectionId: new mongoose_1.default.Types.ObjectId(req.body.sectionId),
         });
         return {
             status: 201,
@@ -91,7 +92,7 @@ const updateTable = async ({ req }) => {
     }
 };
 exports.updateTable = updateTable;
-const updateTicketStatus = async ({ req }) => {
+const updateTableStatus = async ({ req }) => {
     try {
         const { tableID } = req.params;
         const { status } = req.body;
@@ -102,6 +103,17 @@ const updateTicketStatus = async ({ req }) => {
                 body: {
                     success: false,
                     error: "Table not found",
+                },
+            };
+        }
+        const tickets = await ticket_repository_1.default.getByTableID(tableID);
+        const hasUnservedTickets = tickets.some((ticket) => ticket.status !== "served");
+        if (hasUnservedTickets) {
+            return {
+                status: 400,
+                body: {
+                    success: false,
+                    error: "Cannot change table status while there are pending kitchen tickets.",
                 },
             };
         }
@@ -125,7 +137,7 @@ const updateTicketStatus = async ({ req }) => {
         };
     }
 };
-exports.updateTicketStatus = updateTicketStatus;
+exports.updateTableStatus = updateTableStatus;
 const removeTable = async ({ req }) => {
     const { tableID } = req.params;
     const table = await table_repository_1.default.getByID(tableID);
@@ -151,6 +163,6 @@ exports.removeTable = removeTable;
 exports.tableMutationHandler = {
     createTable: exports.createTable,
     updateTable: exports.updateTable,
-    updateTicketStatus: exports.updateTicketStatus,
+    updateTableStatus: exports.updateTableStatus,
     removeTable: exports.removeTable,
 };

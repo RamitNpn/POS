@@ -48,6 +48,10 @@ const KitchenTicketItemSchema = new mongoose_1.Schema({
         type: Number,
         required: true,
     },
+    price: {
+        type: Number,
+        required: true,
+    },
 }, {
     _id: false,
 });

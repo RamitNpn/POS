@@ -11,4 +11,5 @@ exports.statsRouter = s.router(stats_contract_1.statsContract, {
     getRevenueChart: stats_query_1.statsQueryHandler.getRevenueChart,
     getRevenueStats: stats_query_1.statsQueryHandler.getRevenueStats,
     getProfitLossStats: stats_query_1.statsQueryHandler.getProfitLossStats,
+    cashierCheckoutStats: stats_query_1.statsQueryHandler.getCashierCheckoutStats,
 });

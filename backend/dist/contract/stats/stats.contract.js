@@ -79,4 +79,20 @@ exports.statsContract = c.router({
             500: commonSchema_1.errorSchema,
         },
     },
+    cashierCheckoutStats: {
+        method: "GET",
+        path: "/stats/cashier-checkout",
+        summary: "Get Cashier Page Stats",
+        responses: {
+            200: zod_1.z.object({
+                success: zod_1.z.boolean(),
+                data: zod_1.z.object({
+                    totalActiveOrders: zod_1.z.number(),
+                    readyForCheckout: zod_1.z.number(),
+                    pendingPayments: zod_1.z.number(),
+                    tablesInHouse: zod_1.z.number(),
+                }),
+            }),
+        },
+    },
 });

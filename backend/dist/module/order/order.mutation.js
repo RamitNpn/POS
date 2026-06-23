@@ -12,10 +12,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const createOrder = async ({ req }) => {
     try {
         const { tableId, customerName, waiterId, notes, items } = req.body;
-        // 1. Find active order for table
         let order = await order_repository_1.default.getActiveOrderByTable(tableId);
         let isReorder = false;
-        // 2. Convert frontend items → DB-safe items
         const resolvedItems = [];
         for (const item of items) {
             const menuItem = await menu_item_model_1.default.findById(item.menuItemId);
@@ -39,9 +37,6 @@ const createOrder = async ({ req }) => {
         const subtotal = resolvedItems.reduce((sum, i) => sum + i.total, 0);
         const tax = Number((subtotal * 0.13).toFixed(2));
         const total = subtotal + tax;
-        // =========================
-        // CASE 1: NEW ORDER
-        // =========================
         if (!order) {
             const orderNumber = await order_repository_1.default.generateOrderNumber();
             order = await order_repository_1.default.create({
@@ -58,7 +53,6 @@ const createOrder = async ({ req }) => {
                 status: "active",
                 paymentStatus: "pending",
             });
-            // Create Ticket #1
             await ticket_repository_1.default.create({
                 orderId: order._id,
                 tableId: new mongoose_1.default.Types.ObjectId(tableId),
@@ -67,11 +61,11 @@ const createOrder = async ({ req }) => {
                     menuItemId: i.menuItemId,
                     name: i.name,
                     quantity: i.quantity,
+                    price: i.price,
                 })),
                 printed: false,
                 status: "pending",
             });
-            // Mark table occupied
             await table_model_1.default.findByIdAndUpdate(new mongoose_1.default.Types.ObjectId(tableId), {
                 status: "occupied",
             });
@@ -84,11 +78,7 @@ const createOrder = async ({ req }) => {
                 },
             };
         }
-        // =========================
-        // CASE 2: REORDER
-        // =========================
         isReorder = true;
-        // Merge items into existing order
         for (const newItem of resolvedItems) {
             const existingItem = order.items.find((i) => i.menuItemId.toString() === newItem.menuItemId.toString());
             if (existingItem) {
@@ -99,13 +89,11 @@ const createOrder = async ({ req }) => {
                 order.items.push(newItem);
             }
         }
-        // Update totals
         order.subtotal += subtotal;
         order.tax += tax;
         order.total += total;
         order.ticketCount += 1;
         await order.save();
-        // Create next ticket
         await ticket_repository_1.default.create({
             orderId: order._id,
             tableId: new mongoose_1.default.Types.ObjectId(tableId),
@@ -114,6 +102,7 @@ const createOrder = async ({ req }) => {
                 menuItemId: i.menuItemId,
                 name: i.name,
                 quantity: i.quantity,
+                price: i.price,
             })),
             printed: false,
             status: "pending",
@@ -185,7 +174,10 @@ const removeOrder = async ({ req }) => {
                 },
             };
         }
-        await order_repository_1.default.delete(orderID);
+        const deletedOrder = await order_repository_1.default.delete(orderID);
+        if (deletedOrder) {
+            await ticket_repository_1.default.deleteByOrderId(orderID);
+        }
         return {
             status: 200,
             body: {

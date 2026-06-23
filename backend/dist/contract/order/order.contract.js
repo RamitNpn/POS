@@ -28,6 +28,8 @@ exports.orderContract = c.router({
             status: zod_1.z.string().optional(),
             tableId: zod_1.z.string().optional(),
             search: zod_1.z.string().optional(),
+            to: zod_1.z.string().optional(),
+            from: zod_1.z.string().optional(),
         }),
         responses: {
             200: zod_1.z.object({
@@ -58,6 +60,28 @@ exports.orderContract = c.router({
         responses: {
             200: order_schema_1.getOrderByIdSchema,
             404: commonSchema_1.errorSchema,
+        },
+    },
+    getOrdersByDate: {
+        method: "GET",
+        path: "/order/date-report",
+        summary: "Get completed orders for a specific date with full relations",
+        query: zod_1.z.object({
+            dateReport: zod_1.z.string(),
+        }),
+        responses: {
+            200: zod_1.z.object({
+                success: zod_1.z.boolean(),
+                data: zod_1.z.array(zod_1.z.any()),
+            }),
+            400: zod_1.z.object({
+                success: zod_1.z.boolean(),
+                error: zod_1.z.string(),
+            }),
+            500: zod_1.z.object({
+                success: zod_1.z.boolean(),
+                error: zod_1.z.string(),
+            }),
         },
     },
     // updateOrder: {

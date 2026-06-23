@@ -45,10 +45,14 @@ class TableRepository {
     async getAll({ skip, limit, search, status, sectionId, }) {
         const filter = {};
         if (search) {
-            filter.section = {
-                $regex: search,
-                $options: "i",
-            };
+            filter.$or = [
+                {
+                    name: {
+                        $regex: search,
+                        $options: "i",
+                    },
+                },
+            ];
         }
         if (status) {
             filter.status = status;

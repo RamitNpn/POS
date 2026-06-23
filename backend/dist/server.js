@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_config_1 = require("./config/db.config");
 const app_1 = __importDefault(require("./app"));
+require("../src/config/nodeCorn");
 dotenv_1.default.config();
 const PORT = process.env.PORT || 4000;
 const startServer = async () => {

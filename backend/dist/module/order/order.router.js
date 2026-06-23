@@ -13,4 +13,5 @@ exports.orderRouter = s.router(order_contract_1.orderContract, {
     getAllOrders: order_query_1.orderQueryHandler.getAllOrders,
     getOrderByID: order_query_1.orderQueryHandler.getOrderByID,
     getActiveOrderByTable: order_query_1.orderQueryHandler.getActiveOrderByTable,
+    getOrdersByDate: order_query_1.orderQueryHandler.getOrdersByDate,
 });

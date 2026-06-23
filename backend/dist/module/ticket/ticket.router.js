@@ -9,6 +9,7 @@ const s = (0, express_1.initServer)();
 exports.ticketRouter = s.router(ticket_contract_1.ticketContract, {
     updateTicketStatus: ticket_mutation_1.ticketMutationHandler.updateTicketStatus,
     removeTicket: ticket_mutation_1.ticketMutationHandler.removeTicket,
+    getAllTickets: ticket_query_1.ticketQueryHandler.getAllTickets,
     getTicketByID: ticket_query_1.ticketQueryHandler.getTicketById,
     getLiveTickets: ticket_query_1.ticketQueryHandler.getLiveTickets,
     getTicketsByOrder: ticket_query_1.ticketQueryHandler.getTicketsByOrder,

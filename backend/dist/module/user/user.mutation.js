@@ -9,8 +9,6 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const createUser = async ({ req }) => {
     try {
         const { name, email, role, password, phone, status } = req.body;
-        console.log("BODY:", req.body);
-        console.log("FILES:", req.files);
         const existingUser = await user_repository_1.default.getByEmail(email.toLowerCase());
         if (existingUser) {
             return {

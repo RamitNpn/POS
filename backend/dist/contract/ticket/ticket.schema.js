@@ -12,6 +12,7 @@ exports.kitchenTicketItemSchema = zod_1.z.object({
     menuItemId: zod_1.z.string(),
     name: zod_1.z.string(),
     quantity: zod_1.z.number().min(1),
+    price: zod_1.z.number(),
 });
 exports.kitchenTicketWaiterSchema = zod_1.z.object({
     waiterId: zod_1.z.string().nullable().optional(),

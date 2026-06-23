@@ -7,9 +7,26 @@ const ticket_schema_1 = require("./ticket.schema");
 const commonSchema_1 = require("../commonSchema");
 const c = (0, core_1.initContract)();
 exports.ticketContract = c.router({
-    getLiveTickets: {
+    getAllTickets: {
         method: "GET",
         path: "/ticket",
+        summary: "Get all kitchen tickets",
+        query: zod_1.z.object({
+            page: zod_1.z.coerce.number().optional(),
+            limit: zod_1.z.coerce.number().optional(),
+            search: zod_1.z.string().optional(),
+            status: zod_1.z.string().optional(),
+        }),
+        responses: {
+            200: zod_1.z.object({
+                data: zod_1.z.array(ticket_schema_1.kitchenTicketSchema),
+            }),
+            500: commonSchema_1.errorSchema,
+        },
+    },
+    getLiveTickets: {
+        method: "GET",
+        path: "/ticket/active-tickets",
         summary: "Get all live kitchen tickets",
         query: zod_1.z.object({
             search: zod_1.z.string().optional(),
@@ -23,7 +40,7 @@ exports.ticketContract = c.router({
     },
     getTicketByID: {
         method: "GET",
-        path: "/ticket/:ticketID",
+        path: "/ticket/order/:ticketID",
         summary: "Get kitchen ticket by ID",
         pathParams: zod_1.z.object({
             ticketID: zod_1.z.string(),

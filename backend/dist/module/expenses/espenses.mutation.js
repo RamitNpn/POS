@@ -5,12 +5,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.espensesMutationHandler = exports.deleteExpense = exports.updateExpense = exports.createExpense = void 0;
 const expenses_repository_1 = __importDefault(require("../../repository/expenses.repository"));
+const log_repository_1 = __importDefault(require("../../repository/log.repository"));
+const user_repository_1 = __importDefault(require("../../repository/user.repository"));
 const createExpense = async ({ body }) => {
     try {
-        await expenses_repository_1.default.create({
+        const expense = await expenses_repository_1.default.create({
             ...body,
             date: new Date(body.date),
         });
+        const admins = await user_repository_1.default.getByRole("admin");
+        const admin = admins?.[0];
+        if (admin) {
+            await log_repository_1.default.create({
+                userId: admin._id,
+                action: "Expense Create",
+                details: `${admin.name} added an expense in ${body.category}`,
+                module: "Expense",
+                entityId: `${expense._id}`,
+                entityType: "Expense",
+            });
+        }
         return {
             status: 201,
             body: {
@@ -43,6 +57,18 @@ const updateExpense = async ({ req }) => {
                 },
             };
         }
+        const admins = await user_repository_1.default.getByRole("admin");
+        const admin = admins?.[0];
+        if (admin) {
+            await log_repository_1.default.create({
+                userId: admin._id,
+                action: "Expense Update",
+                details: `${admin.name} updated an expense in ${req.body.category || "list"}`,
+                module: "Expense",
+                entityId: `${updated._id}`,
+                entityType: "Expense",
+            });
+        }
         return {
             status: 200,
             body: {
@@ -73,6 +99,18 @@ const deleteExpense = async ({ req }) => {
                     error: "Expense not found",
                 },
             };
+        }
+        const admins = await user_repository_1.default.getByRole("admin");
+        const admin = admins?.[0];
+        if (admin) {
+            await log_repository_1.default.create({
+                userId: admin._id,
+                action: "Expense deleted",
+                details: `${admin.name} deleted an expense from ${deleted.category || "list"}`,
+                module: "Expense",
+                entityId: `${deleted._id}`,
+                entityType: "Expense",
+            });
         }
         return {
             status: 200,

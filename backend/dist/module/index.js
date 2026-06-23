@@ -18,8 +18,15 @@ const purchase_router_1 = require("./purchase/purchase.router");
 const order_router_1 = require("./order/order.router");
 const stock_movement_router_1 = require("./stock-movement/stock-movement.router");
 const espenses_router_1 = require("./expenses/espenses.router");
+const auth_router_1 = require("./auth/auth.router");
+const log_router_1 = require("./logs/log.router");
+const report_router_1 = require("./daily-report/report.router");
+const role_router_1 = require("./role/role.router");
+const branch_router_1 = require("./branch/branch.router");
+const sales_router_1 = require("./sales/sales.router");
 const s = (0, express_1.initServer)();
 exports.router = s.router(contract_1.contract, {
+    auth: auth_router_1.authRouter,
     user: user_router_1.userRouter,
     room: room_router_1.roomRouter,
     table: table_router_1.tableRouter,
@@ -35,4 +42,9 @@ exports.router = s.router(contract_1.contract, {
     purchase: purchase_router_1.purchaseRouter,
     stockMovement: stock_movement_router_1.stockMovementRouter,
     expenses: espenses_router_1.expenseRouter,
+    logs: log_router_1.activityLogRouter,
+    report: report_router_1.reportRouter,
+    role: role_router_1.roleRouter,
+    branch: branch_router_1.branchRouter,
+    sales: sales_router_1.salesRouter,
 });

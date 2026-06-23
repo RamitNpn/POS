@@ -18,14 +18,14 @@ const env_1 = __importDefault(require("./config/env"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: [
-        env_1.default.frontend_url || "https://thedineflow.vercel.app",
+        env_1.default.frontend_url || "https://localvibes.cornortech.com",
     ],
     credentials: true,
 }));
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use((0, morgan_1.default)("dev"));
+app.use((0, morgan_1.default)("production"));
 app.use("/dineflow-api", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_config_1.openApiDocument));
 (0, express_2.createExpressEndpoints)(contract_1.contract, module_1.router, app);
 exports.default = app;

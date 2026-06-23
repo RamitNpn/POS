@@ -8,7 +8,7 @@ const menu_item_repository_1 = __importDefault(require("../../repository/menu-it
 const getAllMenuItems = async ({ req }) => {
     try {
         const page = Number(req.query.page ?? 1);
-        const limit = Number(req.query.limit ?? 10);
+        const limit = Number(req.query.limit);
         const { data, total } = await menu_item_repository_1.default.getAll({
             skip: (page - 1) * limit,
             limit,

@@ -64,7 +64,7 @@ const getRoomByID = async ({ req }) => {
                 },
             };
         }
-        const tableCount = await room_repository_1.default.countByRoom(room._id.toString());
+        const tableCount = await table_repository_1.default.countByRoom(room._id.toString());
         return {
             status: 200,
             body: {

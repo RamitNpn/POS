@@ -34,7 +34,7 @@ class MenuItemRepository {
             filter.name = { $regex: search, $options: "i" };
         }
         const [data, total] = await Promise.all([
-            menu_item_model_1.default.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
+            menu_item_model_1.default.find(filter).skip(skip).limit(limit).sort({}),
             menu_item_model_1.default.countDocuments(filter),
         ]);
         return { data, total };

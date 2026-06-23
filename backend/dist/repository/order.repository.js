@@ -16,7 +16,7 @@ class OrderRepository {
             throw new Error(`Error creating order: ${error}`);
         }
     }
-    async getAll({ skip, limit, status, tableId, search, }) {
+    async getAll({ skip, limit, status, tableId, search, from, to, }) {
         try {
             const query = {};
             if (status && status !== "all") {
@@ -40,6 +40,16 @@ class OrderRepository {
                         },
                     },
                 ];
+            }
+            // Date range filter
+            if (from || to) {
+                query.createdAt = {};
+                if (from) {
+                    query.createdAt.$gte = new Date(from);
+                }
+                if (to) {
+                    query.createdAt.$lte = new Date(to);
+                }
             }
             const data = await this.model
                 .find(query)
@@ -91,6 +101,29 @@ class OrderRepository {
         }
         catch (error) {
             throw new Error(`Error fetching active order: ${error}`);
+        }
+    }
+    async getOrdersByDate(dateReport) {
+        try {
+            const start = new Date(dateReport);
+            start.setHours(0, 0, 0, 0);
+            const end = new Date(dateReport);
+            end.setHours(23, 59, 59, 999);
+            const query = {
+                status: "completed",
+                createdAt: {
+                    $gte: start,
+                    $lte: end,
+                },
+            };
+            const data = await this.model
+                .find(query)
+                .populate("items.menuItemId")
+                .sort({ createdAt: -1 });
+            return data;
+        }
+        catch (error) {
+            throw new Error(`Failed to get orders by date: ${error}`);
         }
     }
     async update(id, data) {
@@ -199,16 +232,14 @@ class OrderRepository {
                             createdAt: {
                                 $gte: currentMonthStart,
                             },
-                            status: {
-                                $ne: "cancelled",
-                            },
+                            paymentStatus: "paid",
                         },
                     },
                     {
                         $group: {
                             _id: null,
                             totalRevenue: {
-                                $sum: "$totalAmount",
+                                $sum: "$total",
                             },
                             totalOrders: {
                                 $sum: 1,
@@ -223,16 +254,14 @@ class OrderRepository {
                                 $gte: previousMonthStart,
                                 $lte: previousMonthEnd,
                             },
-                            status: {
-                                $ne: "cancelled",
-                            },
+                            paymentStatus: "paid",
                         },
                     },
                     {
                         $group: {
                             _id: null,
                             totalRevenue: {
-                                $sum: "$totalAmount",
+                                $sum: "$total",
                             },
                             totalOrders: {
                                 $sum: 1,
@@ -241,7 +270,7 @@ class OrderRepository {
                     },
                 ]),
                 this.model.countDocuments({
-                    status: "active",
+                    paymentStatus: "paid",
                 }),
             ]);
             return {
@@ -286,9 +315,7 @@ class OrderRepository {
                     break;
             }
             const matchStage = {
-                status: {
-                    $ne: "cancelled",
-                },
+                paymentStatus: "paid",
             };
             if (startDate) {
                 matchStage.createdAt = {
@@ -309,7 +336,7 @@ class OrderRepository {
                             },
                         },
                         revenue: {
-                            $sum: "$subtotal",
+                            $sum: "$total",
                         },
                         orders: {
                             $sum: 1,
