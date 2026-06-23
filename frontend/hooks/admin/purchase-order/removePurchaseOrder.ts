@@ -3,7 +3,7 @@ import { toast } from "@/hooks/use-toast";
 import { ingredientApi } from "@/lib/api/ingredient.api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useDeleteIngredient() {
+export function useDeletePurchaseOrder() {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -11,8 +11,8 @@ export function useDeleteIngredient() {
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["delete ingredient"] });
       toast({
-        title: "Ingredient Created",
-        description: "The ingredient was deleted successfully.",
+        title: "Ingredient Delete",
+        description: "The purchase order was deleted successfully.",
       });
     },
     onError: (error: any) => {

@@ -11,8 +11,8 @@ export function useDeleteRoom() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
       toast({
-        title: "Section Deleted",
-        description: "The section was removed successfully.",
+        title: "Room Delete",
+        description: "The room was removed successfully.",
       });
     },
     onError: (error: any) => {

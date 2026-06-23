@@ -11,7 +11,7 @@ export function useDeleteIngredient() {
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["delete ingredient"] });
       toast({
-        title: "Ingredient Created",
+        title: "Ingredient Create",
         description: "The ingredient was deleted successfully.",
       });
     },

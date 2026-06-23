@@ -13,6 +13,7 @@ import {
   createUserSchema,
   TCreateUserSchema,
   TUpdateUserSchema,
+  updateUserSchema,
 } from "@/lib/validations/user.validation";
 import { userApi } from "@/lib/api/user.api";
 import { toast } from "@/hooks/use-toast";
@@ -38,7 +39,7 @@ function UserEditForm({ userId, onClose, size = "lg" }: Props) {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: zodResolver(createUserSchema),
+    resolver: zodResolver(updateUserSchema),
     defaultValues: {
       name: "",
       email: "",

@@ -1,5 +1,14 @@
  [
   {
+    "name": "Green Salad",
+    "description": "Fresh carrot, cucumber and radish salad",
+    "price": 175,
+    "categoryId": "6a3034064f59a5564b31fcf6",
+    "image":
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+    "status": "available"
+  },
+  {
     "name": "Nepali Salad",
     "description": "Traditional Nepali style mixed salad",
     "price": 150,
@@ -16,6 +25,15 @@
     "image":
       "https://images.unsplash.com/photo-1564093497595-593b96d80180?auto=format&fit=crop&w=800&q=80",
     "status": "available"
+  },
+    {
+    "name": "Bread Toast with Jam",
+    "description": "Toasted bread served with jam",
+    "price": 150,
+    "categoryId": "6a3034064f59a5564b31fcf7",
+    "image":
+      "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
   },
   {
     "name": "Bread Omelette",
@@ -1291,6 +1309,38 @@
     "categoryId": "6a3034064f59a5564b31fcf5",
     "image":
       "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+    "status": "available"
+  },
+  {
+    "name": "Bhutuwa Mutton",
+    "description": "Traditional Nepalese style pan-fried mutton with local spices",
+    "price": 350,
+    "categoryId": "YOUR_SITAN_CATEGORY_ID_HERE",
+    "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=800&q=80",
+    "status": "available"
+  },
+  {
+    "name": "Hekula (Fry/Sadheko)",
+    "description": "Crispy fried or spicy marinated mutton brisket chunk skewers",
+    "price": 450,
+    "categoryId": "YOUR_SITAN_CATEGORY_ID_HERE",
+    "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+    "status": "available"
+  },
+  {
+    "name": "Chicken Pangra Fry",
+    "description": "Deep-fried seasoned chicken gizzards tossed with onions and green chilies",
+    "price": 350,
+    "categoryId": "YOUR_SITAN_CATEGORY_ID_HERE",
+    "image": "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=800&q=80",
+    "status": "available"
+  },
+  {
+    "name": "Chicken Dameko",
+    "description": "Char-grilled or pan-seared smoky chicken seasoned with traditional herbs",
+    "price": 400,
+    "categoryId": "YOUR_SITAN_CATEGORY_ID_HERE",
+    "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80",
     "status": "available"
   }
 ]

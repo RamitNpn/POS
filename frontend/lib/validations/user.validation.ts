@@ -35,12 +35,12 @@ export const getUserByIdSchema = userSchema;
 export type TGetUserByIdSchema = z.infer<typeof getUserByIdSchema>;
 
 export const updateUserSchema = z.object({
-  name: z.string().trim().min(2).max(100).optional(),
+  name: z.string().trim().optional(),
   email: z.string().email().optional(),
   role: userRoleEnum.optional(),
   profile: z.any().optional(),
   password: z.string().optional(),
-  phone: z.string().min(7).max(20).optional(),
+  phone: z.string().optional(),
   status: userStatusEnum.optional(),
 });
 

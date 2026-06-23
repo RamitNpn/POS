@@ -11,7 +11,7 @@ export function useDeleteTable() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tables"] });
       toast({
-        title: "Table Deleted",
+        title: "Table Delete",
         description: "The table was removed successfully.",
       });
     },
