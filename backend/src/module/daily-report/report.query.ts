@@ -1,47 +1,54 @@
-// queries/getDailyReports.ts
-
 import { AppRouteQueryImplementation } from "@ts-rest/express";
 import { reportContract } from "../../contract/daily-report/report.contract";
 import { dailyReportRepository } from "../../repository/report.repository";
 
 export const getDailyReports: AppRouteQueryImplementation<
   typeof reportContract.getDailyReports
-> = async ({ query }) => {
-  const { page, limit } = query;
+> = async ({ req }) => {
+  try {
+    const page = Number(req.query.page ?? 1);
+    const limit = Number(req.query.limit);
+    const skip = (page - 1) * limit;
 
-  const result =
-    await dailyReportRepository.getAll(page, limit);
+    const to = req.query.to as string | undefined;
+    const from = req.query.from as string | undefined;
 
-  return {
-    status: 200,
-    body: {
-      success: true,
+    const result = await dailyReportRepository.getAll({skip, limit, to, from});
 
-      data: result.data.map((report) => ({
-        id: report._id.toString(),
+    return {
+      status: 200,
+      body: {
+        success: true,
 
-        reportDate: report.reportDate.toISOString(),
+        data: result.data.map((report) => ({
+          id: report._id.toString(),
+          reportDate: report.reportDate.toISOString(),
+          totalRevenue: report.totalRevenue,
+          totalOrders: report.totalOrders,
+          cashSales: report.cashSales,
+          onlineSales: report.onlineSales,
+          totalDiscount: report.totalDiscount,
+          totalTax: report.totalTax,
+          generatedAt: report.generatedAt.toISOString(),
+        })),
 
-        totalRevenue: report.totalRevenue,
-        totalOrders: report.totalOrders,
-
-        cashSales: report.cashSales,
-        onlineSales: report.onlineSales,
-
-        totalDiscount: report.totalDiscount,
-        totalTax: report.totalTax,
-
-        generatedAt: report.generatedAt.toISOString(),
-      })),
-
-      pagination: {
-        page,
-        limit,
-        total: result.total,
-        totalPages: Math.ceil(result.total / limit),
+        pagination: {
+          page,
+          limit,
+          total: result.total,
+          totalPages: Math.ceil(result.total / limit),
+        },
       },
-    },
-  };
+    };
+  } catch {
+    return {
+      status: 500,
+      body: {
+        success: false,
+        error: "Failed to fetch daily reports",
+      },
+    };
+  }
 };
 
 export const reportQueryHandler = {

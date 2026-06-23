@@ -1,6 +1,12 @@
 import DailyReportModel from "../model/report.model";
 
 class DailyReportRepository {
+  private model;
+
+  constructor() {
+    this.model = DailyReportModel;
+  }
+
   async create(payload: any) {
     return DailyReportModel.create(payload);
   }
@@ -11,19 +17,43 @@ class DailyReportRepository {
     });
   }
 
-  async getAll(page: number, limit: number) {
-    const skip = (page - 1) * limit;
+  async getAll({
+    limit,
+    skip,
+    from,
+    to,
+  }: {
+    limit: number;
+    skip: number;
+    from?: string;
+    to?: string;
+  }) {
 
-    const [data, total] = await Promise.all([
-      DailyReportModel.find().sort({ reportDate: -1 }).skip(skip).limit(limit),
+    const query: any = {};
 
-      DailyReportModel.countDocuments(),
-    ]);
+    if (from || to) {
+      query.reportDate = {};
 
-    return {
-      data,
-      total,
-    };
+      if (from) {
+        query.reportDate.$gte = new Date(from);
+      }
+
+      if (to) {
+        query.reportDate.$lte = new Date(to);
+      }
+    }
+
+    console.log("FINAL QUERY:", JSON.stringify(query, null, 2));
+
+    const data = await this.model
+      .find(query)
+      .sort({ reportDate: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await this.model.countDocuments(query);
+
+    return { data, total };
   }
 }
 

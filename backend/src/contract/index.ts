@@ -17,6 +17,9 @@ import { expenseContract } from "./expenses/expenses.contract";
 import { authContract } from "./auth/auth.contract";
 import { activityLogContract } from "./logs/log.contract";
 import { reportContract } from "./daily-report/report.contract";
+import { roleContract } from "./role/role.contract";
+import { branchContract } from "./branch/branch.contract";
+import { salesContract } from "./sales/sales.contract";
 
 const c = initContract();
 
@@ -39,4 +42,7 @@ export const contract = c.router({
     expenses: expenseContract,
     logs: activityLogContract,
     report: reportContract,
+    role: roleContract,
+    branch: branchContract,
+    sales: salesContract,
 });

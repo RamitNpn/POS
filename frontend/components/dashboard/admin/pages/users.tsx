@@ -255,7 +255,7 @@ export default function UsersPage() {
                 <Label htmlFor="new-user-role">Role</Label>
                 <select
                   id="new-user-role"
-                  className="mt-2 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   {...register("role")}
                 >
                   <option value="admin">Administrator</option>
@@ -273,7 +273,7 @@ export default function UsersPage() {
                 <Label htmlFor="new-user-status">Status</Label>
                 <select
                   id="new-user-status"
-                  className="mt-2 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   {...register("status")}
                 >
                   <option value="active">Active</option>
@@ -415,6 +415,7 @@ export default function UsersPage() {
                       </button>
                       <button
                         onClick={() => setItemToRemove(user._id)}
+                        disabled={user.role === "admin"}
                         className="flex items center text-red-600 hover:text-red-700 p-1 rounded"
                       >
                         <Trash2 className="h-5 w-5" />

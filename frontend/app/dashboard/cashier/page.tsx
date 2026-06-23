@@ -23,9 +23,9 @@ import { useReactToPrint } from "react-to-print";
 
 import OrderTicketPrint from "@/components/dashboard/cashier/ticket-print";
 import { TicketTable } from "@/components/shared/ticketTable";
-import { useLiveTickets } from "@/hooks/cahsier/getAllTicket";
 import { useCashierDashboardStats } from "@/hooks/shared/stats/getChasierDashboardStats";
 import { TTicket } from "@/lib/types/ticket.types";
+import { useLiveTickets } from "@/hooks/cahsier/getAllLiveTickets";
 
 export default function CashierDashboard() {
   const [searchTerm, setSearchTerm] = useState("");

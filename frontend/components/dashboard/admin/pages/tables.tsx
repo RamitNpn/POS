@@ -32,7 +32,7 @@ import { toast } from "@/hooks/use-toast";
 import { TTable } from "@/lib/types/table.types";
 import { useAllRooms } from "@/hooks/admin/room/getAllRooms";
 import { TRoom } from "@/lib/types/room.types";
-import { Cross, Download, Edit, Trash2 } from "lucide-react";
+import { Download, Edit, Trash2 } from "lucide-react";
 import { useDeleteTable } from "@/hooks/admin/table/removeTable";
 import ConfirmDialog from "@/components/shared/confirmDialog";
 import TableEditForm from "@/components/dashboard/admin/editForm/table.edit";
@@ -314,7 +314,7 @@ export default function TablesPage() {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-4">
                         <button
                           type="button"
                           onClick={() => setEditId(table._id)}

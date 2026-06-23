@@ -18,8 +18,8 @@ import { useState } from "react";
 import { useAllTables } from "@/hooks/admin/table/getAllTables";
 import { TableStatus, TTable } from "@/lib/types/table.types";
 import { useTableStats } from "@/hooks/shared/stats/getTableStats";
-import { useLiveTickets } from "@/hooks/cahsier/getAllTicket";
 import { Status, TTicket } from "@/lib/types/ticket.types";
+import { useLiveTickets } from "@/hooks/cahsier/getAllLiveTickets";
 
 const tableStatusOptions: { value: TableStatus | "all"; label: string }[] = [
   { value: "all", label: "All statuses" },

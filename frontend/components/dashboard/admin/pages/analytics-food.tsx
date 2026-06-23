@@ -1,13 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
-import { RevenueChart } from "@/components/dashboard/revenue-chart";
-import { api } from "@/lib/api/mock-data";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -17,27 +10,33 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { statusStyle, MetricCard, PageSection, SearchField, TableBadge, formatDate } from "@/components/dashboard/admin/shared";
-import type { AdminDashboardStats, Branch, Expense, Ingredient, MenuCategory, MenuItem, MenuModifier, Notification, Order, PurchaseOrder, Reservation, Role, SalesByCategory, StaffMember, StockMovement, Supplier, Table as DiningTable, TableSection, ManagedUser, RevenueData } from "@/lib/types";
+  MetricCard,
+  PageSection,
+} from "@/components/dashboard/admin/shared";
+import { TSalesItem, TTopSellingItems } from "@/lib/types/sales.types";
+import { useTopSellingItems } from "@/hooks/admin/sales/getTopSellingItems";
 
 export default function FoodAnalyticsPage() {
-  const { data: salesByCategory = [] } = useQuery<SalesByCategory[]>({ queryKey: ['sales-by-category'], queryFn: () => api.getSalesByCategory() });
-  const { data: topItems = [] } = useQuery<any[]>({ queryKey: ['top-selling-items'], queryFn: () => api.getTopSellingItems() });
+
+  const { data: itemResponse } = useTopSellingItems({});
+
+  const itemData: TTopSellingItems | undefined = itemResponse;
 
   return (
     <div className="space-y-6">
-      <DashboardHeader title="Food Analytics" description="Track menu category performance and top selling dishes." />
+      <DashboardHeader
+        title="Food Analytics"
+        description="Track menu category performance and top selling dishes."
+      />
       <div className="grid gap-4 lg:grid-cols-3">
-        <MetricCard title="Top item" value={topItems[0]?.name ?? 'N/A'} />
-        <MetricCard title="Top revenue" value={`$${topItems[0]?.revenue.toFixed(2) ?? '0.00'}`} />
-        <MetricCard title="Category count" value={salesByCategory.length} />
+        <MetricCard title="Top item" value={itemData?.topItem ?? "N/A"} />
+
+        <MetricCard
+          title="Top revenue"
+          value={`Rs ${(itemData?.topRevenue ?? 0).toFixed(2)}`}
+        />
+
+        <MetricCard title="Item count" value={itemData?.totalItems ?? 0} />
       </div>
       <PageSection title="Top Selling Items">
         <Table>
@@ -49,11 +48,11 @@ export default function FoodAnalyticsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {topItems.map((item) => (
-              <TableRow key={item.id}>
+            {itemData?.items?.map((item: TSalesItem) => (
+              <TableRow key={item.menuItemId}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.quantity}</TableCell>
-                <TableCell>${item.revenue.toFixed(2)}</TableCell>
+                <TableCell>Rs {item.revenue.toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

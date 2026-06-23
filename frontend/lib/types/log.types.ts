@@ -7,7 +7,7 @@ export interface User {
 }
 
 export interface TActivityLog {
-  id: string;
+  _id: string;
   userId: string;
   user: User;
   action: string;

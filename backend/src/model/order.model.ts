@@ -1,5 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+export type OrderStatus = "active" | "completed" | "cancelled";
+
 export interface IOrderItem {
   menuItemId: mongoose.Types.ObjectId;
   name: string;
@@ -20,7 +22,7 @@ export interface IOrder extends Document {
   tax: number;
   total: number;
   ticketCount: number;
-  status: "active" | "completed" | "cancelled";
+  status: OrderStatus;
   paymentStatus: "pending" | "paid" | "partial";
   createdAt: Date;
 }

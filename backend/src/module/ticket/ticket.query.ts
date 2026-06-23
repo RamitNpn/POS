@@ -39,6 +39,73 @@ const mapTicket = (ticket: any) => {
   };
 };
 
+export const getAllTickets: AppRouteQueryImplementation<
+  typeof ticketContract.getAllTickets
+> = async (req) => {
+  try {
+    const page = Number(req.query.page ?? 1);
+    const limit = Number(req.query.limit);
+    const search = req.query.search as string | undefined;
+    const status = req.query.status as string | undefined;
+    if (status && status !== "all") {
+      req.query.status = status;
+    }
+
+    const tickets = await kitchenTicketRepository.getAll({
+      skip: 0,
+      limit,
+      status: status,
+      search,
+    });
+
+    return {
+      status: 200,
+      body: {
+        data: tickets.data.map(mapTicket),
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      body: {
+        success: false,
+        error: "Failed to fetch tickets",
+      },
+    };
+  }
+};
+
+export const getLiveTickets: AppRouteQueryImplementation<
+  typeof ticketContract.getLiveTickets
+> = async (req) => {
+  try {
+    const search = req.query.search as string | undefined;
+
+    const tickets = await kitchenTicketRepository.getLatestTickets({
+      skip: 0,
+      limit: 100,
+      search,
+    });
+
+    return {
+      status: 200,
+      body: {
+        data: tickets.data.map(mapTicket),
+      },
+    };
+  } catch (error) {
+    console.error("LIVE TICKETS ERROR:", error);
+
+    return {
+      status: 500,
+      body: {
+        success: false,
+        error: (error as Error).message,
+      },
+    };
+  }
+};
+
 export const getTicketById: AppRouteQueryImplementation<
   typeof ticketContract.getTicketByID
 > = async ({ req }) => {
@@ -67,42 +134,6 @@ export const getTicketById: AppRouteQueryImplementation<
       body: {
         success: false,
         error: "Failed to fetch ticket",
-      },
-    };
-  }
-};
-
-export const getLiveTickets: AppRouteQueryImplementation<
-  typeof ticketContract.getLiveTickets
-> = async (req) => {
-  try {
-    const search = req.query.search as string | undefined;
-
-    const status = req.query.status as string | undefined;
-
-    if (status && status !== "all") {
-      req.query.status = status;
-    }
-
-    const tickets = await kitchenTicketRepository.getAll({
-      skip: 0,
-      limit: 100,
-      status: status || "pending",
-      search,
-    });
-
-    return {
-      status: 200,
-      body: {
-        data: tickets.data.map(mapTicket),
-      },
-    };
-  } catch (error) {
-    return {
-      status: 500,
-      body: {
-        success: false,
-        error: "Failed to fetch tickets",
       },
     };
   }
@@ -144,6 +175,7 @@ export const getTicketsByOrder: AppRouteQueryImplementation<
 };
 
 export const ticketQueryHandler = {
+  getAllTickets,
   getTicketById,
   getLiveTickets,
   getTicketsByOrder,

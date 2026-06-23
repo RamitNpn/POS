@@ -9,15 +9,15 @@ import { CardFooter } from "@/components/ui/card";
 import { PageSection } from "@/components/dashboard/admin/shared";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMenuCategoryById } from "@/hooks/admin/menu-category/getMenuCategoryById";
-import { menuCategoryApi } from "@/lib/api/menu-category.api";
 import { toast } from "@/hooks/use-toast";
 import FormHeader from "@/components/shared/formHeader";
+import clsx from "clsx";
+import { useMenuCategoryById } from "@/hooks/admin/menu-category/getMenuCategoryById";
 import {
   TUpdateMenuCategorySchema,
   updateMenuCategorySchema,
 } from "@/lib/validations/menu-category.validation";
-import clsx from "clsx";
+import { menuCategoryApi } from "@/lib/api/menu-category.api";
 
 type Props = {
   categoryId: string;
@@ -31,14 +31,9 @@ export default function MenuCategoryEditForm({
   size = "lg",
 }: Props) {
   const { data: categoryData } = useMenuCategoryById(categoryId);
-  const category = categoryData?.data;
+  const table = categoryData?.data ?? categoryData;
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<TUpdateMenuCategorySchema>({
+  const { register, handleSubmit, reset } = useForm<TUpdateMenuCategorySchema>({
     resolver: zodResolver(updateMenuCategorySchema),
     defaultValues: {
       name: "",
@@ -47,26 +42,26 @@ export default function MenuCategoryEditForm({
   });
 
   useEffect(() => {
-    if (!category) return;
+    if (!table) return;
 
     reset({
-      name: category.name,
-      description: category.description || "",
+      name: table.name,
+      description: table.description,
     });
-  }, [category, reset]);
+  }, [table, reset]);
 
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
     mutationFn: ({
       categoryId,
-      formData,
+      data,
     }: {
       categoryId: string;
-      formData: FormData;
-    }) => menuCategoryApi.updateMenuCategoryApi(categoryId, formData),
+      data: TUpdateMenuCategorySchema;
+    }) => menuCategoryApi.updateMenuCategoryApi(categoryId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["menu-categories"] });
+      queryClient.invalidateQueries({ queryKey: ["tables"] });
       toast({
         title: "Category Updated",
         description: "The category was updated successfully.",
@@ -87,14 +82,10 @@ export default function MenuCategoryEditForm({
   });
 
   const onSubmit = (data: TUpdateMenuCategorySchema) => {
-    const formData = new FormData();
-    formData.append("name", data.name || "");
-    formData.append("description", data.description || "");
-
-    mutate({ categoryId, formData });
+    mutate({ categoryId, data });
   };
 
-  if (!category) return null;
+  if (!table) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -111,46 +102,36 @@ export default function MenuCategoryEditForm({
         )}
       >
         <FormHeader
-          title="Edit Category"
-          subtitle="Update menu category details."
+          title="Edit Munu Category"
+          subtitle="Update category details."
           onClose={onClose}
         />
 
         <div className="max-h-[75vh] overflow-y-auto p-6">
-          <PageSection title="Category Details">
-            <div className="grid gap-5 md:grid-cols-2">
+          <PageSection title="Update Category">
+            <div className="grid gap-4 lg:grid-cols-2">
               <div>
-                <Label htmlFor="edit-category-name">Category Name</Label>
+                <Label htmlFor="new-category-name">Category name</Label>
                 <Input
-                  id="edit-category-name"
+                  id="new-category-name"
                   {...register("name")}
                   placeholder="e.g. Main Course"
                 />
-                {errors.name && (
-                  <p className="mt-1 text-xs text-destructive">
-                    {errors.name.message}
-                  </p>
-                )}
               </div>
-              <div className="md:col-span-2">
-                <Label htmlFor="edit-category-description">Description</Label>
+              <div>
+                <Label htmlFor="new-category-description">Description</Label>
                 <Input
-                  id="edit-category-description"
+                  id="new-category-description"
                   {...register("description")}
-                  placeholder="Optional description"
+                  placeholder="Optional category description"
                 />
-                {errors.description && (
-                  <p className="mt-1 text-xs text-destructive">
-                    {errors.description.message}
-                  </p>
-                )}
               </div>
             </div>
           </PageSection>
         </div>
 
         <CardFooter className="border-t border-border bg-muted/20 px-6 py-4 justify-end gap-3">
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button type="submit" disabled={isPending}>

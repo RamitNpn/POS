@@ -231,7 +231,7 @@ export default function MenuItemEditForm({
         </div>
 
         <CardFooter className="border-t border-border bg-muted/20 px-6 py-4 justify-end gap-3">
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button type="submit" disabled={isPending}>

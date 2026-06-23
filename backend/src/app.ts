@@ -16,7 +16,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      env.frontend_url || "http://localhost:3000",
+      env.frontend_url || "https://localvibes.cornortech.com",
     ],
     credentials: true,
   })
@@ -25,7 +25,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"));
+app.use(morgan("production"));
 
 app.use("/dineflow-api", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 

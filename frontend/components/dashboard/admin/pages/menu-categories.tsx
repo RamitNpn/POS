@@ -32,7 +32,7 @@ import { TMenuCategory } from "@/lib/types/menu-category.types";
 import { Download, Edit, Trash2 } from "lucide-react";
 import ConfirmDialog from "@/components/shared/confirmDialog";
 import { useDeleteMenuCategory } from "@/hooks/admin/menu-category/removeMenuCategory";
-import MenuCategoryEditForm from "@/components/dashboard/admin/editForm/menu-category.edit";
+import MenuCategoryEditForm from "../editForm/menu-categories.edit";
 
 export default function MenuCategoriesPage() {
   const [filter, setFilter] = useState("");

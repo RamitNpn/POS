@@ -4,6 +4,7 @@ import {
   TCreateIngredientSchema,
   TDeleteIngredientSchema,
   TGetIngredientByIdSchema,
+  TUpdateIngredientSchema,
 } from "../validations/inventory.validation";
 
 export const createIngredient = async (data: TCreateIngredientSchema) => {
@@ -31,13 +32,9 @@ const getIngredientByIdApi = async (
 
 const updateIngredientApi = async (
   ingredientId: string,
-  formData: FormData,
+  data: TUpdateIngredientSchema,
 ) => {
-  const response = await apiClient.put(
-    `/ingredient/${ingredientId}`,
-    formData,
-    {},
-  );
+  const response = await apiClient.put(`/ingredient/${ingredientId}`, data);
   return response.data;
 };
 

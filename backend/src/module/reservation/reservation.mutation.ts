@@ -2,15 +2,46 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import reservationRepository from "../../repository/reservation.repository";
 import { reservationContract } from "../../contract/reservation/reservation.contract";
 import mongoose from "mongoose";
+import tableRepository from "../../repository/table.repository";
 
 export const createReservation: AppRouteMutationImplementation<
   typeof reservationContract.createReservation
 > = async ({ req }) => {
   try {
+    const table = await tableRepository.getByID(req.body.tableId);
+
+    if (!table) {
+      return {
+        status: 404,
+        body: {
+          success: false,
+          error: "Table not found",
+        },
+      };
+    }
+
     const data = await reservationRepository.create({
       ...req.body,
       tableId: new mongoose.Types.ObjectId(req.body.tableId),
     });
+
+    const status = "reserved";
+
+    const updated = await tableRepository.updateStatus(
+      req.body.tableId,
+      status,
+    );
+
+    if (!updated) {
+      return {
+        status: 404,
+        body: {
+          success: false,
+          message: "Table was not updated",
+          error: "Table was not updated",
+        },
+      };
+    }
 
     return {
       status: 201,

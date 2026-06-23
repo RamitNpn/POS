@@ -16,8 +16,11 @@ export function statusStyle(status: string) {
     case "paid":
     case "approved":
     case "available":
+      return "bg-emerald-100 text-emerald-700";
     case "reserved":
+      return "bg-yellow-100 text-yellow-700";
     case "occupied":
+      return "bg-rose-100 text-rose-700";
     case "received":
     case "confirmed":
       return "bg-emerald-100 text-emerald-700";

@@ -1,4 +1,4 @@
-import OrderModel, { IOrder } from "../model/order.model";
+import OrderModel, { IOrder, OrderStatus } from "../model/order.model";
 
 class OrderRepository {
   private model;
@@ -21,12 +21,16 @@ class OrderRepository {
     status,
     tableId,
     search,
+    from,
+    to,
   }: {
     skip: number;
     limit: number;
     status?: string;
     tableId?: string;
     search?: string;
+    from?: string;
+    to?: string;
   }) {
     try {
       const query: any = {};
@@ -54,6 +58,19 @@ class OrderRepository {
             },
           },
         ];
+      }
+
+      // Date range filter
+      if (from || to) {
+        query.createdAt = {};
+
+        if (from) {
+          query.createdAt.$gte = new Date(from);
+        }
+
+        if (to) {
+          query.createdAt.$lte = new Date(to);
+        }
       }
 
       const data = await this.model
@@ -107,6 +124,33 @@ class OrderRepository {
         .populate("waiterId");
     } catch (error) {
       throw new Error(`Error fetching active order: ${error}`);
+    }
+  }
+
+  async getOrdersByDate(dateReport: string) {
+    try {
+      const start = new Date(dateReport);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(dateReport);
+      end.setHours(23, 59, 59, 999);
+
+      const query = {
+        status: "completed" as OrderStatus,
+        createdAt: {
+          $gte: start,
+          $lte: end,
+        },
+      };
+
+      const data = await this.model
+        .find(query)
+        .populate("items.menuItemId")
+        .sort({ createdAt: -1 });
+
+      return data;
+    } catch (error) {
+      throw new Error(`Failed to get orders by date: ${error}`);
     }
   }
 
@@ -252,9 +296,7 @@ class OrderRepository {
                 createdAt: {
                   $gte: currentMonthStart,
                 },
-                status: {
-                  $ne: "cancelled",
-                },
+                paymentStatus: "paid",
               },
             },
             {
@@ -277,9 +319,7 @@ class OrderRepository {
                   $gte: previousMonthStart,
                   $lte: previousMonthEnd,
                 },
-                status: {
-                  $ne: "cancelled",
-                },
+                paymentStatus: "paid",
               },
             },
             {
@@ -296,7 +336,7 @@ class OrderRepository {
           ]),
 
           this.model.countDocuments({
-            status: "active",
+            paymentStatus: "paid",
           }),
         ]);
 
@@ -351,9 +391,7 @@ class OrderRepository {
       }
 
       const matchStage: any = {
-        status: {
-          $ne: "cancelled",
-        },
+        paymentStatus: "paid",
       };
 
       if (startDate) {

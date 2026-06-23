@@ -212,7 +212,11 @@ export const removeOrder: AppRouteMutationImplementation<
       };
     }
 
-    await orderRepository.delete(orderID);
+    const deletedOrder = await orderRepository.delete(orderID);
+
+    if (deletedOrder) {
+      await kitchenTicketRepository.deleteByOrderId(orderID);
+    }
 
     return {
       status: 200,

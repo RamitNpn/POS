@@ -61,7 +61,7 @@ export function TicketTable({ tickets, onView, onPrint }: Props) {
         {tickets.length === 0 ? (
           <TableRow>
             <TableCell colSpan={8} className="text-center">
-              No tickets found
+              No tickets found for today
             </TableCell>
           </TableRow>
         ) : (

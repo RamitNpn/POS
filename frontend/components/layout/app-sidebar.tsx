@@ -169,7 +169,7 @@ const adminNavGroups: NavGroup[] = [
         href: "/dashboard/admin/inventory/alerts",
         icon: AlertTriangle,
         roles: ["admin"],
-        badge: 3,
+        // badge: 3,
       },
     ],
   },
@@ -196,23 +196,11 @@ const adminNavGroups: NavGroup[] = [
     roles: ["admin"],
     items: [
       {
-        title: "Active Orders",
+        title: "Total Orders",
         href: "/dashboard/admin/orders",
         icon: ClipboardList,
         roles: ["admin"],
-        badge: 5,
-      },
-      {
-        title: "Completed Orders",
-        href: "/dashboard/admin/orders/completed",
-        icon: History,
-        roles: ["admin"],
-      },
-      {
-        title: "Cancelled Orders",
-        href: "/dashboard/admin/orders/cancelled",
-        icon: Receipt,
-        roles: ["admin"],
+        // badge: 5,
       },
     ],
   },
@@ -245,21 +233,9 @@ const adminNavGroups: NavGroup[] = [
     roles: ["admin"],
     items: [
       {
-        title: "Sales Reports",
-        href: "/dashboard/admin/reports/sales",
+        title: "Daily Reports",
+        href: "/dashboard/admin/reports/daily",
         icon: FileText,
-        roles: ["admin"],
-      },
-      {
-        title: "Inventory Reports",
-        href: "/dashboard/admin/reports/inventory",
-        icon: FileSpreadsheet,
-        roles: ["admin"],
-      },
-      {
-        title: "Staff Reports",
-        href: "/dashboard/admin/reports/staff",
-        icon: Users,
         roles: ["admin"],
       },
       {
@@ -286,12 +262,6 @@ const adminNavGroups: NavGroup[] = [
         icon: PieChart,
         roles: ["admin"],
       },
-      {
-        title: "Customer Analytics",
-        href: "/dashboard/admin/analytics/customers",
-        icon: Activity,
-        roles: ["admin"],
-      },
     ],
   },
   {
@@ -303,7 +273,7 @@ const adminNavGroups: NavGroup[] = [
         href: "/dashboard/admin/notifications",
         icon: Bell,
         roles: ["admin"],
-        badge: 4,
+        // badge: 4,
       },
       {
         title: "Audit Logs",
@@ -358,7 +328,7 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
             <span className="text-sm font-semibold text-sidebar-foreground">
-              DineFlow
+              LocalVibes
             </span>
             <span className="text-xs text-muted-foreground">{roleDisplay}</span>
           </div>

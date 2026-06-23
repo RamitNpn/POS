@@ -2,8 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { useLiveTickets } from "@/hooks/cahsier/getAllTicket";
 import { Status, TTicket } from "@/lib/types/ticket.types";
+import { useLiveTickets } from "@/hooks/cahsier/getAllLiveTickets";
 
 interface OrderCardProps {
   order: TTicket;

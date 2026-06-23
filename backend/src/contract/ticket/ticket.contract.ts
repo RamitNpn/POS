@@ -13,11 +13,13 @@ import { successSchema, errorSchema } from "../commonSchema";
 const c = initContract();
 
 export const ticketContract = c.router({
-  getLiveTickets: {
+  getAllTickets: {
     method: "GET",
     path: "/ticket",
-    summary: "Get all live kitchen tickets",
+    summary: "Get all kitchen tickets",
     query: z.object({
+      page: z.coerce.number().optional(),
+      limit: z.coerce.number().optional(),
       search: z.string().optional(),
       status: z.string().optional(),
     }),
@@ -29,9 +31,24 @@ export const ticketContract = c.router({
     },
   },
 
+  getLiveTickets: {
+    method: "GET",
+    path: "/ticket/active-tickets",
+    summary: "Get all live kitchen tickets",
+    query: z.object({
+      search: z.string().optional(),
+    }),
+    responses: {
+      200: z.object({
+        data: z.array(kitchenTicketSchema),
+      }),
+      500: errorSchema,
+    },
+  },
+
   getTicketByID: {
     method: "GET",
-    path: "/ticket/:ticketID",
+    path: "/ticket/order/:ticketID",
     summary: "Get kitchen ticket by ID",
     pathParams: z.object({
       ticketID: z.string(),

@@ -36,7 +36,7 @@ class MenuItemRepository {
     }
 
     const [data, total] = await Promise.all([
-      MenuItem.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
+      MenuItem.find(filter).skip(skip).limit(limit).sort({}),
 
       MenuItem.countDocuments(filter),
     ]);

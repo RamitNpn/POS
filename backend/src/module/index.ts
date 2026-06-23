@@ -20,6 +20,9 @@ import { expenseRouter } from "./expenses/espenses.router";
 import { authRouter } from "./auth/auth.router";
 import { activityLogRouter } from "./logs/log.router";
 import { reportRouter } from "./daily-report/report.router";
+import { roleRouter } from "./role/role.router";
+import { branchRouter } from "./branch/branch.router";
+import { salesRouter } from "./sales/sales.router";
 
 const s = initServer();
 
@@ -42,4 +45,7 @@ export const router = s.router(contract, {
   expenses: expenseRouter,
   logs: activityLogRouter,
   report: reportRouter,
+  role: roleRouter,
+  branch: branchRouter,
+  sales: salesRouter,
 });

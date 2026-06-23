@@ -66,7 +66,7 @@ export default function AuditLogsPage() {
           <TableBody>
             {logs.length > 0 ? (
               logs.map((log: TActivityLog) => (
-                <TableRow key={log.id}>
+                <TableRow key={log._id}>
                   <TableCell>{formatDate(log.createdAt)}</TableCell>
                   <TableCell>{log.user.name}</TableCell>
                   <TableCell>{log.action}</TableCell>

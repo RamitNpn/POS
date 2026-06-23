@@ -39,8 +39,6 @@ export default function SectionsPage() {
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
   const [editId, setEditId] = useState<string | null>(null);
 
-  console.log(editId);
-
   const { data: roomData } = useAllRooms({ search: filter });
   const rooms = roomData?.data ?? [];
 

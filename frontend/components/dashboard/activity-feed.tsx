@@ -46,7 +46,7 @@ export function ActivityFeed({
         ) : (
           <div className="space-y-4">
             {logs.map((activity: TActivityLog) => (
-              <div key={activity.id} className="flex items-start gap-3">
+              <div key={activity._id} className="flex items-start gap-3">
                 <Avatar className="size-8">
                   <AvatarFallback className={getActionColor(activity.action)}>
                     {getInitials(activity.user.name)}

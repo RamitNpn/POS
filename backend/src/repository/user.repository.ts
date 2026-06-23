@@ -105,6 +105,9 @@ class UserRepository {
       throw new Error(`Error counting users: ${error}`);
     }
   }
+    async countByRole(roleId: string) {
+    return this.model.countDocuments({ roleId });
+  }
 }
 
 export default new UserRepository();

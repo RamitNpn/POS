@@ -30,6 +30,8 @@ export const reportContract = c.router({
     query: z.object({
       page: z.coerce.number().default(1),
       limit: z.coerce.number().default(10),
+      to: z.string().optional(),
+      from: z.string().optional(),
     }),
     responses: {
       200: dailyReportsResponseSchema,

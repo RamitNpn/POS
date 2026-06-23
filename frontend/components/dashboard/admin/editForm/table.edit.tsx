@@ -147,7 +147,7 @@ export default function TableEditForm({
                 <select
                   id="edit-table-section"
                   {...register("sectionId")}
-                  className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 >
                   <option value="">Select room</option>
                   {rooms.map((room: TRoom) => (
@@ -180,7 +180,7 @@ export default function TableEditForm({
                 <select
                   id="edit-table-status"
                   {...register("status")}
-                  className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 >
                   <option value="available">Available</option>
                   <option value="occupied">Occupied</option>
@@ -197,7 +197,7 @@ export default function TableEditForm({
         </div>
 
         <CardFooter className="border-t border-border bg-muted/20 px-6 py-4 justify-end gap-3">
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button type="submit" disabled={isPending}>
