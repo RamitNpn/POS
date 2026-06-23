@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAllTables } from "@/hooks/admin/table/getAllTables";
 import { TableStatus, TTable } from "@/lib/types/table.types";
 import { useUpdateTableStatus } from "@/hooks/cahsier/updateTableStatus";
+import { useTableStats } from "@/hooks/shared/stats/getTableStats";
 
 const tableStatusOptions: { value: TableStatus | "all"; label: string }[] = [
   { value: "all", label: "All tables" },
@@ -28,17 +29,30 @@ const tableStatusOptions: { value: TableStatus | "all"; label: string }[] = [
 ];
 
 export default function CashierTablesPage() {
-  const { data: tableData } = useAllTables({});
-
-  const tables = tableData?.data ?? [];
-
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<TableStatus | "all">("all");
   const [selectedTable, setSelectedTable] = useState<TTable | null>(null);
 
-  const filteredTables = tables?.filter(
-    (table: TTable) => statusFilter === "all" || table.status === statusFilter,
-  );
+  const { data: tableData } = useAllTables({
+    search: query,
+  });
+
+  const tables = tableData?.data ?? [];
+
+  const { data: tableStats } = useTableStats();
+
+  const filteredTables = tables?.filter((table: TTable) => {
+    const q = query.trim().toLowerCase();
+
+    const matchesStatus = statusFilter === "all" || table.status === statusFilter;
+
+    const matchesQuery =
+      !q ||
+      (table.name || "").toString().toLowerCase().includes(q) ||
+      (table.section || "").toString().toLowerCase().includes(q);
+
+    return matchesStatus && matchesQuery;
+  });
 
   const { mutate: markServed, isPending } = useUpdateTableStatus();
 
@@ -56,7 +70,7 @@ export default function CashierTablesPage() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-semibold text-foreground">
-              {tables.length}
+              {tableStats?.data.total}
             </p>
           </CardContent>
         </Card>
@@ -66,10 +80,7 @@ export default function CashierTablesPage() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-semibold text-foreground">
-              {
-                tables.filter((table: TTable) => table.status === "occupied")
-                  .length
-              }
+              {tableStats?.data.occupied}
             </p>
           </CardContent>
         </Card>
@@ -79,10 +90,7 @@ export default function CashierTablesPage() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-semibold text-foreground">
-              {
-                tables.filter((table: TTable) => table.status === "available")
-                  .length
-              }
+              {tableStats?.data.available}
             </p>
           </CardContent>
         </Card>
@@ -92,10 +100,7 @@ export default function CashierTablesPage() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-semibold text-foreground">
-              {
-                tables.filter((table: TTable) => table.status === "reserved")
-                  .length
-              }
+              {tableStats?.data.reserved}
             </p>
           </CardContent>
         </Card>
@@ -141,9 +146,11 @@ export default function CashierTablesPage() {
         </CardContent>
       </Card>
 
-      <div className={`grid gap-6 ${selectedTable ? "xl:grid-cols-[1.2fr_0.8fr]" : "grid-cols-1"}`}>
+      <div
+        className={`grid gap-6 ${selectedTable ? "xl:grid-cols-[1.2fr_0.8fr]" : "grid-cols-1"}`}
+      >
         <div className="space-y-4">
-          <TableStats tables={tables} />
+          <TableStats stats={tableStats?.data} />
           <TableGrid
             tables={filteredTables}
             onTableClick={setSelectedTable}

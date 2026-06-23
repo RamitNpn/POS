@@ -4,19 +4,15 @@ export interface IKitchenTicketItem {
   menuItemId: mongoose.Types.ObjectId;
   name: string;
   quantity: number;
+  price: number;
 }
 
 export interface IKitchenTicket extends Document {
   orderId: mongoose.Types.ObjectId;
-
   tableId: mongoose.Types.ObjectId;
-
   ticketNumber: number;
-
   items: IKitchenTicketItem[];
-
   printed: boolean;
-
   status: "pending" | "served" | "cancelled" | "completed";
 }
 
@@ -34,6 +30,10 @@ const KitchenTicketItemSchema = new Schema<IKitchenTicketItem>(
     },
 
     quantity: {
+      type: Number,
+      required: true,
+    },
+    price: {
       type: Number,
       required: true,
     },

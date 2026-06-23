@@ -179,15 +179,10 @@ export default function OrderDetailsModal({ open, onClose, order }: Props) {
                 {order.notes?.trim() ? order.notes : "No notes provided"}
               </p>
             </div>
-
-            {/* FOOTER */}
-            <div className="border-t pt-4 text-center text-sm text-gray-300">
-              Printed on {new Date().toLocaleString()}
-            </div>
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={handlePrint}>
+            <Button variant="secondary" onClick={handlePrint}>
               <Printer className="mr-2 h-4 w-4" />
               Print
             </Button>

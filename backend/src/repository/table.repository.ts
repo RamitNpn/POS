@@ -70,10 +70,14 @@ class TableRepository {
     const filter: any = {};
 
     if (search) {
-      filter.section = {
-        $regex: search,
-        $options: "i",
-      };
+      filter.$or = [
+        {
+          name: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
     }
 
     if (status) {

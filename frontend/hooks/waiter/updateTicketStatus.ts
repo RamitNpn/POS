@@ -33,11 +33,15 @@ export const useUpdateTicketStatus = () => {
         queryKey: ["order"],
       });
     },
-    onError: () => {
+    onError: (error: any) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to mark order.",
+        description:
+          error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to mark order.",
       });
     },
   });

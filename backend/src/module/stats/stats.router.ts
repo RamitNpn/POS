@@ -10,4 +10,5 @@ export const statsRouter = s.router(statsContract, {
   getRevenueChart: statsQueryHandler.getRevenueChart,
   getRevenueStats: statsQueryHandler.getRevenueStats,
   getProfitLossStats: statsQueryHandler.getProfitLossStats,
+  cashierCheckoutStats: statsQueryHandler.getCashierCheckoutStats,
 });

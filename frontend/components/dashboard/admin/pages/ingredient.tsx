@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/select";
 
 import { Controller } from "react-hook-form";
+import IngredientEditForm from "../editForm/ingredient.edit";
 
 export default function InventoryPage() {
   const [search, setSearch] = useState("");
@@ -127,15 +128,6 @@ export default function InventoryPage() {
       },
     });
   };
-
-  const filtered = useMemo(() => {
-    return ingredients.filter((item: TIngredient) =>
-      [item.name, item.category, item.unit]
-        .join(" ")
-        .toLowerCase()
-        .includes(search.toLowerCase()),
-    );
-  }, [ingredients, search]);
 
   const lowStock = ingredients.filter(
     (item: TIngredient) => item.currentStock <= item.minimumStock,
@@ -347,6 +339,7 @@ export default function InventoryPage() {
               <TableHead>Stock</TableHead>
               <TableHead>Minimum</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -403,12 +396,12 @@ export default function InventoryPage() {
           </TableBody>
         </Table>
       </PageSection>
-      {/* {editId && (
-        <ReservationEditForm
-          reservationId={editId}
+      {editId && (
+        <IngredientEditForm
+          ingredientId={editId}
           onClose={() => setEditId(null)}
         />
-      )} */}
+      )}
       <ConfirmDialog
         open={itemToRemove !== null}
         title="Remove Ingredient"

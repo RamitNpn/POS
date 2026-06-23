@@ -28,6 +28,16 @@ const getActiveOrderByTableApi = async (tableId: string) => {
   return response.data;
 };
 
+// Replace getOrderByDateApi in lib/api/order.api.ts
+const getOrderByDateApi = async (params: { dateReport: string }) => {
+  const response = await apiClient.get("/order/date-report", {
+    params: {
+      dateReport: params.dateReport // Explicitly bind the exact string key expected by Zod
+    },
+  });
+  return response.data;
+};
+
 const updateOrderApi = async (OrderId: string, formData: FormData) => {
   const response = await apiClient.put(`/order/${OrderId}`, formData, {});
   return response.data;
@@ -58,4 +68,5 @@ export const orderApi = {
   updatePaymentStatusApi,
   deleteOrderApi,
   getActiveOrderByTableApi,
+  getOrderByDateApi,
 };

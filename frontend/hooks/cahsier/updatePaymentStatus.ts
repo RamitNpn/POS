@@ -30,11 +30,15 @@ export const useUpdatePaymentStatus = () => {
         queryKey: ["payments"],
       });
     },
-    onError: () => {
+    onError: (error: any) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to mark payment.",
+        description:
+          error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to mark payment.",
       });
     },
   });

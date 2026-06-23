@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import type { Order, PaymentMethod, PaymentStatus } from "@/lib/types";
+import type { PaymentMethod } from "@/lib/types";
 import {
   Dialog,
   DialogContent,
@@ -32,10 +32,9 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useAllOrders } from "@/hooks/admin/orders/getAllOrders";
-import { TOrder } from "@/lib/types/order.types";
-import OrderInvoicePrint from "@/components/dashboard/admin/order-invoice-print";
+import { PaymentStatus, TOrder } from "@/lib/types/order.types";
 import { useReactToPrint } from "react-to-print";
-import { CheckSquare, CreditCard, Download, Eye } from "lucide-react";
+import { CreditCard, Download, Eye } from "lucide-react";
 import { formatDate } from "@/components/dashboard/admin/shared";
 import { useUpdatePaymentStatus } from "@/hooks/cahsier/updatePaymentStatus";
 import TablePagination from "@/components/shared/pagination";
@@ -46,6 +45,7 @@ const paymentStatusOptions: { value: PaymentStatus | "all"; label: string }[] =
     { value: "all", label: "All payments" },
     { value: "paid", label: "Paid" },
     { value: "pending", label: "Pending" },
+    { value: "partial", label: "Partial" },
   ];
 
 const paymentMethodOptions: { value: PaymentMethod | "all"; label: string }[] =
@@ -56,33 +56,6 @@ const paymentMethodOptions: { value: PaymentMethod | "all"; label: string }[] =
     { value: "mobile", label: "Mobile" },
     { value: "split", label: "Split" },
   ];
-
-function createCsvData(orders: Order[]) {
-  const headers = [
-    "Order #",
-    "Table",
-    "Server",
-    "Total",
-    "Payment status",
-    "Payment method",
-    "Completed at",
-  ];
-  const rows = orders.map((order) => [
-    order.orderNumber,
-    order.table.number.toString(),
-    order.waiter.name,
-    order.total.toFixed(2),
-    order.paymentStatus,
-    order.paymentMethod || "N/A",
-    formatDate(order.completedAt || order.createdAt),
-  ]);
-
-  return [headers, ...rows]
-    .map((row) =>
-      row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(","),
-    )
-    .join("\n");
-}
 
 export default function CashierReportsPage() {
   const [page, setPage] = useState(1);
@@ -99,10 +72,8 @@ export default function CashierReportsPage() {
   const { data: PrintOrder } = useAllOrders({});
 
   const { data: orderData } = useAllOrders({
-    page: 1,
+    page: page,
     limit: 10,
-    search: searchTerm,
-    status: statusFilter,
   });
   const orders = orderData?.data || [];
 
@@ -114,19 +85,21 @@ export default function CashierReportsPage() {
   });
 
   const filteredOrders = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+
     return orders.filter((order: TOrder) => {
       const matchesSearch =
-        searchTerm.trim().length === 0 ||
-        order.customerName?.toString().includes(searchTerm) ||
-        order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.table?.name.toString().includes(searchTerm) ||
-        order.waiter?.name.toLowerCase().includes(searchTerm.toLowerCase());
+        !q ||
+        (order.customerName || "").toString().toLowerCase().includes(q) ||
+        (order.orderNumber || "").toString().toLowerCase().includes(q) ||
+        (order.table?.name || "").toString().toLowerCase().includes(q) ||
+        (order.waiter?.name || "").toString().toLowerCase().includes(q);
 
-      const matchesStatus =
-        statusFilter === "all" || order.paymentStatus === statusFilter;
+      const matchesStatus = statusFilter === "all" || order.paymentStatus === statusFilter;
+
       return matchesSearch && matchesStatus;
     });
-  }, [orders, searchTerm, statusFilter]);
+  }, [orders, searchTerm, statusFilter, methodFilter]);
 
   const { mutate: updateOrderStatus, isPending } = useUpdatePaymentStatus();
 
@@ -353,7 +326,6 @@ export default function CashierReportsPage() {
                 <TableHead>Server</TableHead>
                 <TableHead>Total</TableHead>
                 <TableHead>Payment</TableHead>
-                {/* <TableHead>Method</TableHead> */}
                 <TableHead>Date</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>

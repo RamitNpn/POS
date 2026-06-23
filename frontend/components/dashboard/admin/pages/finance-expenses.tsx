@@ -97,11 +97,15 @@ export default function FinanceExpensesPage() {
       reset();
       setShowForm(false);
     },
-    onError: (err: any) => {
+    onError: (error: any) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: err?.response?.data?.error || "Failed to add expense",
+        description:
+          error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to add expense",
       });
     },
   });

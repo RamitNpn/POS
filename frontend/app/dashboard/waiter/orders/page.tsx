@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/select";
 import { PageSection } from "@/components/dashboard/admin/shared";
 import { TicketTable } from "@/components/shared/ticketTable";
-import { useLiveTickets } from "@/hooks/cahsier/getAllTicket";
 import { Status } from "@/lib/types/ticket.types";
 import { Button } from "@/components/ui/button";
+import { useLiveTickets } from "@/hooks/cahsier/getAllLiveTickets";
 
 const orderStatusOptions: { value: Status | "all"; label: string }[] = [
   { value: "all", label: "All statuses" },

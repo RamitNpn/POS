@@ -25,7 +25,7 @@ export default function OrderPrintReport({ order }: Props) {
 
         <div className="text-right">
           <h2 className="text-3xl font-bold">
-            DINEFLOW
+            LOCALVIBES
           </h2>
 
           <p className="text-sm text-gray-600">
@@ -165,19 +165,19 @@ export default function OrderPrintReport({ order }: Props) {
           <tbody>
             {order.items.map((item, index) => (
               <tr key={index}>
-                <td className="border p-2">
+                <td className="border p-2 border-gray-200">
                   {item.menuItem}
                 </td>
 
-                <td className="border p-2 text-center">
+                <td className="border p-2 border-gray-200 text-center">
                   {item.quantity}
                 </td>
 
-                <td className="border p-2 text-center">
+                <td className="border p-2 border-gray-200 text-center">
                   Rs {item.price.toFixed(2)}
                 </td>
 
-                <td className="border p-2 text-center">
+                <td className="border p-2 border-gray-200 text-center">
                   Rs {(item.total || 0).toFixed(2)}
                 </td>
               </tr>

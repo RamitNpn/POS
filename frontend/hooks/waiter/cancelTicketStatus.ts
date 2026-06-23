@@ -7,16 +7,13 @@ export const useCancelTicketStatus = () => {
 
   return useMutation({
     mutationFn: async (ticketID: string) => {
-      const response =
-        await ticketApi.updateticketStatusApi(
-          ticketID,
-          "served",
-        );
+      const response = await ticketApi.updateticketStatusApi(
+        ticketID,
+        "served",
+      );
 
       if (!response.success) {
-        throw new Error(
-          response.error || "Failed to update ticket",
-        );
+        throw new Error(response.error || "Failed to update ticket");
       }
 
       return response.data;
@@ -28,6 +25,15 @@ export const useCancelTicketStatus = () => {
       queryClient.invalidateQueries({
         queryKey: ["all-tickets"],
       });
+    },
+
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to update ticket",
+      );
     },
   });
 };

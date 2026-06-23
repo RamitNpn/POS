@@ -34,7 +34,8 @@ import { TSupplier } from "@/lib/types/supplier.types";
 import { useDeleteSupplier } from "@/hooks/admin/supplier/removeSupplier";
 import ConfirmDialog from "@/components/shared/confirmDialog";
 import TablePagination from "@/components/shared/pagination";
-import { Download } from "lucide-react";
+import { Download, Edit, Eye, Trash2 } from "lucide-react";
+import SupplierEditForm from "../editForm/supplier.edit";
 
 export default function SuppliersPage() {
   const [page, setPage] = useState(1);
@@ -83,7 +84,10 @@ export default function SuppliersPage() {
         variant: "destructive",
         title: "Error",
         description:
-          error?.response?.data?.error || "Failed to create supplier.",
+          error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to create supplier.",
       });
     },
   });
@@ -349,22 +353,22 @@ export default function SuppliersPage() {
                     </TableCell>
 
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
+                      <div className="flex items-center gap-4">
+                        <button className="flex items center text-primary/90 hover:text-primary/80 justify-center p-1 rounded">
+                          <Eye className="h-5 w-5" />
+                        </button>
+                        <button
                           onClick={() => setEditId(supplier._id)}
+                          className="flex items center text-green-600 hover:text-green-700 p-1 rounded"
                         >
-                          Edit
-                        </Button>
-
-                        <Button
-                          size="sm"
-                          variant="destructive"
+                          <Edit className="h-5 w-5" />
+                        </button>
+                        <button
                           onClick={() => setItemToRemove(supplier._id)}
+                          className="flex items center text-red-600 hover:text-red-700 p-1 rounded"
                         >
-                          Delete
-                        </Button>
+                          <Trash2 className="h-5 w-5" />
+                        </button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -382,14 +386,18 @@ export default function SuppliersPage() {
             </div>
           )}
         </div>
-        <ConfirmDialog
-          open={itemToRemove !== null}
-          title="Remove Supplier"
-          message="Are you sure you want to remove this supplier?"
-          onConfirm={confirmDelete}
-          onCancel={() => setItemToRemove(null)}
-        />
       </PageSection>
+
+      {editId && (
+        <SupplierEditForm supplierId={editId} onClose={() => setEditId(null)} />
+      )}
+      <ConfirmDialog
+        open={itemToRemove !== null}
+        title="Remove Supplier"
+        message="Are you sure you want to remove this supplier?"
+        onConfirm={confirmDelete}
+        onCancel={() => setItemToRemove(null)}
+      />
     </div>
   );
 }

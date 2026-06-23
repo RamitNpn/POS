@@ -4,52 +4,12 @@ import {
   createUserSchema,
   getAllUsersSchema,
   getUserByIdSchema,
-  loginSchema,
-  loginResponseSchema,
-  logoutResponseSchema,
-  getMeResponseSchema,
 } from "./user.schema";
 import { errorSchema, successSchema } from "../commonSchema";
 
 const c = initContract();
 
 export const userContract = c.router({
-  login: {
-    method: "POST",
-    path: "/user/login",
-    summary: "Authenticate a user and return user profile",
-    body: loginSchema,
-    responses: {
-      200: loginResponseSchema,
-      400: errorSchema,
-      401: errorSchema,
-      403: errorSchema,
-      500: errorSchema,
-    },
-  },
-
-  logout: {
-    method: "POST",
-    path: "/user/logout",
-    summary: "Clear authentication session",
-    body: z.object({}),
-    responses: {
-      200: logoutResponseSchema,
-      500: errorSchema,
-    },
-  },
-
-  getMe: {
-    method: "GET",
-    path: "/user/me",
-    summary: "Get the authenticated user profile",
-    responses: {
-      200: getMeResponseSchema,
-      401: errorSchema,
-      500: errorSchema,
-    },
-  },
-
   createUser: {
     method: "POST",
     path: "/user",

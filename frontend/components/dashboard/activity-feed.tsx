@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import type { ActivityLog } from '@/lib/types';
 import { formatDistanceToNow } from 'date-fns';
+import { TActivityLog } from '@/lib/types/log.types';
+import { useActivityLogs } from '@/hooks/admin/log/getAllLogs';
 
 interface ActivityFeedProps {
-  activities: ActivityLog[];
   title?: string;
   description?: string;
 }
@@ -27,23 +27,26 @@ function getActionColor(action: string): string {
 }
 
 export function ActivityFeed({ 
-  activities, 
   title = 'Recent Activity',
   description = 'Latest updates from your team'
 }: ActivityFeedProps) {
+
+  const { data: logData } = useActivityLogs({ limit: 10 });
+  const logs = logData?.data ?? [];
+
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-card border-border h-[90vh] overflow-y-scroll">
       <CardHeader>
         <CardTitle className="text-foreground">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        {activities.length === 0 ? (
+        {logs.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">No recent activity</p>
         ) : (
           <div className="space-y-4">
-            {activities.map((activity) => (
-              <div key={activity.id} className="flex items-start gap-3">
+            {logs.map((activity: TActivityLog) => (
+              <div key={activity._id} className="flex items-start gap-3">
                 <Avatar className="size-8">
                   <AvatarFallback className={getActionColor(activity.action)}>
                     {getInitials(activity.user.name)}
@@ -55,7 +58,7 @@ export function ActivityFeed({
                       {activity.action}
                     </p>
                     <span className="text-xs text-muted-foreground">
-                      {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
+                      {formatDistanceToNow(activity.createdAt, { addSuffix: true })}
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground">

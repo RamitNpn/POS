@@ -4,7 +4,6 @@ import { Bell, LogOut, Search, UtensilsCrossed } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { SidebarHeader, SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -16,7 +15,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { UserRole } from "@/lib/types";
-import { useState } from "react";
 
 interface TopbarProps {
   title?: string;
@@ -33,7 +31,6 @@ function getRoleDisplayName(role: UserRole): string {
 }
 
 export function Topbar({ title }: TopbarProps) {
-  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const { user, logout } = useAuth();
 
   if (!user) return null;
@@ -73,17 +70,6 @@ export function Topbar({ title }: TopbarProps) {
           )}
 
           <div className="ml-auto flex items-center gap-2">
-            {/* Search - Hidden on mobile */}
-            {/* <div className="hidden md:flex items-center">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="w-64 pl-8 bg-secondary/50 border-none focus-visible:ring-1"
-                />
-              </div>
-            </div> */}
 
             {/* Notifications */}
             <DropdownMenu>
@@ -162,25 +148,6 @@ export function Topbar({ title }: TopbarProps) {
           </div>
         </div>
       </header>
-      {/* {showMobileSearch && (
-        <div className="sticky top-16 z-30 border-b border-border bg-background px-4 py-3 md:hidden">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              autoFocus
-              type="search"
-              placeholder="Search..."
-              className="pl-9"
-              onBlur={() => setShowMobileSearch(false)}
-              onKeyDown={(e) => {
-                if (e.key === "Escape") {
-                  setShowMobileSearch(false);
-                }
-              }}
-            />
-          </div>
-        </div>
-      )} */}
     </>
   );
 }

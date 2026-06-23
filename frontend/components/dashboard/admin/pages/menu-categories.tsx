@@ -32,7 +32,7 @@ import { TMenuCategory } from "@/lib/types/menu-category.types";
 import { Download, Edit, Trash2 } from "lucide-react";
 import ConfirmDialog from "@/components/shared/confirmDialog";
 import { useDeleteMenuCategory } from "@/hooks/admin/menu-category/removeMenuCategory";
-import MenuCategoryEditForm from "@/components/dashboard/admin/editForm/menu-category.edit";
+import MenuCategoryEditForm from "../editForm/menu-categories.edit";
 
 export default function MenuCategoriesPage() {
   const [filter, setFilter] = useState("");
@@ -65,11 +65,15 @@ export default function MenuCategoriesPage() {
       });
       reset();
     },
-    onError: (err) => {
+    onError: (error: any) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to add category.",
+        description:
+          error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to add category.",
       });
     },
   });

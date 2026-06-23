@@ -79,11 +79,15 @@ export default function ReservationsPage() {
       });
       reset();
     },
-    onError: (err) => {
+    onError: (error: any) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to create reservation.",
+        description:
+          error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to create reservation.",
       });
     },
   });

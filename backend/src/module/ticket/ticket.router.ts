@@ -10,6 +10,7 @@ export const ticketRouter = s.router(ticketContract, {
   updateTicketStatus: ticketMutationHandler.updateTicketStatus,
   removeTicket: ticketMutationHandler.removeTicket,
 
+  getAllTickets: ticketQueryHandler.getAllTickets,
   getTicketByID: ticketQueryHandler.getTicketById,
   getLiveTickets: ticketQueryHandler.getLiveTickets,
   getTicketsByOrder: ticketQueryHandler.getTicketsByOrder,

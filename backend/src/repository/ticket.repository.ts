@@ -1,4 +1,3 @@
-import MenuItem from "../model/menu-item.model";
 import KitchenTicketModel, { IKitchenTicket } from "../model/ticket.model";
 
 class KitchenTicketRepository {
@@ -33,6 +32,7 @@ class KitchenTicketRepository {
       if (status && status !== "all") {
         query.status = status;
       }
+
       if (search) {
         query.$or = [
           {
@@ -48,13 +48,18 @@ class KitchenTicketRepository {
             },
           },
           {
-            "items.name": {
-              $regex: search,
-              $options: "i",
+            items: {
+              $elemMatch: {
+                name: {
+                  $regex: search,
+                  $options: "i",
+                },
+              },
             },
           },
         ];
       }
+
       const data = await this.model
         .find(query)
         .populate("orderId")
@@ -109,19 +114,92 @@ class KitchenTicketRepository {
     }
   }
 
-  async getLatestTicket(orderId: string) {
+  async getByTableID(tableId: string) {
     try {
       return await this.model
-        .findOne({
-          orderId,
-        })
+        .find({ tableId })
+        .populate("tableId")
+        .sort({ ticketNumber: 1 });
+    } catch (error) {
+      throw new Error(`Error fetching order tickets: ${error}`);
+    }
+  }
+
+  async getLatestTickets({
+    skip,
+    limit,
+    search,
+  }: {
+    skip: number;
+    limit: number;
+    search?: string;
+  }) {
+    try {
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
+
+      const query: any = {
+        createdAt: {
+          $gte: startOfDay,
+          $lte: endOfDay,
+        },
+        status: "pending",
+      };
+
+      if (search) {
+        query.$or = [
+          {
+            orderNumber: {
+              $regex: search,
+              $options: "i",
+            },
+          },
+          {
+            customerName: {
+              $regex: search,
+              $options: "i",
+            },
+          },
+          {
+            items: {
+              $elemMatch: {
+                name: {
+                  $regex: search,
+                  $options: "i",
+                },
+              },
+            },
+          },
+        ];
+      }
+
+      const data = await this.model
+        .find(query)
         .populate("orderId")
         .populate("tableId")
+        .populate({
+          path: "orderId",
+          populate: {
+            path: "waiterId",
+          },
+        })
         .sort({
           ticketNumber: -1,
-        });
+        })
+        .skip(skip)
+        .limit(limit);
+
+      const total = await this.model.countDocuments(query);
+
+      return {
+        data,
+        total,
+      };
     } catch (error) {
-      throw new Error(`Error fetching latest ticket: ${error}`);
+      throw new Error(`Error fetching latest kitchen tickets: ${error}`);
     }
   }
 
@@ -141,6 +219,12 @@ class KitchenTicketRepository {
     } catch (error) {
       throw new Error(`Error deleting ticket: ${error}`);
     }
+  }
+
+  async deleteByOrderId(orderId: string) {
+    return await this.model.deleteMany({
+      orderId,
+    });
   }
 
   async updateStatus(

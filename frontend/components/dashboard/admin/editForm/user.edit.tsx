@@ -84,11 +84,15 @@ function UserEditForm({ userId, onClose, size = "lg" }: Props) {
       });
       reset();
     },
-    onError: () => {
+    onError: (error: any) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to add user.",
+        description:
+          error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to add user.",
       });
     },
   });
@@ -184,7 +188,7 @@ function UserEditForm({ userId, onClose, size = "lg" }: Props) {
               <select
                 id="new-user-role"
                 {...register("role")}
-                className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               >
                 <option value="admin">Administrator</option>
                 <option value="waiter">Server</option>
@@ -231,7 +235,7 @@ function UserEditForm({ userId, onClose, size = "lg" }: Props) {
         </div>
 
         <CardFooter className="border-t border-border bg-muted/20 px-6 py-4 justify-end gap-3">
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
 

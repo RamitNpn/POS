@@ -5,15 +5,22 @@ import {
   TGetTicketByIdSchema,
 } from "../validations/ticket.validation";
 
-const getLiveTicketsApi = async (params: UsePaginationParams) => {
+const getAllTicketsApi = async (params: UsePaginationParams) => {
   const response = await apiClient.get("/ticket", {
     params,
   });
   return response.data;
 };
 
+const getLiveTicketsApi = async (params: UsePaginationParams) => {
+  const response = await apiClient.get("/ticket/active-tickets", {
+    params,
+  });
+  return response.data;
+};
+
 const getTicketByIdApi = async (ticketId: TGetTicketByIdSchema["_id"]) => {
-  const response = await apiClient.get(`/ticket/${ticketId}`);
+  const response = await apiClient.get(`/ticket/order/${ticketId}`);
   return response.data;
 };
 
@@ -36,6 +43,7 @@ const deleteticketApi = async (ticketId: TDeleteTicketSchema["_id"]) => {
 };
 
 export const ticketApi = {
+  getAllTicketsApi,
   getLiveTicketsApi,
   getTicketByIdApi,
   updateticketStatusApi,

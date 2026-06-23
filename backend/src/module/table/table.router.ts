@@ -10,7 +10,7 @@ const s = initServer();
 export const tableRouter = s.router(tableContract, {
   createTable: tableMutationHandler.createTable,
   updateTable: tableMutationHandler.updateTable,
-  updateTableStatus: tableMutationHandler.updateTicketStatus,
+  updateTableStatus: tableMutationHandler.updateTableStatus,
   removeTable: tableMutationHandler.removeTable,
 
   getAllTables: tableQueryHandler.getAllTables,

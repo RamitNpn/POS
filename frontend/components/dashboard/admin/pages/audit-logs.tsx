@@ -1,13 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
-import { RevenueChart } from "@/components/dashboard/revenue-chart";
-import { api } from "@/lib/api/mock-data";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -16,24 +9,50 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { statusStyle, MetricCard, PageSection, SearchField, TableBadge, formatDate } from "@/components/dashboard/admin/shared";
-import type { AdminDashboardStats, Branch, Expense, Ingredient, MenuCategory, MenuItem, MenuModifier, Notification, Order, PurchaseOrder, Reservation, Role, SalesByCategory, StaffMember, StockMovement, Supplier, Table as DiningTable, TableSection, ManagedUser, RevenueData } from "@/lib/types";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { formatDate, PageSection } from "../shared";
+import { useActivityLogs } from "@/hooks/admin/log/getAllLogs";
+import { TActivityLog } from "@/lib/types/log.types";
+import TablePagination from "@/components/shared/pagination";
+import { useEffect, useState } from "react";
 
 export default function AuditLogsPage() {
-  const { data: logs = [] } = useQuery<ActivityLog[]>({ queryKey: ['activity-log'], queryFn: () => api.getActivityLog() });
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const { data: logData } = useActivityLogs({
+    page: page,
+    limit: 10,
+    search: search,
+  });
+
+  const logs = logData?.data ?? [];
+
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
 
   return (
     <div className="space-y-6">
-      <DashboardHeader title="Audit Logs" description="Review recent account activity and system events." />
+      <DashboardHeader
+        title="Audit Logs"
+        description="Review recent account activity and system events."
+      />
+
       <PageSection title="Activity Timeline">
+        <div className="mb-4 flex items-center gap-2">
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search logs..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+        </div>
+
         <Table>
           <TableHeader>
             <TableRow>
@@ -43,18 +62,40 @@ export default function AuditLogsPage() {
               <TableHead>Details</TableHead>
             </TableRow>
           </TableHeader>
+
           <TableBody>
-            {logs.map((log) => (
-              <TableRow key={log.id}>
-                <TableCell>{formatDate(log.timestamp)}</TableCell>
-                <TableCell>{log.user.name}</TableCell>
-                <TableCell>{log.action}</TableCell>
-                <TableCell>{log.details}</TableCell>
+            {logs.length > 0 ? (
+              logs.map((log: TActivityLog) => (
+                <TableRow key={log._id}>
+                  <TableCell>{formatDate(log.createdAt)}</TableCell>
+                  <TableCell>{log.user.name}</TableCell>
+                  <TableCell>{log.action}</TableCell>
+                  <TableCell>{log.details}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={4}
+                  className="text-center text-muted-foreground"
+                >
+                  No logs found.
+                </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </PageSection>
+
+      {logData?.pagination?.totalPages > 1 && (
+        <div className="mt-4">
+          <TablePagination
+            page={page}
+            totalPages={logData.pagination.totalPages}
+            onPageChange={setPage}
+          />
+        </div>
+      )}
     </div>
   );
 }

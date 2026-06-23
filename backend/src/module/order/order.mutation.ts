@@ -13,12 +13,10 @@ const createOrder: AppRouteMutationImplementation<
   try {
     const { tableId, customerName, waiterId, notes, items } = req.body;
 
-    // 1. Find active order for table
     let order = await orderRepository.getActiveOrderByTable(tableId);
 
     let isReorder = false;
 
-    // 2. Convert frontend items → DB-safe items
     const resolvedItems = [];
 
     for (const item of items) {
@@ -49,9 +47,6 @@ const createOrder: AppRouteMutationImplementation<
 
     const total = subtotal + tax;
 
-    // =========================
-    // CASE 1: NEW ORDER
-    // =========================
     if (!order) {
       const orderNumber = await orderRepository.generateOrderNumber();
 
@@ -70,7 +65,6 @@ const createOrder: AppRouteMutationImplementation<
         paymentStatus: "pending",
       });
 
-      // Create Ticket #1
       await kitchenTicketRepository.create({
         orderId: order._id,
         tableId: new mongoose.Types.ObjectId(tableId),
@@ -79,12 +73,12 @@ const createOrder: AppRouteMutationImplementation<
           menuItemId: i.menuItemId,
           name: i.name,
           quantity: i.quantity,
+          price: i.price,
         })),
         printed: false,
         status: "pending",
       });
 
-      // Mark table occupied
       await TableModel.findByIdAndUpdate(new mongoose.Types.ObjectId(tableId), {
         status: "occupied",
       });
@@ -99,12 +93,8 @@ const createOrder: AppRouteMutationImplementation<
       };
     }
 
-    // =========================
-    // CASE 2: REORDER
-    // =========================
     isReorder = true;
 
-    // Merge items into existing order
     for (const newItem of resolvedItems) {
       const existingItem = order.items.find(
         (i: any) => i.menuItemId.toString() === newItem.menuItemId.toString(),
@@ -119,7 +109,6 @@ const createOrder: AppRouteMutationImplementation<
       }
     }
 
-    // Update totals
     order.subtotal += subtotal;
     order.tax += tax;
     order.total += total;
@@ -128,7 +117,6 @@ const createOrder: AppRouteMutationImplementation<
 
     await order.save();
 
-    // Create next ticket
     await kitchenTicketRepository.create({
       orderId: order._id,
       tableId: new mongoose.Types.ObjectId(tableId),
@@ -137,6 +125,7 @@ const createOrder: AppRouteMutationImplementation<
         menuItemId: i.menuItemId,
         name: i.name,
         quantity: i.quantity,
+        price: i.price,
       })),
       printed: false,
       status: "pending",
@@ -223,7 +212,11 @@ export const removeOrder: AppRouteMutationImplementation<
       };
     }
 
-    await orderRepository.delete(orderID);
+    const deletedOrder = await orderRepository.delete(orderID);
+
+    if (deletedOrder) {
+      await kitchenTicketRepository.deleteByOrderId(orderID);
+    }
 
     return {
       status: 200,

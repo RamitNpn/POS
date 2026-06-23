@@ -45,7 +45,7 @@ function LoginForm() {
           <div className="flex size-16 items-center justify-center rounded-2xl bg-primary">
             <UtensilsCrossed className="size-8 text-primary-foreground" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">DineFlow</h1>
+          <h1 className="text-2xl font-bold text-foreground">LocalVibes</h1>
           <p className="text-muted-foreground">Restaurant Management System</p>
         </div>
 

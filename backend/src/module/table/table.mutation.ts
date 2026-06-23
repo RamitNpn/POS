@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import { tableContract } from "../../contract/table/table.contract";
 import tableRepository from "../../repository/table.repository";
+import ticketRepository from "../../repository/ticket.repository";
 
 export const createTable: AppRouteMutationImplementation<
   typeof tableContract.createTable
@@ -22,7 +23,7 @@ export const createTable: AppRouteMutationImplementation<
 
     await tableRepository.create({
       ...req.body,
-      sectionId: new mongoose.Types.ObjectId(req.body.sectionId)
+      sectionId: new mongoose.Types.ObjectId(req.body.sectionId),
     });
 
     return {
@@ -100,7 +101,7 @@ export const updateTable: AppRouteMutationImplementation<
   }
 };
 
-export const updateTicketStatus: AppRouteMutationImplementation<
+export const updateTableStatus: AppRouteMutationImplementation<
   typeof tableContract.updateTableStatus
 > = async ({ req }) => {
   try {
@@ -119,10 +120,24 @@ export const updateTicketStatus: AppRouteMutationImplementation<
       };
     }
 
-    const updated = await tableRepository.updateStatus(
-      tableID,
-      status,
+    const tickets = await ticketRepository.getByTableID(tableID);
+
+    const hasUnservedTickets = tickets.some(
+      (ticket) => ticket.status !== "served",
     );
+
+    if (hasUnservedTickets) {
+      return {
+        status: 400,
+        body: {
+          success: false,
+          error:
+            "Cannot change table status while there are pending kitchen tickets.",
+        },
+      };
+    }
+
+    const updated = await tableRepository.updateStatus(tableID, status);
 
     return {
       status: 200,
@@ -174,6 +189,6 @@ export const removeTable: AppRouteMutationImplementation<
 export const tableMutationHandler = {
   createTable,
   updateTable,
-  updateTicketStatus,
+  updateTableStatus,
   removeTable,
 };

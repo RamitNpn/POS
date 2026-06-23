@@ -11,6 +11,7 @@ export const kitchenTicketItemSchema = z.object({
   menuItemId: z.string(),
   name: z.string(),
   quantity: z.number().min(1),
+  price: z.number(),
 });
 
 export const kitchenTicketWaiterSchema = z.object({

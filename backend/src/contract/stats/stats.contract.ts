@@ -91,4 +91,20 @@ export const statsContract = c.router({
       500: errorSchema,
     },
   },
+  cashierCheckoutStats: {
+    method: "GET",
+    path: "/stats/cashier-checkout",
+    summary: "Get Cashier Page Stats",
+    responses: {
+      200: z.object({
+        success: z.boolean(),
+        data: z.object({
+          totalActiveOrders: z.number(),
+          readyForCheckout: z.number(),
+          pendingPayments: z.number(),
+          tablesInHouse: z.number(),
+        }),
+      }),
+    },
+  },
 });

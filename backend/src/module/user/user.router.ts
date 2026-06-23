@@ -10,21 +10,10 @@ import {
   authorizeRoles,
   authorizeSelfOrAdmin,
 } from "../../middleware/auth.middleware";
-import { userAuthHandler } from "./user.auth";
 
 const s = initServer();
 
 export const userRouter = s.router(userContract, {
-  login: userAuthHandler.login,
-  logout: {
-    middleware: [verifyToken],
-    handler: userAuthHandler.logout,
-  },
-  getMe: {
-    middleware: [verifyToken],
-    handler: userAuthHandler.getMe,
-  },
-  // createUser: userMutationHandler.createUser,
   createUser: {
     middleware: [verifyToken, authorizeRoles("admin"), userUploadFields],
     handler: userMutationHandler.createUser,

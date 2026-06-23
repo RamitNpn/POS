@@ -4,6 +4,7 @@ export interface TTicketItem {
   menuItemId: string;
   name: string;
   quantity: number;
+  price: number;
 }
 
 export interface TTicketWaiter {

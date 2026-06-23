@@ -14,7 +14,10 @@ import { useAllRooms } from "@/hooks/admin/room/getAllRooms";
 import { tableApi } from "@/lib/api/table.api";
 import { toast } from "@/hooks/use-toast";
 import FormHeader from "@/components/shared/formHeader";
-import { TUpdateTableSchema, updateTableSchema } from "@/lib/validations/table.validation";
+import {
+  TUpdateTableSchema,
+  updateTableSchema,
+} from "@/lib/validations/table.validation";
 import { TRoom } from "@/lib/types/room.types";
 import clsx from "clsx";
 
@@ -24,7 +27,11 @@ type Props = {
   size?: "sm" | "md" | "lg" | "xl";
 };
 
-export default function TableEditForm({ tableId, onClose, size = "lg" }: Props) {
+export default function TableEditForm({
+  tableId,
+  onClose,
+  size = "lg",
+}: Props) {
   const { data: tableData } = useTableById(tableId);
   const table = tableData?.data ?? tableData;
   const { data: roomData } = useAllRooms({});
@@ -59,8 +66,13 @@ export default function TableEditForm({ tableId, onClose, size = "lg" }: Props) 
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ tableId, formData }: { tableId: string; formData: FormData }) =>
-      tableApi.updateTableApi(tableId, formData),
+    mutationFn: ({
+      tableId,
+      formData,
+    }: {
+      tableId: string;
+      formData: FormData;
+    }) => tableApi.updateTableApi(tableId, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tables"] });
       toast({
@@ -74,7 +86,9 @@ export default function TableEditForm({ tableId, onClose, size = "lg" }: Props) 
         variant: "destructive",
         title: "Error",
         description:
-          error?.response?.data?.error || error?.message ||
+          error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
           "Failed to update table.",
       });
     },
@@ -106,7 +120,11 @@ export default function TableEditForm({ tableId, onClose, size = "lg" }: Props) 
           },
         )}
       >
-        <FormHeader title="Edit Table" subtitle="Update seating details." onClose={onClose} />
+        <FormHeader
+          title="Edit Table"
+          subtitle="Update seating details."
+          onClose={onClose}
+        />
 
         <div className="max-h-[75vh] overflow-y-auto p-6">
           <PageSection title="Table Details">
@@ -118,14 +136,18 @@ export default function TableEditForm({ tableId, onClose, size = "lg" }: Props) 
                   {...register("name")}
                   placeholder="e.g. Table 1"
                 />
-                {errors.name && <p className="mt-1 text-xs text-destructive">{errors.name.message}</p>}
+                {errors.name && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
               <div>
                 <Label htmlFor="edit-table-section">Room</Label>
                 <select
                   id="edit-table-section"
                   {...register("sectionId")}
-                  className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 >
                   <option value="">Select room</option>
                   {rooms.map((room: TRoom) => (
@@ -134,7 +156,11 @@ export default function TableEditForm({ tableId, onClose, size = "lg" }: Props) 
                     </option>
                   ))}
                 </select>
-                {errors.sectionId && <p className="mt-1 text-xs text-destructive">{errors.sectionId.message}</p>}
+                {errors.sectionId && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {errors.sectionId.message}
+                  </p>
+                )}
               </div>
               <div>
                 <Label htmlFor="edit-table-capacity">Capacity</Label>
@@ -143,27 +169,35 @@ export default function TableEditForm({ tableId, onClose, size = "lg" }: Props) 
                   type="number"
                   {...register("capacity", { valueAsNumber: true })}
                 />
-                {errors.capacity && <p className="mt-1 text-xs text-destructive">{errors.capacity.message}</p>}
+                {errors.capacity && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {errors.capacity.message}
+                  </p>
+                )}
               </div>
               <div>
                 <Label htmlFor="edit-table-status">Status</Label>
                 <select
                   id="edit-table-status"
                   {...register("status")}
-                  className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 >
                   <option value="available">Available</option>
                   <option value="occupied">Occupied</option>
                   <option value="reserved">Reserved</option>
                 </select>
-                {errors.status && <p className="mt-1 text-xs text-destructive">{errors.status.message}</p>}
+                {errors.status && (
+                  <p className="mt-1 text-xs text-destructive">
+                    {errors.status.message}
+                  </p>
+                )}
               </div>
             </div>
           </PageSection>
         </div>
 
         <CardFooter className="border-t border-border bg-muted/20 px-6 py-4 justify-end gap-3">
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button type="submit" disabled={isPending}>

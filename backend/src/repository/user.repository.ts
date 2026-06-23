@@ -1,4 +1,4 @@
-import UserModel, { IUser } from "../model/user.model";
+import UserModel, { IUser, UserRole } from "../model/user.model";
 
 class UserRepository {
   private model;
@@ -72,6 +72,16 @@ class UserRepository {
     }
   }
 
+  async getByRole(role: UserRole, includePassword = false) {
+    try {
+      const query = this.model.find({ role });
+
+      return includePassword ? query.select("+password") : query;
+    } catch (error) {
+      throw new Error(`Error fetching user: ${error}`);
+    }
+  }
+
   async update(id: string, data: Partial<IUser>) {
     try {
       return await this.model.findByIdAndUpdate(id, data, { new: true });
@@ -94,6 +104,9 @@ class UserRepository {
     } catch (error) {
       throw new Error(`Error counting users: ${error}`);
     }
+  }
+    async countByRole(roleId: string) {
+    return this.model.countDocuments({ roleId });
   }
 }
 

@@ -14,10 +14,17 @@ import { ingredientContract } from "./ingredient/ingredient.contract";
 import { purchaseContract } from "./purchase/purchase.contract";
 import { stockMovementContract } from "./stock-movement/stock-movement.contract";
 import { expenseContract } from "./expenses/expenses.contract";
+import { authContract } from "./auth/auth.contract";
+import { activityLogContract } from "./logs/log.contract";
+import { reportContract } from "./daily-report/report.contract";
+import { roleContract } from "./role/role.contract";
+import { branchContract } from "./branch/branch.contract";
+import { salesContract } from "./sales/sales.contract";
 
 const c = initContract();
 
 export const contract = c.router({
+    auth: authContract,
     user: userContract,
     room: roomContract,
     table: tableContract,
@@ -33,4 +40,9 @@ export const contract = c.router({
     purchase: purchaseContract,
     stockMovement: stockMovementContract,
     expenses: expenseContract,
+    logs: activityLogContract,
+    report: reportContract,
+    role: roleContract,
+    branch: branchContract,
+    sales: salesContract,
 });

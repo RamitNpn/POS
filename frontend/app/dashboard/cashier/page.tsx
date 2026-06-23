@@ -1,18 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useRef, useState } from "react";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
-import { api } from "@/lib/api/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -20,14 +11,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+
 import {
   Dialog,
   DialogContent,
@@ -35,101 +19,57 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import type { Order, PaymentMethod } from "@/lib/types";
 import { useReactToPrint } from "react-to-print";
-import { useAllTables } from "@/hooks/admin/table/getAllTables";
-import { OrderStatus } from "@/lib/types/order.types";
-import {
-  formatDate,
-  PageSection,
-  statusStyle,
-} from "@/components/dashboard/admin/shared";
-import { Eye, Printer } from "lucide-react";
+
 import OrderTicketPrint from "@/components/dashboard/cashier/ticket-print";
 import { TicketTable } from "@/components/shared/ticketTable";
-import { useLiveTickets } from "@/hooks/cahsier/getAllTicket";
-
-const statusOptions: { value: OrderStatus | "all"; label: string }[] = [
-  { value: "all", label: "All statuses" },
-  { value: "active", label: "Active" },
-  { value: "completed", label: "Completed" },
-  { value: "cancelled", label: "Cancelled" },
-];
-
-const paymentOptions: { value: PaymentMethod; label: string }[] = [
-  { value: "cash", label: "Cash" },
-  { value: "card", label: "Card" },
-  { value: "mobile", label: "Mobile" },
-  { value: "split", label: "Split" },
-];
+import { useCashierDashboardStats } from "@/hooks/shared/stats/getChasierDashboardStats";
+import { TTicket } from "@/lib/types/ticket.types";
+import { useLiveTickets } from "@/hooks/cahsier/getAllLiveTickets";
 
 export default function CashierDashboard() {
+  const [searchTerm, setSearchTerm] = useState("");
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const filterTicketsByDateRange = (tickets: any[]) => {
-    if (!fromDate && !toDate) return tickets;
+  const { data: ticketData } = useLiveTickets({});
 
+  const tickets = ticketData?.data ?? [];
+
+  const filteredTickets = tickets.filter((ticket: TTicket) => {
+    const createdAt = new Date(ticket.createdAt || "");
+
+    const q = searchTerm.trim().toLowerCase();
+
+    const matchesSearch =
+      !q ||
+      (ticket.orderNumber || "").toLowerCase().includes(q) ||
+      (ticket.table?.tableName || "").toLowerCase().includes(q) ||
+      (ticket.waiter?.name || "").toLowerCase().includes(q) ||
+      ticket.items?.some((item: any) =>
+        (item.name || "").toLowerCase().includes(q),
+      );
+
+    // DATE
     const from = fromDate ? new Date(fromDate) : null;
     const to = toDate ? new Date(toDate) : null;
 
-    return tickets.filter((ticket) => {
-      const createdAt = new Date(ticket.createdAt);
+    let toEnd: Date | null = null;
+    if (to) {
+      toEnd = new Date(to);
+      toEnd.setHours(23, 59, 59, 999);
+    }
 
-      if (from && createdAt < from) return false;
+    const matchesDate =
+      (!from || createdAt >= from) && (!toEnd || createdAt <= toEnd);
 
-      if (to) {
-        const endOfTo = new Date(to);
-        endOfTo.setHours(23, 59, 59, 999);
-
-        if (createdAt > endOfTo) return false;
-      }
-
-      return true;
-    });
-  };
-
-  const { data: ticketData } = useLiveTickets({
-    search: searchTerm,
-  });
-  const tickets = ticketData?.data ?? [];
-  const filteredTickets = filterTicketsByDateRange(tickets);
-
-  const { data: orders = [] } = useQuery({
-    queryKey: ["active-orders"],
-    queryFn: api.getActiveOrders,
+    return matchesSearch && matchesDate;
   });
 
-  const { data: tableData } = useAllTables({ filter: "available" });
-
-  const tables = tableData?.data ?? [];
+  const { data: cashierStats } = useCashierDashboardStats();
 
   const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
   const [printedTicket, setPrintedTicket] = useState<any | null>(null);
-
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
-  const [paidOrders, setPaidOrders] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
-    if (!selectedOrder && orders.length > 0) {
-      setSelectedOrder(orders[0]);
-    }
-  }, [orders, selectedOrder]);
-
-  const invoiceOrder = selectedOrder && {
-    ...selectedOrder,
-    paymentStatus: paidOrders[selectedOrder.id]
-      ? "completed"
-      : selectedOrder.paymentStatus,
-    paymentMethod,
-  };
-
-  const handleMarkPaid = () => {
-    if (!selectedOrder) return;
-    setPaidOrders((prev) => ({ ...prev, [selectedOrder.id]: true }));
-  };
 
   const invoiceRef = useRef<HTMLDivElement>(null);
 
@@ -137,8 +77,6 @@ export default function CashierDashboard() {
     contentRef: invoiceRef,
     documentTitle: selectedTicket?.orderNumber || "invoice",
   });
-
-  const checkoutReady = orders.filter((order) => order.status === "served");
 
   return (
     <div className="space-y-6 print:bg-white">
@@ -154,7 +92,7 @@ export default function CashierDashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-foreground">
-              {orders.length}
+              {cashierStats?.data.totalActiveOrders}
             </p>
           </CardContent>
         </Card>
@@ -164,7 +102,7 @@ export default function CashierDashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-foreground">
-              {checkoutReady.length}
+              {cashierStats?.data.readyForCheckout}
             </p>
           </CardContent>
         </Card>
@@ -174,7 +112,7 @@ export default function CashierDashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-foreground">
-              {orders.filter((order) => order.paymentStatus !== "paid").length}
+              {cashierStats?.data.pendingPayments}
             </p>
           </CardContent>
         </Card>
@@ -184,7 +122,7 @@ export default function CashierDashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-foreground">
-              {tables.length}
+              {cashierStats?.data.tablesInHouse}
             </p>
           </CardContent>
         </Card>
@@ -214,7 +152,6 @@ export default function CashierDashboard() {
                 />
               </div>
 
-              {/* DATE FILTERS */}
               <div className="flex items-center flex-col gap-3 sm:flex-row sm:items-end sm:flex-wrap lg:flex-nowrap">
                 <div className="flex flex-col gap-1 w-full sm:w-auto">
                   <label className="text-sm text-muted-foreground">From</label>

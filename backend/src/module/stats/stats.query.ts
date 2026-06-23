@@ -4,6 +4,7 @@ import { statsContract } from "../../contract/stats/stats.contract";
 import tableRepository from "../../repository/table.repository";
 import reservationRepository from "../../repository/reservation.repository";
 import expensesRepository from "../../repository/expenses.repository";
+import ticketRepository from "../../repository/ticket.repository";
 
 export const getDashboardStats: AppRouteQueryImplementation<
   typeof statsContract.getDashboardStats
@@ -106,7 +107,7 @@ export const getRevenueStats: AppRouteQueryImplementation<
     });
 
     const totalRevenue = todayOrders.reduce((sum, order) => {
-      if (order.status === "completed") {
+      if (order.paymentStatus === "paid") {
         return sum + (order.subtotal || 0);
       }
       return sum;
@@ -269,10 +270,66 @@ export const getProfitLossStats: AppRouteQueryImplementation<
   }
 };
 
+export const getCashierCheckoutStats: AppRouteQueryImplementation<
+  typeof statsContract.cashierCheckoutStats
+> = async () => {
+  try {
+    const [
+      totalActiveOrders,
+      readyForCheckout,
+      pendingPayments,
+      tableStats,
+    ] = await Promise.all([
+      ticketRepository.count({
+        status: {
+          $in: ["pending", "served"],
+        },
+      }),
+
+      orderRepository.count({
+        status: "completed",
+        paymentStatus: {
+          $ne: "paid",
+        },
+      }),
+
+      orderRepository.count({
+        paymentStatus: {
+          $ne: "paid",
+        },
+      }),
+
+      tableRepository.getTableStats(),
+    ]);
+
+    return {
+      status: 200,
+      body: {
+        success: true,
+        data: {
+          totalActiveOrders,
+          readyForCheckout,
+          pendingPayments,
+          tablesInHouse: tableStats.total,
+        },
+      },
+    };
+  } catch (error) {
+      return {
+        status: 500,
+        body: {
+          success: false,
+          error: "Failed to fetch cashier checkout stats",
+        },
+      };
+  }
+};
+
 export const statsQueryHandler = {
   getDashboardStats,
   getTableStats,
   getRevenueChart,
   getRevenueStats,
   getProfitLossStats,
+  getCashierCheckoutStats,
 };

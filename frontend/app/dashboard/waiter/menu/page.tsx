@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
@@ -19,18 +19,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { ArrowDown } from "lucide-react";
 import { useAllMenuCategories } from "@/hooks/admin/menu-category/getAllMenuCategories";
 import { TMenuCategory } from "@/lib/types/menu-category.types";
 import { useTableById } from "@/hooks/admin/table/getTableById";
 import { useAllMenuItems } from "@/hooks/admin/menu-item/getAllMenuItems";
 import { TMenuItem } from "@/lib/types/menu-item.types";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createOrderSchema } from "@/lib/validations/order.validation";
 import { orderApi } from "@/lib/api/order.api";
-import { FloatingButton } from "@/components/ui/floating-button";
 import { useAuth } from "@/context/auth-context";
+import ScrollToggleButton from "@/components/dashboard/flotable-button";
 
 export default function WaiterMenuPage() {
   const { user } = useAuth();
@@ -146,11 +143,15 @@ export default function WaiterMenuPage() {
 
       router.push("/dashboard/waiter/orders");
     },
-    onError: () => {
+    onError: (error: any) => {
       toast({
-        title: "Unable to create order",
-        description: "Please try again or select another table.",
         variant: "destructive",
+        title: "Unable to create order",
+        description:
+          error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
+          "Please try again or select another table.",
       });
     },
   });
@@ -208,7 +209,7 @@ export default function WaiterMenuPage() {
         description={`Creating order for Table ${selectedTable?.name ?? ""} ${selectedTable?.section ?? ""}`}
       />
 
-      {selectedTable?.number && <FloatingButton />}
+      <ScrollToggleButton targetId="checkout" />
       <div
         className={
           selectedTable
@@ -251,7 +252,7 @@ export default function WaiterMenuPage() {
                     ))}
                   </SelectContent>
                 </Select>
-                <div>
+                {/* <div>
                   <a
                     href="#checkout"
                     className="lg:hidden text-primary text-sm font-medium bg-primary/10 px-3 py-2 rounded-full flex items-center gap-1"
@@ -259,7 +260,7 @@ export default function WaiterMenuPage() {
                     Invoice
                     <ArrowDown className="size-3" />
                   </a>
-                </div>
+                </div> */}
               </div>
 
               {filteredAvailableMenuItems.length === 0 ? (
@@ -421,17 +422,17 @@ export default function WaiterMenuPage() {
                   </div>
 
                   {/* 3. Added helpful error alerts at bottom if anything fails schema rules */}
-                  {/* {Object.keys(errors).length > 0 && (
+                  {Object.keys(errors).length > 0 && (
                     <div className="p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg text-xs space-y-1">
                       <p className="font-semibold">
-                        Please fix validation errors:
+                        Something went wrong:
                       </p>
                       {errors.tableId && <p>• Table selection is missing.</p>}
                       {errors.items && (
                         <p>• You must add menu items to the order.</p>
                       )}
                     </div>
-                  )} */}
+                  )}
 
                   <Button
                     type="submit"

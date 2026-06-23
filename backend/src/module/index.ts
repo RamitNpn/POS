@@ -17,10 +17,17 @@ import { purchaseRouter } from "./purchase/purchase.router";
 import { orderRouter } from "./order/order.router";
 import { stockMovementRouter } from "./stock-movement/stock-movement.router";
 import { expenseRouter } from "./expenses/espenses.router";
+import { authRouter } from "./auth/auth.router";
+import { activityLogRouter } from "./logs/log.router";
+import { reportRouter } from "./daily-report/report.router";
+import { roleRouter } from "./role/role.router";
+import { branchRouter } from "./branch/branch.router";
+import { salesRouter } from "./sales/sales.router";
 
 const s = initServer();
 
 export const router = s.router(contract, {
+  auth: authRouter,
   user: userRouter,
   room: roomRouter,
   table: tableRouter,
@@ -36,4 +43,9 @@ export const router = s.router(contract, {
   purchase: purchaseRouter,
   stockMovement: stockMovementRouter,
   expenses: expenseRouter,
+  logs: activityLogRouter,
+  report: reportRouter,
+  role: roleRouter,
+  branch: branchRouter,
+  sales: salesRouter,
 });

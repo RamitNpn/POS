@@ -36,6 +36,8 @@ export const orderContract = c.router({
       status: z.string().optional(),
       tableId: z.string().optional(),
       search: z.string().optional(),
+      to: z.string().optional(),
+      from: z.string().optional(),
     }),
     responses: {
       200: z.object({
@@ -68,6 +70,32 @@ export const orderContract = c.router({
     responses: {
       200: getOrderByIdSchema,
       404: errorSchema,
+    },
+  },
+
+  getOrdersByDate: {
+    method: "GET",
+    path: "/order/date-report",
+    summary: "Get completed orders for a specific date with full relations",
+    query: z.object({
+      dateReport: z.string(),
+    }),
+
+    responses: {
+      200: z.object({
+        success: z.boolean(),
+        data: z.array(z.any()),
+      }),
+
+      400: z.object({
+        success: z.boolean(),
+        error: z.string(),
+      }),
+
+      500: z.object({
+        success: z.boolean(),
+        error: z.string(),
+      }),
     },
   },
 

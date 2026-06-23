@@ -15,4 +15,5 @@ export const orderRouter = s.router(orderContract, {
   getAllOrders: orderQueryHandler.getAllOrders,
   getOrderByID: orderQueryHandler.getOrderByID,
   getActiveOrderByTable: orderQueryHandler.getActiveOrderByTable,
+  getOrdersByDate: orderQueryHandler.getOrdersByDate,
 });

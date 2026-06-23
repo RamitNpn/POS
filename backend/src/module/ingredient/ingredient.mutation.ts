@@ -2,6 +2,8 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import ingredientRepository from "../../repository/ingredient.repository";
 import { ingredientContract } from "../../contract/ingredient/ingredient.contract";
 import stockMovementRepository from "../../repository/stock-movement.repository";
+import logRepository from "../../repository/log.repository";
+import userRepository from "../../repository/user.repository";
 
 export const createIngredient: AppRouteMutationImplementation<
   typeof ingredientContract.createIngredient
@@ -34,6 +36,20 @@ export const createIngredient: AppRouteMutationImplementation<
       });
     }
 
+    const admins = await userRepository.getByRole("admin");
+    const admin = admins?.[0];
+
+    if (admin) {
+      await logRepository.create({
+        userId: admin._id,
+        action: "Ingredient Create",
+        details: `${admin.name} added an ingredient in ${ingredient.category}`,
+        module: "Ingredient",
+        entityId: `${ingredient._id}`,
+        entityType: "Ingredient",
+      });
+    }
+
     return {
       status: 201,
       body: {
@@ -58,9 +74,9 @@ export const updateIngredient: AppRouteMutationImplementation<
   try {
     const { ingredientId } = req.params;
 
-    const ingredient = await ingredientRepository.getByID(ingredientId);
+    const existing = await ingredientRepository.getByID(ingredientId);
 
-    if (!ingredient) {
+    if (!existing) {
       return {
         status: 404,
         body: {
@@ -70,7 +86,24 @@ export const updateIngredient: AppRouteMutationImplementation<
       };
     }
 
-    await ingredientRepository.update(ingredientId, req.body);
+    const ingredient = await ingredientRepository.update(
+      ingredientId,
+      req.body,
+    );
+
+    const admins = await userRepository.getByRole("admin");
+    const admin = admins?.[0];
+
+    if (admin) {
+      await logRepository.create({
+        userId: admin._id,
+        action: "Ingredient Update",
+        details: `${admin.name} updated an ingredient in ${ingredient?.category || "list"}`,
+        module: "Ingredient",
+        entityId: `${ingredient?._id}`,
+        entityType: "Ingredient",
+      });
+    }
 
     return {
       status: 200,
@@ -96,9 +129,9 @@ export const deleteIngredient: AppRouteMutationImplementation<
   try {
     const { ingredientId } = req.params;
 
-    const ingredient = await ingredientRepository.getByID(ingredientId);
+    const existing = await ingredientRepository.getByID(ingredientId);
 
-    if (!ingredient) {
+    if (!existing) {
       return {
         status: 404,
         body: {
@@ -108,7 +141,21 @@ export const deleteIngredient: AppRouteMutationImplementation<
       };
     }
 
-    await ingredientRepository.delete(ingredientId);
+    const ingredient = await ingredientRepository.delete(ingredientId);
+
+    const admins = await userRepository.getByRole("admin");
+    const admin = admins?.[0];
+
+    if (admin) {
+      await logRepository.create({
+        userId: admin._id,
+        action: "Ingredient Delete",
+        details: `${admin.name} deleted an ingredient from ${ingredient?.category || "list"}`,
+        module: "Ingredient",
+        entityId: `${ingredient?._id}`,
+        entityType: "Ingredient",
+      });
+    }
 
     return {
       status: 200,

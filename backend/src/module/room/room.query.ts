@@ -76,7 +76,7 @@ export const getRoomByID: AppRouteQueryImplementation<
       };
     }
 
-    const tableCount = await roomRepository.countByRoom(room._id.toString());
+    const tableCount = await tableRepository.countByRoom(room._id.toString());
 
     return {
       status: 200,

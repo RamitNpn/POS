@@ -8,41 +8,48 @@ const mapOrder = (order: any) => {
     _id: order._id.toString(),
     orderNumber: order.orderNumber,
 
-    tableId: order.tableId?._id?.toString?.() || order.tableId,
+    tableId:
+      order.tableId?._id?.toString?.() ||
+      order.tableId?.toString?.() ||
+      order.tableId,
+
     table: order.tableId,
 
     items: (order.items ?? []).map((item: any) => ({
-      _id: item._id?.toString(),
+      _id: item._id?.toString?.(),
+
       menuItemId:
         item.menuItemId?._id?.toString?.() ||
         item.menuItemId?.toString?.() ||
         item.menuItemId,
 
-      menuItem: item.name,
+      menuItem: item.menuItemId?.name ?? item.name,
+
+      category: item.menuItemId?.categoryId?.name ?? null,
+
       quantity: item.quantity,
-      notes: item.notes ?? "",
       price: item.price,
       total: item.total ?? item.price * item.quantity,
     })),
 
     customerName: order.customerName,
-    paymentStatus: order.paymentStatus,
-    paymentMethod: order.paymentMethod,
 
-    subtotal: order.subtotal,
-    tax: order.tax,
-    discount: order.discount ?? 0,
-    serviceCharge: order.serviceCharge ?? 0,
-    total: order.total,
-
-    notes: order.notes ?? "",
-
-    waiterId: order.waiterId?._id?.toString?.() || order.waiterId,
+    waiterId:
+      order.waiterId?._id?.toString?.() ||
+      order.waiterId?.toString?.() ||
+      order.waiterId,
 
     waiter: order.waiterId,
 
-    status: order.status,
+    paymentStatus: order.paymentStatus,
+    orderType: order.orderType,
 
+    subtotal: order.subtotal,
+    tax: order.tax,
+    total: order.total,
+
+    notes: order.notes ?? "",
+    status: order.status,
     ticketCount: order.ticketCount ?? 0,
 
     createdAt: order.createdAt,
@@ -61,6 +68,8 @@ export const getAllOrders: AppRouteQueryImplementation<
     const status = req.query.status as string | undefined;
     const tableId = req.query.tableId as string | undefined;
     const search = req.query.search as string | undefined;
+    const to = req.query.to as string | undefined;
+    const from = req.query.from as string | undefined;
 
     const { data, total } = await orderRepository.getAll({
       skip,
@@ -68,6 +77,8 @@ export const getAllOrders: AppRouteQueryImplementation<
       status,
       tableId,
       search,
+      to,
+      from,
     });
 
     return {
@@ -180,8 +191,47 @@ export const getActiveOrderByTable: AppRouteQueryImplementation<
   }
 };
 
+export const getOrdersByDate: AppRouteQueryImplementation<
+  typeof orderContract.getOrdersByDate
+> = async ({ req }) => {
+  try {
+    const { dateReport } = req.query;
+
+    if (!dateReport) {
+      return {
+        status: 400,
+        body: {
+          success: false,
+          error: "Date is required",
+        },
+      };
+    }
+
+    const orders = await orderRepository.getOrdersByDate(dateReport);
+
+    const data = orders.map(mapOrder);
+
+    return {
+      status: 200,
+      body: {
+        success: true,
+        data,
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      body: {
+        success: false,
+        error: (error as Error).message,
+      },
+    };
+  }
+};
+
 export const orderQueryHandler = {
   getAllOrders,
   getOrderByID,
   getActiveOrderByTable,
+  getOrdersByDate,
 };

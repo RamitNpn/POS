@@ -22,7 +22,7 @@ import { Eye, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useReactToPrint } from "react-to-print";
 import OrderDetailsModal from "../order-details-modal";
-import OrderInvoicePrint from "../order-invoice-print";
+import PrintInvoice from "../../billing-modal";
 
 export default function OrdersPage() {
   const [search, setSearch] = useState("");
@@ -56,34 +56,28 @@ export default function OrdersPage() {
     const headers = [
       "SN",
 
-      // Order Info
       "Order Number",
       "Order ID",
       "Status",
       "Payment Status",
       "Customer Name",
 
-      // Table Info
       "Table Name",
       "Table Capacity",
       "Table Status",
 
-      // Waiter Info
       "Waiter ID",
       "Waiter Name",
       "Waiter Email",
 
-      // Items (flattened string)
       "Items",
 
-      // Financials
       "Subtotal (Rs)",
       "Tax (Rs)",
       "Discount (Rs)",
       "Service Charge (Rs)",
       "Total (Rs)",
 
-      // Meta
       "Notes",
       "Ticket Count",
       "Created At",
@@ -101,34 +95,28 @@ export default function OrdersPage() {
       return [
         i + 1,
 
-        // Order
         o._id,
         o.orderNumber,
         o.status,
         o.paymentStatus,
         o.customerName,
 
-        // Table
         o.table?.name,
         o.table?.capacity,
         o.table?.status,
 
-        // Waiter
         o.waiter?._id,
         o.waiter?.name,
         o.waiter?.email,
 
-        // Items
         itemsText,
 
-        // Financials
         o.subtotal,
         o.tax,
         o.discount,
         o.serviceCharge,
         o.total,
 
-        // Meta
         o.notes,
         o.ticketCount,
         formatDate(o.createdAt),
@@ -238,8 +226,8 @@ export default function OrdersPage() {
               <TableHead>Customer</TableHead>
               <TableHead>Items</TableHead>
               <TableHead>Payment</TableHead>
-              <TableHead>Actions</TableHead>
               <TableHead>Created</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -264,6 +252,7 @@ export default function OrdersPage() {
                     </span>
                   </TableCell>
                   <TableCell>{order.waiter?.name ?? "N/A"}</TableCell>
+                  <TableCell>Rs {order.total.toFixed(2)}</TableCell>
                   <TableCell>{order.customerName || "Guest"}</TableCell>
                   <TableCell>{order.items.length}</TableCell>
                   <TableCell className="capitalize">
@@ -275,7 +264,6 @@ export default function OrdersPage() {
                       {order.paymentStatus}
                     </span>
                   </TableCell>
-                  <TableCell>Rs {order.total.toFixed(2)}</TableCell>
                   <TableCell>{formatDate(order.createdAt)}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -323,7 +311,7 @@ export default function OrdersPage() {
         }}
       >
         <div ref={invoiceRef}>
-          <OrderInvoicePrint order={printOrder} />
+          <PrintInvoice order={printOrder} />
         </div>
       </div>
     </div>

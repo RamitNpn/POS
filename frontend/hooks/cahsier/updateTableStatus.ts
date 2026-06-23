@@ -32,11 +32,14 @@ export const useUpdateTableStatus = () => {
         queryKey: ["tables"],
       });
     },
-    onError: () => {
+    onError: (error: any) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to mark order.",
+        description:
+          error?.response?.data?.error ||
+          error?.message ||
+          "Failed to update table status",
       });
     },
   });

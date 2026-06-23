@@ -99,7 +99,10 @@ export default function PurchaseOrdersPage() {
         variant: "destructive",
         title: "Error",
         description:
-          error?.response?.data?.error || "Failed to create supplier.",
+          error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to create supplier.",
       });
     },
   });

@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TableStatus, TTable } from "@/lib/types/table.types";
 import { TTableStats } from "@/lib/types/stats.types";
+import { Table2 } from "lucide-react";
 
 interface TableGridProps {
   tables: TTable[];
@@ -85,24 +86,52 @@ export function TableGrid({ tables, onTableClick, title }: TableGridProps) {
       )}
       <CardContent className={title ? "" : "pt-6"}>
         <div className="space-y-6">
-          {Object.entries(sections).map(([section, sectionTables]) => (
-            <div key={section}>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">
-                {section}
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {sectionTables.map((table) => (
-                  <TableCard
-                    key={table._id}
-                    table={table}
-                    onClick={
-                      onTableClick ? () => onTableClick(table) : undefined
-                    }
-                  />
-                ))}
+          {tables.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/20 py-12 text-center">
+              <div className="mb-3 rounded-full bg-muted p-3">
+                <Table2 className="size-6 text-muted-foreground" />
               </div>
+
+              <h3 className="text-base font-semibold text-foreground">
+                No Tables Found
+              </h3>
+
+              <p className="mt-1 max-w-sm text-sm text-muted-foreground">
+                There are currently no tables available in this section.
+              </p>
             </div>
-          ))}
+          ) : (
+            Object.entries(sections).map(([section, sectionTables]) => (
+              <div key={section} className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="h-px flex-1 bg-border" />
+
+                  <span className="rounded-full border border-border bg-muted/30 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    {section}
+                  </span>
+
+                  <span className="text-xs text-muted-foreground">
+                    {sectionTables.length} table
+                    {sectionTables.length !== 1 ? "s" : ""}
+                  </span>
+
+                  <div className="h-px flex-1 bg-border" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                  {sectionTables.map((table) => (
+                    <TableCard
+                      key={table._id}
+                      table={table}
+                      onClick={
+                        onTableClick ? () => onTableClick(table) : undefined
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </CardContent>
     </Card>

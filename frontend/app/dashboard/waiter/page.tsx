@@ -1,12 +1,9 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
 import { TableGrid, TableStats } from "@/components/dashboard/table-grid";
-import { OrderList } from "@/components/dashboard/order-card";
 import { StatsCard } from "@/components/dashboard/stats-card";
-import { api } from "@/lib/api/mock-data";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -21,6 +18,8 @@ import { useState } from "react";
 import { useAllTables } from "@/hooks/admin/table/getAllTables";
 import { TableStatus, TTable } from "@/lib/types/table.types";
 import { useTableStats } from "@/hooks/shared/stats/getTableStats";
+import { Status, TTicket } from "@/lib/types/ticket.types";
+import { useLiveTickets } from "@/hooks/cahsier/getAllLiveTickets";
 
 const tableStatusOptions: { value: TableStatus | "all"; label: string }[] = [
   { value: "all", label: "All statuses" },
@@ -38,16 +37,14 @@ export default function WaiterDashboard() {
     setShowTablePrompt(true);
   };
 
+  const { data: ticketData } = useLiveTickets({});
+  const tickets = ticketData?.data ?? [];
+
   const { data: tableStats } = useTableStats();
 
   const { data: tableData } = useAllTables({});
 
   const tables = tableData?.data ?? [];
-
-  const { data: orders } = useQuery({
-    queryKey: ["active-orders"],
-    queryFn: api.getActiveOrders,
-  });
 
   const handleTableClick = (table: TTable) => {
     if (table.status === "reserved") {
@@ -62,15 +59,16 @@ export default function WaiterDashboard() {
     router.push(`/dashboard/waiter/menu?tableId=${table._id}`);
   };
 
-  const myOrders =
-    orders?.filter((o) => o.waiterId === "2" || o.waiterId === "5") || [];
-  const readyOrders = myOrders.filter((o) => o.status === "ready");
   const [tableStatusFilter, setTableStatusFilter] = useState<
     TableStatus | "all"
   >("all");
   const filteredTables = tables?.filter(
     (table: TTable) =>
       tableStatusFilter === "all" || table.status === tableStatusFilter,
+  );
+
+  const activeOrders = tickets.filter(
+    (ticket: TTicket) => ticket.status === "pending",
   );
 
   return (
@@ -97,13 +95,13 @@ export default function WaiterDashboard() {
       {/* Quick Stats */}
       <div className="grid gap-4 grid-cols-3">
         <StatsCard
-          title="My Active Orders"
-          value={myOrders.length}
+          title="Today's Total Orders"
+          value={tickets.length}
           icon={<ClipboardList className="size-4" />}
         />
         <StatsCard
-          title="Ready for Pickup"
-          value={readyOrders.length}
+          title="Today's Active Orders"
+          value={activeOrders.length}
           icon={<Clock className="size-4" />}
         />
         <StatsCard

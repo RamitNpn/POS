@@ -9,4 +9,7 @@ export interface UsePaginationParams {
   date?: Date;
   category?: string;
   supplier?: string;
+  from?: string;
+  to?: string;
+  dateReport?: string;
 }

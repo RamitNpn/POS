@@ -81,7 +81,7 @@ export default function PrintInvoice({ order }: any) {
           </div>
 
           {order.items?.map((item: any) => (
-            <div key={item.id} className="grid grid-cols-12 py-1">
+            <div key={item._id} className="grid grid-cols-12 py-1">
               <span className="col-span-5 truncate">{item.menuItem?.name}</span>
 
               <span className="col-span-2 text-center">{item.quantity}</span>

@@ -11,8 +11,6 @@ const createUser: AppRouteMutationImplementation<
 > = async ({ req }) => {
   try {
     const { name, email, role, password, phone, status } = req.body;
-    console.log("BODY:", req.body);
-console.log("FILES:", req.files);
 
     const existingUser = await userRepository.getByEmail(email.toLowerCase());
 

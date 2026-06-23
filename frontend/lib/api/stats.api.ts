@@ -33,10 +33,10 @@ export const getProfitLossStatsApi = async (period: string) => {
   return res.data;
 };
 
-// export const getDashboardStats = async () => {
-//   const res = await apiClient.get("/stats/dashboard");
-//   return res.data;
-// };
+export const getCashierDashboardStats = async () => {
+  const res = await apiClient.get("/stats/cashier-checkout");
+  return res.data;
+};
 
 export const statsApi = {
   getDashboardStats,
@@ -44,4 +44,5 @@ export const statsApi = {
   getRevenueAnalytic,
   getRevenueStats,
   getProfitLossStatsApi,
+  getCashierDashboardStats,
 };
