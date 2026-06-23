@@ -77,8 +77,8 @@ export const login: AppRouteMutationImplementation<
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 8 * 60 * 60 * 1000,
     });
 
@@ -120,8 +120,7 @@ export const login: AppRouteMutationImplementation<
 
 export const logout: AppRouteMutationImplementation<
   typeof authContract.logout
-> = async ({ req, res }) => { 
-
+> = async ({ req, res }) => {
   const userId = req.user?.id;
 
   const user = await userRepository.getByID(userId || "");

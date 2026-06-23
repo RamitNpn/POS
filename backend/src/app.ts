@@ -27,7 +27,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("production"));
 
-app.use("/dineflow-api", swaggerUi.serve, swaggerUi.setup(openApiDocument));
+app.use("/localvibes-api", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 createExpressEndpoints(contract, router, app);
 export default app;
