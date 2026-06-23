@@ -11,7 +11,7 @@ export function useDeleteMenuCategory() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["menu-categories"] });
       toast({
-        title: "Category Deleted",
+        title: "Category Delete",
         description: "The category was removed successfully.",
       });
     },

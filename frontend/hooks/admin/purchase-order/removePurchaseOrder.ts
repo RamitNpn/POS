@@ -1,25 +1,25 @@
 "use client";
 import { toast } from "@/hooks/use-toast";
-import { ingredientApi } from "@/lib/api/ingredient.api";
+import { purchaseOrderApi } from "@/lib/api/purchase-order.api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useDeleteIngredient() {
+export function useDeletepurchaseOrder() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => ingredientApi.deleteIngredientApi(id),
+    mutationFn: (id: string) => purchaseOrderApi.deletePurchaseOrderApi(id),
     onSuccess: (data: any) => {
-      queryClient.invalidateQueries({ queryKey: ["delete ingredient"] });
+      queryClient.invalidateQueries({ queryKey: ["delete purchaseOrder"] });
       toast({
-        title: "Ingredient Created",
-        description: "The ingredient was deleted successfully.",
+        title: "Purchase Order Create",
+        description: "The purchase order was deleted successfully.",
       });
     },
     onError: (error: any) => {
       console.log(
         error?.response?.data?.error ||
           error?.message ||
-          "Failed to delete ingredient",
+          "Failed to delete purchase order",
       );
       toast({
         variant: "destructive",
@@ -27,7 +27,7 @@ export function useDeleteIngredient() {
         description:
           error?.response?.data?.error ||
           error?.message ||
-          "Failed to delete ingredient",
+          "Failed to delete purchase order",
       });
     },
   });

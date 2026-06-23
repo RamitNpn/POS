@@ -11,7 +11,7 @@ export function useDeleteBranch() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branchs"] });
       toast({
-        title: "Branch Deleted",
+        title: "Branch Delete",
         description: "The branch was removed successfully.",
       });
     },

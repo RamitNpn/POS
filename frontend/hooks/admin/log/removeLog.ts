@@ -16,7 +16,7 @@ export function useDeleteActivityLog() {
       });
 
       toast({
-        title: "Log Deleted",
+        title: "Log Delete",
         description: "Activity log deleted successfully.",
       });
     },

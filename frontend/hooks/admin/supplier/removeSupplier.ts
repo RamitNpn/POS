@@ -17,7 +17,7 @@ export function useDeleteSupplier() {
       });
 
       toast({
-        title: "Supplier Deleted",
+        title: "Supplier Delete",
         description: "The supplier was deleted successfully.",
       });
     },

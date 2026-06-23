@@ -11,7 +11,7 @@ export function useDeleteRole() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roles"] });
       toast({
-        title: "Role Deleted",
+        title: "Role Delete",
         description: "The role was removed successfully.",
       });
     },

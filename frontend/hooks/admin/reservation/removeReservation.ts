@@ -11,7 +11,7 @@ export function useDeleteReservation() {
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["delete reservation"] });
       toast({
-        title: "Reservation Created",
+        title: "Reservation Delete",
         description: "The reservation was deleted successfully.",
       });
     },

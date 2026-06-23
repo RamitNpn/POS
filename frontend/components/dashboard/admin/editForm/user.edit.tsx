@@ -5,14 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CardFooter } from "@/components/ui/card";
-import { PageSection } from "@/components/dashboard/admin/shared";
-import { useAllUsers } from "@/hooks/admin/users/getAllUsers";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  createUserSchema,
-  TCreateUserSchema,
   TUpdateUserSchema,
+  updateUserSchema,
 } from "@/lib/validations/user.validation";
 import { userApi } from "@/lib/api/user.api";
 import { toast } from "@/hooks/use-toast";
@@ -38,7 +35,7 @@ function UserEditForm({ userId, onClose, size = "lg" }: Props) {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: zodResolver(createUserSchema),
+    resolver: zodResolver(updateUserSchema),
     defaultValues: {
       name: "",
       email: "",

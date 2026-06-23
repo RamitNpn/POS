@@ -11,7 +11,7 @@ export function useDeleteMenuItem() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["menu-items"] });
       toast({
-        title: "Menu Item Deleted",
+        title: "Menu Item Delete",
         description: "The menu item was removed successfully.",
       });
     },

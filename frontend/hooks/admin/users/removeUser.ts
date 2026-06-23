@@ -11,7 +11,7 @@ export function useDeleteUser() {
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["delete user"] });
       toast({
-        title: "User Created",
+        title: "User Delete",
         description: "The user was deleted successfully.",
       });
     },
