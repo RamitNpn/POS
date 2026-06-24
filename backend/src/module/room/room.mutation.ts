@@ -6,11 +6,20 @@ export const createRoom: AppRouteMutationImplementation<
   typeof roomContract.createRoom
 > = async ({ req }) => {
   try {
+    console.log("[CREATE ROOM] BODY:", req.body);
+
     const { name, description, isActive } = req.body;
 
     const existingRoom = await roomRepository.getByName(name);
 
+    console.log("[CREATE ROOM] EXISTING CHECK:", {
+      name,
+      exists: !!existingRoom,
+    });
+
     if (existingRoom) {
+      console.warn("[CREATE ROOM] ROOM ALREADY EXISTS:", name);
+
       return {
         status: 400,
         body: {
@@ -20,11 +29,15 @@ export const createRoom: AppRouteMutationImplementation<
       };
     }
 
-    await roomRepository.create({
+    console.log("[CREATE ROOM] CREATING ROOM...");
+
+    const created = await roomRepository.create({
       name,
       description,
       isActive,
     });
+
+    console.log("[CREATE ROOM] CREATED ROOM ID:", created?._id);
 
     return {
       status: 201,
@@ -34,6 +47,9 @@ export const createRoom: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[CREATE ROOM] ERROR:", error);
+    console.error("[CREATE ROOM] BODY:", req.body);
+
     return {
       status: 500,
       body: {
@@ -48,11 +64,21 @@ export const updateRoom: AppRouteMutationImplementation<
   typeof roomContract.updateRoom
 > = async ({ req }) => {
   try {
+    console.log("[UPDATE ROOM] PARAMS:", req.params);
+    console.log("[UPDATE ROOM] BODY:", req.body);
+
     const { roomID } = req.params;
 
     const room = await roomRepository.getByID(roomID);
 
+    console.log("[UPDATE ROOM] FOUND:", {
+      roomID,
+      exists: !!room,
+    });
+
     if (!room) {
+      console.warn("[UPDATE ROOM] NOT FOUND:", roomID);
+
       return {
         status: 404,
         body: {
@@ -67,7 +93,14 @@ export const updateRoom: AppRouteMutationImplementation<
     if (name && name !== room.name) {
       const exists = await roomRepository.getByName(name);
 
+      console.log("[UPDATE ROOM] NAME CHECK:", {
+        name,
+        exists: !!exists,
+      });
+
       if (exists) {
+        console.warn("[UPDATE ROOM] DUPLICATE NAME:", name);
+
         return {
           status: 400,
           body: {
@@ -78,11 +111,15 @@ export const updateRoom: AppRouteMutationImplementation<
       }
     }
 
+    console.log("[UPDATE ROOM] UPDATING...");
+
     await roomRepository.update(roomID, {
       name,
       description,
       isActive,
     });
+
+    console.log("[UPDATE ROOM] UPDATED SUCCESSFULLY:", roomID);
 
     return {
       status: 200,
@@ -92,6 +129,10 @@ export const updateRoom: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[UPDATE ROOM] ERROR:", error);
+    console.error("[UPDATE ROOM] PARAMS:", req.params);
+    console.error("[UPDATE ROOM] BODY:", req.body);
+
     return {
       status: 500,
       body: {
@@ -106,11 +147,20 @@ export const removeRoom: AppRouteMutationImplementation<
   typeof roomContract.removeRoom
 > = async ({ req }) => {
   try {
+    console.log("[DELETE ROOM] PARAMS:", req.params);
+
     const { roomID } = req.params;
 
     const room = await roomRepository.getByID(roomID);
 
+    console.log("[DELETE ROOM] FOUND:", {
+      roomID,
+      exists: !!room,
+    });
+
     if (!room) {
+      console.warn("[DELETE ROOM] NOT FOUND:", roomID);
+
       return {
         status: 404,
         body: {
@@ -120,7 +170,11 @@ export const removeRoom: AppRouteMutationImplementation<
       };
     }
 
+    console.log("[DELETE ROOM] DELETING...");
+
     await roomRepository.delete(roomID);
+
+    console.log("[DELETE ROOM] DELETED:", roomID);
 
     return {
       status: 200,
@@ -130,6 +184,9 @@ export const removeRoom: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[DELETE ROOM] ERROR:", error);
+    console.error("[DELETE ROOM] PARAMS:", req.params);
+
     return {
       status: 500,
       body: {

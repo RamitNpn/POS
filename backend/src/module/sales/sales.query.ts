@@ -8,8 +8,10 @@ export const getSalesAnalytics: AppRouteQueryImplementation<
   typeof salesContract.getSalesAnalytics
 > = async ({ req }) => {
   try {
+    console.log("[getSalesAnalytics] req.query:", req.query);
+
     const query: any = {
-        paymentStatus: "paid",
+      paymentStatus: "paid",
     };
 
     if (req.query.fromDate || req.query.toDate) {
@@ -24,6 +26,8 @@ export const getSalesAnalytics: AppRouteQueryImplementation<
       query.createdAt.$lte = new Date(req.query.toDate);
     }
 
+    console.log("[getSalesAnalytics] mongo query:", query);
+
     const orders = await OrderModel.find(query).populate({
       path: "items.menuItemId",
       populate: {
@@ -31,21 +35,32 @@ export const getSalesAnalytics: AppRouteQueryImplementation<
       },
     });
 
+    console.log("[getSalesAnalytics] orders found:", orders.length);
+
     let totalRevenue = 0;
 
     const categoryMap = new Map<string, number>();
 
     orders.forEach((order) => {
+      console.log("[getSalesAnalytics] processing order:", order._id);
+
       totalRevenue += order.total;
 
       order.items.forEach((item: any) => {
         const menuItem = item.menuItemId;
 
-        if (!menuItem?.categoryId) return;
+        if (!menuItem?.categoryId) {
+          console.log("[getSalesAnalytics] missing category:", item);
+          return;
+        }
 
         const categoryName = menuItem.categoryId.name;
-
         const itemRevenue = item.price * item.quantity;
+
+        console.log("[getSalesAnalytics] item revenue:", {
+          categoryName,
+          itemRevenue,
+        });
 
         categoryMap.set(
           categoryName,
@@ -62,6 +77,8 @@ export const getSalesAnalytics: AppRouteQueryImplementation<
       }),
     );
 
+    console.log("[getSalesAnalytics] salesByCategory:", salesByCategory);
+
     salesByCategory.sort((a, b) => b.sales - a.sales);
 
     return {
@@ -73,7 +90,9 @@ export const getSalesAnalytics: AppRouteQueryImplementation<
         salesByCategory,
       },
     };
-  } catch {
+  } catch (error) {
+    console.error("[getSalesAnalytics] ERROR:", error);
+
     return {
       status: 500,
       body: {
@@ -88,42 +107,47 @@ export const getTopSellingItems: AppRouteQueryImplementation<
   typeof salesContract.getTopSellingItems
 > = async () => {
   try {
-    const orders = await orderRepository
-      .getActiveOrders();
+    console.log("[getTopSellingItems] fetching active orders");
+
+    const orders = await orderRepository.getActiveOrders();
+
+    console.log("[getTopSellingItems] orders:", orders.length);
 
     const itemMap = new Map();
 
     orders.forEach((order: any) => {
+      console.log("[getTopSellingItems] order:", order._id);
+
       order.items.forEach((item: any) => {
-        const existing = itemMap.get(
-          item.menuItemId.toString(),
-        );
+        const key = item.menuItemId.toString();
+
+        const existing = itemMap.get(key);
 
         if (existing) {
           existing.quantity += item.quantity;
-          existing.revenue +=
-            item.quantity * item.price;
+          existing.revenue += item.quantity * item.price;
+
+          console.log("[getTopSellingItems] updated item:", existing);
         } else {
-          itemMap.set(
-            item.menuItemId.toString(),
-            {
-              menuItemId:
-                item.menuItemId.toString(),
-              name: item.name,
-              quantity: item.quantity,
-              revenue:
-                item.quantity * item.price,
-            },
-          );
+          const newItem = {
+            menuItemId: key,
+            name: item.name,
+            quantity: item.quantity,
+            revenue: item.quantity * item.price,
+          };
+
+          itemMap.set(key, newItem);
+
+          console.log("[getTopSellingItems] new item:", newItem);
         }
       });
     });
 
-    const items = Array.from(
-      itemMap.values(),
-    ).sort(
+    const items = Array.from(itemMap.values()).sort(
       (a, b) => b.quantity - a.quantity,
     );
+
+    console.log("[getTopSellingItems] sorted items:", items);
 
     const topItem = items[0];
 
@@ -131,19 +155,19 @@ export const getTopSellingItems: AppRouteQueryImplementation<
       status: 200,
       body: {
         topItem: topItem?.name ?? "",
-        topRevenue:
-          topItem?.revenue ?? 0,
+        topRevenue: topItem?.revenue ?? 0,
         totalItems: items.length,
         items,
       },
     };
-  } catch {
+  } catch (error) {
+    console.error("[getTopSellingItems] ERROR:", error);
+
     return {
       status: 500,
       body: {
         success: false,
-        error:
-          "Failed to fetch top selling items",
+        error: "Failed to fetch top selling items",
       },
     };
   }

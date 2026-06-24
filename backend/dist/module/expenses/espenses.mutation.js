@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.espensesMutationHandler = exports.deleteExpense = exports.updateExpense = exports.createExpense = void 0;
+exports.expensesMutationHandler = exports.deleteExpense = exports.updateExpense = exports.createExpense = void 0;
 const expenses_repository_1 = __importDefault(require("../../repository/expenses.repository"));
 const log_repository_1 = __importDefault(require("../../repository/log.repository"));
 const user_repository_1 = __importDefault(require("../../repository/user.repository"));
@@ -131,7 +131,7 @@ const deleteExpense = async ({ req }) => {
     }
 };
 exports.deleteExpense = deleteExpense;
-exports.espensesMutationHandler = {
+exports.expensesMutationHandler = {
     createExpense: exports.createExpense,
     updateExpense: exports.updateExpense,
     deleteExpense: exports.deleteExpense,

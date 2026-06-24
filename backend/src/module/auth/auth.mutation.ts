@@ -32,6 +32,7 @@ export const login: AppRouteMutationImplementation<
 > = async ({ req, res }) => {
   try {
     const { email, password } = req.body;
+    console.log("Login Credintials: ", email, password);
     const user = await userRepository.getByEmail(email.toLowerCase(), true);
 
     if (!user) {
@@ -47,6 +48,7 @@ export const login: AppRouteMutationImplementation<
     const passwordMatches = await bcrypt.compare(password, user.password);
 
     if (!passwordMatches) {
+      console.log("Invalid password no matched");
       return {
         status: 401,
         body: {
@@ -57,6 +59,7 @@ export const login: AppRouteMutationImplementation<
     }
 
     if (user.status !== "active") {
+      console.log("Your account is not active");
       return {
         status: 403,
         body: {
@@ -67,6 +70,7 @@ export const login: AppRouteMutationImplementation<
     }
 
     const userId = user._id.toString();
+    console.log("User ID to generate token", userId);
 
     const token = createToken({
       id: userId,
@@ -75,6 +79,8 @@ export const login: AppRouteMutationImplementation<
       name: user.name,
     });
 
+    console.log("Generated token", token);
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
@@ -82,7 +88,7 @@ export const login: AppRouteMutationImplementation<
       maxAge: 8 * 60 * 60 * 1000,
     });
 
-    await logRepository.create({
+    const log = await logRepository.create({
       userId: new mongoose.Types.ObjectId(userId),
       action: "User Login",
       details: `${user.name} logged in at ${new Date().toLocaleString("en-US", {
@@ -92,6 +98,10 @@ export const login: AppRouteMutationImplementation<
       entityId: "",
       entityType: "",
     });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 200,
@@ -123,9 +133,13 @@ export const logout: AppRouteMutationImplementation<
 > = async ({ req, res }) => {
   const userId = req.user?.id;
 
+  console.log("User ID from params", userId);
+
   const user = await userRepository.getByID(userId || "");
+  console.log("User by ID details", user);
 
   if (!user) {
+    console.log("User ID not found");
     return {
       status: 401,
       body: {
@@ -141,7 +155,7 @@ export const logout: AppRouteMutationImplementation<
     sameSite: "lax",
   });
 
-  await logRepository.create({
+  const log = await logRepository.create({
     userId: new mongoose.Types.ObjectId(userId),
     action: "User Log Out",
     details: `${user.name} logged out at ${new Date().toLocaleString("en-US", {
@@ -151,6 +165,10 @@ export const logout: AppRouteMutationImplementation<
     entityId: "",
     entityType: "",
   });
+
+  if (!log) {
+    console.log("User log not created", log);
+  }
 
   return {
     status: 200,

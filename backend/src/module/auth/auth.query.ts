@@ -1,6 +1,4 @@
-import {
-  AppRouteQueryImplementation,
-} from "@ts-rest/express";
+import { AppRouteQueryImplementation } from "@ts-rest/express";
 import userRepository from "../../repository/user.repository";
 import { authContract } from "../../contract/auth/auth.contract";
 
@@ -8,6 +6,7 @@ export const getMe: AppRouteQueryImplementation<
   typeof authContract.getMe
 > = async ({ req }) => {
   if (!req.user) {
+    console.log("Req user: ", req.user);
     return {
       status: 401,
       body: {
@@ -18,6 +17,7 @@ export const getMe: AppRouteQueryImplementation<
   }
 
   const user = await userRepository.getByID(req.user.id);
+  console.log("Requested user details: ", user);
 
   if (!user) {
     return {

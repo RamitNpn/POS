@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.espensesQueryHandler = exports.getExpenseByID = exports.getAllExpenses = void 0;
+exports.expensesQueryHandler = exports.getExpenseByID = exports.getAllExpenses = void 0;
 const expenses_repository_1 = __importDefault(require("../../repository/expenses.repository"));
 const getAllExpenses = async ({ req }) => {
     try {
@@ -87,7 +87,7 @@ const getExpenseByID = async ({ req }) => {
     }
 };
 exports.getExpenseByID = getExpenseByID;
-exports.espensesQueryHandler = {
+exports.expensesQueryHandler = {
     getAllExpenses: exports.getAllExpenses,
     getExpenseByID: exports.getExpenseByID,
 };

@@ -10,11 +10,23 @@ const createUser: AppRouteMutationImplementation<
   typeof userContract.createUser
 > = async ({ req }) => {
   try {
-    const { name, email, role, password, phone, status } = req.body;
+    const { name, email, role, phone, status } = req.body;
+
+    console.log("[createUser] request:", {
+      name,
+      email,
+      role,
+      phone,
+      status,
+    });
 
     const existingUser = await userRepository.getByEmail(email.toLowerCase());
 
+    console.log("[createUser] existing user:", existingUser);
+
     if (existingUser) {
+      console.log("[createUser] email already exists:", email);
+
       return {
         status: 400,
         body: {
@@ -25,13 +37,19 @@ const createUser: AppRouteMutationImplementation<
       };
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("[createUser] hashing password");
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const files = req.files as {
       profile?: Express.Multer.File[];
     };
 
+    console.log("[createUser] uploaded files:", files);
+
     const profileUrl = files?.profile?.[0]?.path || "";
+
+    console.log("[createUser] profile url:", profileUrl);
 
     const created = await userRepository.create({
       name,
@@ -43,6 +61,12 @@ const createUser: AppRouteMutationImplementation<
       status,
     });
 
+    console.log("[createUser] created user:", {
+      id: created?._id,
+      email: created?.email,
+      role: created?.role,
+    });
+
     return {
       status: 201,
       body: {
@@ -51,6 +75,8 @@ const createUser: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[createUser] error:", error);
+
     return {
       status: 500,
       body: {
@@ -67,9 +93,15 @@ export const updateUser: AppRouteMutationImplementation<
   try {
     const { userID } = req.params;
 
+    console.log("[updateUser] userID:", userID);
+
     const existingUser = await userRepository.getByID(userID);
 
+    console.log("[updateUser] existing user:", existingUser);
+
     if (!existingUser) {
+      console.log("[updateUser] user not found");
+
       return {
         status: 404,
         body: {
@@ -81,9 +113,20 @@ export const updateUser: AppRouteMutationImplementation<
 
     const { name, email, role, password, phone, status } = req.body;
 
+    console.log("[updateUser] payload:", {
+      name,
+      email,
+      role,
+      phone,
+      status,
+      passwordProvided: !!password,
+    });
+
     const files = req.files as {
       profile?: Express.Multer.File[];
     };
+
+    console.log("[updateUser] uploaded files:", files);
 
     const profileUrl = files?.profile?.[0]?.path;
 
@@ -95,11 +138,20 @@ export const updateUser: AppRouteMutationImplementation<
     if (phone) updateData.phone = phone;
     if (status) updateData.status = status;
     if (profileUrl) updateData.profile = profileUrl;
+
     if (password) {
+      console.log("[updateUser] hashing new password");
       updateData.password = await bcrypt.hash(password, 10);
     }
 
+    console.log("[updateUser] final updateData:", {
+      ...updateData,
+      password: updateData.password ? "[HASHED]" : undefined,
+    });
+
     const updated = await userRepository.update(userID, updateData);
+
+    console.log("[updateUser] updated user:", updated);
 
     if (!updated) {
       return {
@@ -119,6 +171,8 @@ export const updateUser: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[updateUser] error:", error);
+
     return {
       status: 500,
       body: {
@@ -129,15 +183,21 @@ export const updateUser: AppRouteMutationImplementation<
   }
 };
 
-export const removeUser: AppRouteQueryImplementation<
+export const removeUser: AppRouteMutationImplementation<
   typeof userContract.removeUser
 > = async ({ req }) => {
   try {
     const { userID } = req.params;
 
+    console.log("[removeUser] userID:", userID);
+
     const existingUser = await userRepository.getByID(userID);
 
+    console.log("[removeUser] existing user:", existingUser);
+
     if (!existingUser) {
+      console.log("[removeUser] user not found");
+
       return {
         status: 404,
         body: {
@@ -149,6 +209,8 @@ export const removeUser: AppRouteQueryImplementation<
 
     const deleted = await userRepository.delete(userID);
 
+    console.log("[removeUser] delete result:", deleted);
+
     if (!deleted) {
       return {
         status: 404,
@@ -159,6 +221,8 @@ export const removeUser: AppRouteQueryImplementation<
       };
     }
 
+    console.log("[removeUser] user deleted successfully");
+
     return {
       status: 200,
       body: {
@@ -167,6 +231,8 @@ export const removeUser: AppRouteQueryImplementation<
       },
     };
   } catch (error) {
+    console.error("[removeUser] error:", error);
+
     return {
       status: 500,
       body: {
@@ -176,7 +242,6 @@ export const removeUser: AppRouteQueryImplementation<
     };
   }
 };
-
 export const userMutationHandler = {
   createUser,
   updateUser,

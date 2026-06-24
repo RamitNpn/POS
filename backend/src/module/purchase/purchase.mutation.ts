@@ -11,7 +11,16 @@ export const createPurchase: AppRouteMutationImplementation<
   typeof purchaseContract.createPurchase
 > = async ({ req }) => {
   try {
+    console.log("[CREATE PURCHASE] REQUEST BODY:", req.body);
+
     const { supplierId, invoiceNumber, purchaseDate, notes, items } = req.body;
+
+    console.log("[CREATE PURCHASE] BASIC INFO:", {
+      supplierId,
+      invoiceNumber,
+      purchaseDate,
+      itemsCount: items?.length,
+    });
 
     let totalAmount = 0;
 
@@ -25,7 +34,12 @@ export const createPurchase: AppRouteMutationImplementation<
       };
     });
 
+    console.log("[CREATE PURCHASE] ENRICHED ITEMS:", enrichedItems);
+    console.log("[CREATE PURCHASE] TOTAL AMOUNT:", totalAmount);
+
     // 1. Create purchase
+    console.log("[CREATE PURCHASE] CREATING PURCHASE...");
+
     const purchase = await purchaseRepository.create({
       supplierId,
       invoiceNumber,
@@ -34,7 +48,11 @@ export const createPurchase: AppRouteMutationImplementation<
       totalAmount,
     });
 
+    console.log("[CREATE PURCHASE] PURCHASE CREATED:", purchase._id);
+
     // 2. Create purchase items
+    console.log("[CREATE PURCHASE] CREATING PURCHASE ITEMS...");
+
     const purchaseItems = enrichedItems.map((item) => ({
       purchaseId: purchase._id,
       ingredientId: item.ingredientId,
@@ -45,13 +63,27 @@ export const createPurchase: AppRouteMutationImplementation<
 
     await purchaseItemRepository.createMany(purchaseItems);
 
+    console.log("[CREATE PURCHASE] PURCHASE ITEMS SAVED:", purchaseItems.length);
+
     // 3. Process stock updates + stock movements
     for (const item of enrichedItems) {
+      console.log("[CREATE PURCHASE] PROCESSING INGREDIENT:", item.ingredientId);
+
       const ingredient = await ingredientRepository.getByID(item.ingredientId);
 
-      if (!ingredient) continue;
+      if (!ingredient) {
+        console.log("[CREATE PURCHASE] INGREDIENT NOT FOUND:", item.ingredientId);
+        continue;
+      }
 
       const newStock = ingredient.currentStock + item.quantity;
+
+      console.log("[CREATE PURCHASE] STOCK UPDATE:", {
+        ingredientId: item.ingredientId,
+        oldStock: ingredient.currentStock,
+        added: item.quantity,
+        newStock,
+      });
 
       await ingredientRepository.update(item.ingredientId, {
         currentStock: newStock,
@@ -66,18 +98,26 @@ export const createPurchase: AppRouteMutationImplementation<
         referenceType: "PURCHASE",
         note: `Purchase ${invoiceNumber}`,
       });
+
+      console.log("[CREATE PURCHASE] STOCK MOVEMENT CREATED");
     }
 
     const supplier = await supplierRepository.getByID(supplierId);
 
-    // 4. Create EXPENSE (ONE record per purchase)
+    console.log("[CREATE PURCHASE] SUPPLIER:", supplier?.name);
+
+    // 4. Create EXPENSE
+    console.log("[CREATE PURCHASE] CREATING EXPENSE ENTRY...");
+
     await expensesRepository.create({
       category: "STOCK",
       description: `Purchase Invoice ${invoiceNumber}`,
       amount: totalAmount,
       date: new Date(purchaseDate),
-      vendorName: supplier?.name, // optionally replace with supplier name if populated
+      vendorName: supplier?.name,
     });
+
+    console.log("[CREATE PURCHASE] EXPENSE CREATED");
 
     return {
       status: 201,
@@ -87,6 +127,9 @@ export const createPurchase: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[CREATE PURCHASE] ERROR:", error);
+    console.error("[CREATE PURCHASE] REQUEST BODY:", req.body);
+
     return {
       status: 500,
       body: {
@@ -101,11 +144,17 @@ export const deletePurchase: AppRouteMutationImplementation<
   typeof purchaseContract.deletePurchase
 > = async ({ req }) => {
   try {
+    console.log("[DELETE PURCHASE] PARAMS:", req.params);
+
     const { purchaseId } = req.params;
 
     const purchase = await purchaseRepository.getByID(purchaseId);
 
+    console.log("[DELETE PURCHASE] FOUND:", purchase);
+
     if (!purchase) {
+      console.log("[DELETE PURCHASE] NOT FOUND:", purchaseId);
+
       return {
         status: 404,
         body: {
@@ -115,9 +164,13 @@ export const deletePurchase: AppRouteMutationImplementation<
       };
     }
 
+    console.log("[DELETE PURCHASE] DELETING PURCHASE ITEMS...");
     await purchaseItemRepository.deleteByPurchaseId(purchaseId);
 
+    console.log("[DELETE PURCHASE] DELETING PURCHASE...");
     await purchaseRepository.delete(purchaseId);
+
+    console.log("[DELETE PURCHASE] SUCCESS DELETED");
 
     return {
       status: 200,
@@ -127,6 +180,9 @@ export const deletePurchase: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[DELETE PURCHASE] ERROR:", error);
+    console.error("[DELETE PURCHASE] PARAMS:", req.params);
+
     return {
       status: 500,
       body: {

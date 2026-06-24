@@ -362,7 +362,6 @@ export default function CashierReportsPage() {
                         {order.paymentStatus}
                       </Badge>
                     </TableCell>
-                    {/* <TableCell>{order.paymentMethod || "N/A"}</TableCell> */}
                     <TableCell>{formatDate(order.createdAt)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -427,7 +426,7 @@ export default function CashierReportsPage() {
             if (!open) setSelectedOrder(null);
           }}
         >
-          <DialogContent>
+          <DialogContent className="h-auto overflow-y-scroll">
             <DialogHeader>
               <DialogTitle>Order {selectedOrder.orderNumber}</DialogTitle>
               <DialogDescription>Complete checkout details</DialogDescription>

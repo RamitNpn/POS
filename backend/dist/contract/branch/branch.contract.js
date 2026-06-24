@@ -76,7 +76,7 @@ exports.branchContract = c.router({
         pathParams: zod_1.z.object({
             branchID: zod_1.z.string(),
         }),
-        body: zod_1.z.object({}),
+        body: zod_1.z.object({}).optional(),
         responses: {
             200: commonSchema_1.successSchema,
             404: commonSchema_1.errorSchema,

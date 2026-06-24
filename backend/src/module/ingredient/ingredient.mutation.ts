@@ -9,9 +9,15 @@ export const createIngredient: AppRouteMutationImplementation<
   typeof ingredientContract.createIngredient
 > = async ({ req }) => {
   try {
+    console.log("[CREATE INGREDIENT] REQUEST BODY:", req.body);
+
     const existing = await ingredientRepository.getByName(req.body.name);
 
+    console.log("[CREATE INGREDIENT] EXISTING CHECK:", existing);
+
     if (existing) {
+      console.log("[CREATE INGREDIENT] DUPLICATE FOUND:", req.body.name);
+
       return {
         status: 400,
         body: {
@@ -23,7 +29,14 @@ export const createIngredient: AppRouteMutationImplementation<
 
     const ingredient = await ingredientRepository.create(req.body);
 
+    console.log("[CREATE INGREDIENT] CREATED:", ingredient);
+
     if (req.body.currentStock > 0) {
+      console.log(
+        "[CREATE INGREDIENT] INITIAL STOCK ADDED:",
+        req.body.currentStock,
+      );
+
       await stockMovementRepository.create({
         ingredientId: ingredient._id,
         type: "INITIAL_STOCK",
@@ -34,12 +47,19 @@ export const createIngredient: AppRouteMutationImplementation<
       await ingredientRepository.update(ingredient._id.toString(), {
         lastStockInDate: new Date(),
       });
+
+      console.log("[CREATE INGREDIENT] STOCK & LAST STOCK DATE UPDATED");
     }
 
     const admins = await userRepository.getByRole("admin");
+
+    console.log("[CREATE INGREDIENT] ADMINS FOUND:", admins?.length);
+
     const admin = admins?.[0];
 
     if (admin) {
+      console.log("[CREATE INGREDIENT] LOGGING ADMIN ACTION:", admin._id);
+
       await logRepository.create({
         userId: admin._id,
         action: "Ingredient Create",
@@ -48,6 +68,10 @@ export const createIngredient: AppRouteMutationImplementation<
         entityId: `${ingredient._id}`,
         entityType: "Ingredient",
       });
+
+      console.log("[CREATE INGREDIENT] LOG CREATED");
+    } else {
+      console.log("[CREATE INGREDIENT] NO ADMIN FOUND");
     }
 
     return {
@@ -58,6 +82,9 @@ export const createIngredient: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[CREATE INGREDIENT] ERROR:", error);
+    console.error("[CREATE INGREDIENT] REQUEST BODY:", req.body);
+
     return {
       status: 500,
       body: {
@@ -74,9 +101,16 @@ export const updateIngredient: AppRouteMutationImplementation<
   try {
     const { ingredientId } = req.params;
 
+    console.log("[UPDATE INGREDIENT] PARAMS:", req.params);
+    console.log("[UPDATE INGREDIENT] BODY:", req.body);
+
     const existing = await ingredientRepository.getByID(ingredientId);
 
+    console.log("[UPDATE INGREDIENT] EXISTING:", existing);
+
     if (!existing) {
+      console.log("[UPDATE INGREDIENT] NOT FOUND:", ingredientId);
+
       return {
         status: 404,
         body: {
@@ -91,18 +125,31 @@ export const updateIngredient: AppRouteMutationImplementation<
       req.body,
     );
 
+    console.log("[UPDATE INGREDIENT] UPDATED:", ingredient);
+
     const admins = await userRepository.getByRole("admin");
+
+    console.log("[UPDATE INGREDIENT] ADMINS FOUND:", admins?.length);
+
     const admin = admins?.[0];
 
     if (admin) {
+      console.log("[UPDATE INGREDIENT] LOGGING ADMIN ACTION:", admin._id);
+
       await logRepository.create({
         userId: admin._id,
         action: "Ingredient Update",
-        details: `${admin.name} updated an ingredient in ${ingredient?.category || "list"}`,
+        details: `${admin.name} updated an ingredient in ${
+          ingredient?.category || "list"
+        }`,
         module: "Ingredient",
         entityId: `${ingredient?._id}`,
         entityType: "Ingredient",
       });
+
+      console.log("[UPDATE INGREDIENT] LOG CREATED");
+    } else {
+      console.log("[UPDATE INGREDIENT] NO ADMIN FOUND");
     }
 
     return {
@@ -113,6 +160,10 @@ export const updateIngredient: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[UPDATE INGREDIENT] ERROR:", error);
+    console.error("[UPDATE INGREDIENT] PARAMS:", req.params);
+    console.error("[UPDATE INGREDIENT] BODY:", req.body);
+
     return {
       status: 500,
       body: {
@@ -129,9 +180,15 @@ export const deleteIngredient: AppRouteMutationImplementation<
   try {
     const { ingredientId } = req.params;
 
+    console.log("[DELETE INGREDIENT] PARAMS:", req.params);
+
     const existing = await ingredientRepository.getByID(ingredientId);
 
+    console.log("[DELETE INGREDIENT] EXISTING:", existing);
+
     if (!existing) {
+      console.log("[DELETE INGREDIENT] NOT FOUND:", ingredientId);
+
       return {
         status: 404,
         body: {
@@ -143,18 +200,31 @@ export const deleteIngredient: AppRouteMutationImplementation<
 
     const ingredient = await ingredientRepository.delete(ingredientId);
 
+    console.log("[DELETE INGREDIENT] DELETED:", ingredient);
+
     const admins = await userRepository.getByRole("admin");
+
+    console.log("[DELETE INGREDIENT] ADMINS FOUND:", admins?.length);
+
     const admin = admins?.[0];
 
     if (admin) {
+      console.log("[DELETE INGREDIENT] LOGGING ADMIN ACTION:", admin._id);
+
       await logRepository.create({
         userId: admin._id,
         action: "Ingredient Delete",
-        details: `${admin.name} deleted an ingredient from ${ingredient?.category || "list"}`,
+        details: `${admin.name} deleted an ingredient from ${
+          ingredient?.category || "list"
+        }`,
         module: "Ingredient",
         entityId: `${ingredient?._id}`,
         entityType: "Ingredient",
       });
+
+      console.log("[DELETE INGREDIENT] LOG CREATED");
+    } else {
+      console.log("[DELETE INGREDIENT] NO ADMIN FOUND");
     }
 
     return {
@@ -165,6 +235,9 @@ export const deleteIngredient: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[DELETE INGREDIENT] ERROR:", error);
+    console.error("[DELETE INGREDIENT] PARAMS:", req.params);
+
     return {
       status: 500,
       body: {

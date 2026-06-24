@@ -11,18 +11,29 @@ const createOrder: AppRouteMutationImplementation<
   typeof orderContract.createOrder
 > = async ({ req }) => {
   try {
+    console.log("[CREATE ORDER] REQUEST BODY:", req.body);
+
     const { tableId, customerName, waiterId, notes, items } = req.body;
 
+    console.log("[CREATE ORDER] TABLE:", tableId);
+    console.log("[CREATE ORDER] ITEMS COUNT:", items?.length);
+
     let order = await orderRepository.getActiveOrderByTable(tableId);
+
+    console.log("[CREATE ORDER] EXISTING ACTIVE ORDER:", order?._id || null);
 
     let isReorder = false;
 
     const resolvedItems = [];
 
     for (const item of items) {
+      console.log("[CREATE ORDER] RESOLVING ITEM:", item.menuItemId);
+
       const menuItem = await MenuItem.findById(item.menuItemId);
 
       if (!menuItem) {
+        console.log("[CREATE ORDER] MENU ITEM NOT FOUND:", item.menuItemId);
+
         return {
           status: 400,
           body: {
@@ -39,6 +50,12 @@ const createOrder: AppRouteMutationImplementation<
         quantity: item.quantity,
         total: menuItem.price * item.quantity,
       });
+
+      console.log("[CREATE ORDER] ITEM RESOLVED:", {
+        name: menuItem.name,
+        price: menuItem.price,
+        quantity: item.quantity,
+      });
     }
 
     const subtotal = resolvedItems.reduce((sum, i) => sum + i.total, 0);
@@ -47,8 +64,18 @@ const createOrder: AppRouteMutationImplementation<
 
     const total = subtotal + tax;
 
+    console.log("[CREATE ORDER] PRICING:", {
+      subtotal,
+      tax,
+      total,
+    });
+
     if (!order) {
+      console.log("[CREATE ORDER] CREATING NEW ORDER");
+
       const orderNumber = await orderRepository.generateOrderNumber();
+
+      console.log("[CREATE ORDER] GENERATED ORDER NUMBER:", orderNumber);
 
       order = await orderRepository.create({
         orderNumber,
@@ -65,6 +92,8 @@ const createOrder: AppRouteMutationImplementation<
         paymentStatus: "pending",
       });
 
+      console.log("[CREATE ORDER] ORDER CREATED:", order._id);
+
       await kitchenTicketRepository.create({
         orderId: order._id,
         tableId: new mongoose.Types.ObjectId(tableId),
@@ -79,9 +108,16 @@ const createOrder: AppRouteMutationImplementation<
         status: "pending",
       });
 
-      await TableModel.findByIdAndUpdate(new mongoose.Types.ObjectId(tableId), {
-        status: "occupied",
-      });
+      console.log("[CREATE ORDER] KITCHEN TICKET CREATED");
+
+      await TableModel.findByIdAndUpdate(
+        new mongoose.Types.ObjectId(tableId),
+        {
+          status: "occupied",
+        },
+      );
+
+      console.log("[CREATE ORDER] TABLE MARKED OCCUPIED");
 
       return {
         status: 201,
@@ -95,16 +131,23 @@ const createOrder: AppRouteMutationImplementation<
 
     isReorder = true;
 
+    console.log("[CREATE ORDER] REORDER FLOW TRIGGERED");
+
     for (const newItem of resolvedItems) {
       const existingItem = order.items.find(
-        (i: any) => i.menuItemId.toString() === newItem.menuItemId.toString(),
+        (i: any) =>
+          i.menuItemId.toString() === newItem.menuItemId.toString(),
       );
 
       if (existingItem) {
-        existingItem.quantity += newItem.quantity;
+        console.log("[CREATE ORDER] UPDATING EXISTING ITEM:", newItem.name);
 
-        existingItem.total = existingItem.quantity * existingItem.price;
+        existingItem.quantity += newItem.quantity;
+        existingItem.total =
+          existingItem.quantity * existingItem.price;
       } else {
+        console.log("[CREATE ORDER] ADDING NEW ITEM:", newItem.name);
+
         order.items.push(newItem);
       }
     }
@@ -115,7 +158,16 @@ const createOrder: AppRouteMutationImplementation<
 
     order.ticketCount += 1;
 
+    console.log("[CREATE ORDER] UPDATED ORDER TOTALS:", {
+      subtotal: order.subtotal,
+      tax: order.tax,
+      total: order.total,
+      ticketCount: order.ticketCount,
+    });
+
     await order.save();
+
+    console.log("[CREATE ORDER] ORDER SAVED");
 
     await kitchenTicketRepository.create({
       orderId: order._id,
@@ -131,6 +183,8 @@ const createOrder: AppRouteMutationImplementation<
       status: "pending",
     });
 
+    console.log("[CREATE ORDER] KITCHEN TICKET CREATED (REORDER)");
+
     return {
       status: 200,
       body: {
@@ -140,6 +194,9 @@ const createOrder: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[CREATE ORDER] ERROR:", error);
+    console.error("[CREATE ORDER] REQUEST BODY:", req.body);
+
     return {
       status: 500,
       body: {
@@ -154,12 +211,19 @@ export const updatePaymentStatus: AppRouteMutationImplementation<
   typeof orderContract.updatePaymentStatus
 > = async ({ req }) => {
   try {
+    console.log("[UPDATE PAYMENT] PARAMS:", req.params);
+    console.log("[UPDATE PAYMENT] BODY:", req.body);
+
     const { orderID } = req.params;
     const { status, paymentStatus } = req.body;
 
     const Payment = await orderRepository.getByID(orderID);
 
+    console.log("[UPDATE PAYMENT] EXISTING ORDER:", Payment);
+
     if (!Payment) {
+      console.log("[UPDATE PAYMENT] NOT FOUND:", orderID);
+
       return {
         status: 404,
         body: {
@@ -175,6 +239,8 @@ export const updatePaymentStatus: AppRouteMutationImplementation<
       paymentStatus,
     );
 
+    console.log("[UPDATE PAYMENT] UPDATED:", updated);
+
     return {
       status: 200,
       body: {
@@ -184,6 +250,9 @@ export const updatePaymentStatus: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[UPDATE PAYMENT] ERROR:", error);
+    console.error("[UPDATE PAYMENT] PARAMS:", req.params);
+
     return {
       status: 500,
       body: {
@@ -198,11 +267,17 @@ export const removeOrder: AppRouteMutationImplementation<
   typeof orderContract.removeOrder
 > = async ({ req }) => {
   try {
+    console.log("[DELETE ORDER] PARAMS:", req.params);
+
     const { orderID } = req.params;
 
     const order = await orderRepository.getByID(orderID);
 
+    console.log("[DELETE ORDER] EXISTING ORDER:", order);
+
     if (!order) {
+      console.log("[DELETE ORDER] NOT FOUND:", orderID);
+
       return {
         status: 404,
         body: {
@@ -214,8 +289,11 @@ export const removeOrder: AppRouteMutationImplementation<
 
     const deletedOrder = await orderRepository.delete(orderID);
 
+    console.log("[DELETE ORDER] DELETED ORDER:", deletedOrder);
+
     if (deletedOrder) {
       await kitchenTicketRepository.deleteByOrderId(orderID);
+      console.log("[DELETE ORDER] KITCHEN TICKETS DELETED");
     }
 
     return {
@@ -226,6 +304,9 @@ export const removeOrder: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[DELETE ORDER] ERROR:", error);
+    console.error("[DELETE ORDER] PARAMS:", req.params);
+
     return {
       status: 500,
       body: {

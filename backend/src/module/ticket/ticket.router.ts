@@ -4,14 +4,38 @@ import { ticketContract } from "../../contract/ticket/ticket.contract";
 import { ticketMutationHandler } from "./ticket.mutation";
 import { ticketQueryHandler } from "./ticket.query";
 
+import { verifyToken, authorizeRoles } from "../../middleware/auth.middleware";
+
 const s = initServer();
 
 export const ticketRouter = s.router(ticketContract, {
-  updateTicketStatus: ticketMutationHandler.updateTicketStatus,
-  removeTicket: ticketMutationHandler.removeTicket,
+  updateTicketStatus: {
+    middleware: [verifyToken, authorizeRoles("cashier", "waiter", "admin")],
+    handler: ticketMutationHandler.updateTicketStatus,
+  },
 
-  getAllTickets: ticketQueryHandler.getAllTickets,
-  getTicketByID: ticketQueryHandler.getTicketById,
-  getLiveTickets: ticketQueryHandler.getLiveTickets,
-  getTicketsByOrder: ticketQueryHandler.getTicketsByOrder,
+  removeTicket: {
+    middleware: [verifyToken, authorizeRoles("admin")],
+    handler: ticketMutationHandler.removeTicket as any,
+  },
+
+  getAllTickets: {
+    middleware: [verifyToken, authorizeRoles("cashier", "admin", "waiter")],
+    handler: ticketQueryHandler.getAllTickets,
+  },
+
+  getTicketByID: {
+    middleware: [verifyToken, authorizeRoles("cashier", "admin", "waiter")],
+    handler: ticketQueryHandler.getTicketById,
+  },
+
+  getLiveTickets: {
+    middleware: [verifyToken, authorizeRoles("cashier", "admin", "waiter")],
+    handler: ticketQueryHandler.getLiveTickets,
+  },
+
+  getTicketsByOrder: {
+    middleware: [verifyToken, authorizeRoles("cashier", "admin", "waiter")],
+    handler: ticketQueryHandler.getTicketsByOrder,
+  },
 });

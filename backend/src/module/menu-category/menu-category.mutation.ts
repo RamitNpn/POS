@@ -8,9 +8,15 @@ export const createMenuCategory: AppRouteMutationImplementation<
   typeof menuCategoryContract.createMenuCategory
 > = async ({ req }) => {
   try {
+    console.log("[CREATE MENU CATEGORY] REQUEST BODY:", req.body);
+
     const existing = await menuCategoryRepository.getByName(req.body.name);
 
+    console.log("[CREATE MENU CATEGORY] EXISTING CHECK:", existing);
+
     if (existing) {
+      console.log("[CREATE MENU CATEGORY] DUPLICATE NAME:", req.body.name);
+
       return {
         status: 400,
         body: {
@@ -20,7 +26,11 @@ export const createMenuCategory: AppRouteMutationImplementation<
       };
     }
 
+    console.log("[CREATE MENU CATEGORY] CREATING CATEGORY...");
+
     await menuCategoryRepository.create(req.body);
+
+    console.log("[CREATE MENU CATEGORY] SUCCESS CREATED");
 
     return {
       status: 201,
@@ -30,6 +40,9 @@ export const createMenuCategory: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[CREATE MENU CATEGORY] ERROR:", error);
+    console.error("[CREATE MENU CATEGORY] REQUEST BODY:", req.body);
+
     return {
       status: 500,
       body: {
@@ -46,9 +59,16 @@ export const updateMenuCategory: AppRouteMutationImplementation<
   try {
     const { categoryID } = req.params;
 
+    console.log("[UPDATE MENU CATEGORY] PARAMS:", req.params);
+    console.log("[UPDATE MENU CATEGORY] BODY:", req.body);
+
     const category = await menuCategoryRepository.getByID(categoryID);
 
+    console.log("[UPDATE MENU CATEGORY] EXISTING CATEGORY:", category);
+
     if (!category) {
+      console.log("[UPDATE MENU CATEGORY] NOT FOUND:", categoryID);
+
       return {
         status: 404,
         body: {
@@ -59,9 +79,15 @@ export const updateMenuCategory: AppRouteMutationImplementation<
     }
 
     if (req.body.name && req.body.name !== category.name) {
+      console.log("[UPDATE MENU CATEGORY] NAME CHANGE DETECTED");
+
       const exists = await menuCategoryRepository.getByName(req.body.name);
 
+      console.log("[UPDATE MENU CATEGORY] NAME CONFLICT CHECK:", exists);
+
       if (exists) {
+        console.log("[UPDATE MENU CATEGORY] DUPLICATE NAME:", req.body.name);
+
         return {
           status: 400,
           body: {
@@ -72,7 +98,11 @@ export const updateMenuCategory: AppRouteMutationImplementation<
       }
     }
 
+    console.log("[UPDATE MENU CATEGORY] UPDATING CATEGORY...");
+
     await menuCategoryRepository.update(categoryID, req.body);
+
+    console.log("[UPDATE MENU CATEGORY] SUCCESS UPDATED");
 
     return {
       status: 200,
@@ -82,6 +112,10 @@ export const updateMenuCategory: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[UPDATE MENU CATEGORY] ERROR:", error);
+    console.error("[UPDATE MENU CATEGORY] PARAMS:", req.params);
+    console.error("[UPDATE MENU CATEGORY] BODY:", req.body);
+
     return {
       status: 500,
       body: {
@@ -98,9 +132,15 @@ export const removeMenuCategory: AppRouteMutationImplementation<
   try {
     const { categoryID } = req.params;
 
+    console.log("[DELETE MENU CATEGORY] PARAMS:", req.params);
+
     const category = await menuCategoryRepository.getByID(categoryID);
 
+    console.log("[DELETE MENU CATEGORY] EXISTING CATEGORY:", category);
+
     if (!category) {
+      console.log("[DELETE MENU CATEGORY] NOT FOUND:", categoryID);
+
       return {
         status: 404,
         body: {
@@ -110,7 +150,11 @@ export const removeMenuCategory: AppRouteMutationImplementation<
       };
     }
 
+    console.log("[DELETE MENU CATEGORY] DELETING CATEGORY...");
+
     await menuCategoryRepository.delete(categoryID);
+
+    console.log("[DELETE MENU CATEGORY] SUCCESS DELETED");
 
     return {
       status: 200,
@@ -120,6 +164,9 @@ export const removeMenuCategory: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[DELETE MENU CATEGORY] ERROR:", error);
+    console.error("[DELETE MENU CATEGORY] PARAMS:", req.params);
+
     return {
       status: 500,
       body: {

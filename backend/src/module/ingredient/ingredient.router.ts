@@ -4,14 +4,33 @@ import { ingredientContract } from "../../contract/ingredient/ingredient.contrac
 
 import { ingredientMutationHandler } from "./ingredient.mutation";
 import { ingredientQueryHandler } from "./ingredient.query";
+import { verifyToken, authorizeRoles } from "../../middleware/auth.middleware";
 
 const s = initServer();
 
 export const ingredientRouter = s.router(ingredientContract, {
-  createIngredient: ingredientMutationHandler.createIngredient,
-  updateIngredient: ingredientMutationHandler.updateIngredient,
-  deleteIngredient: ingredientMutationHandler.deleteIngredient,
+  createIngredient: {
+    middleware: [verifyToken, authorizeRoles("admin")],
+    handler: ingredientMutationHandler.createIngredient,
+  },
 
-  getAllIngredients: ingredientQueryHandler.getAllIngredients,
-  getIngredientByID: ingredientQueryHandler.getIngredientByID,
+  updateIngredient: {
+    middleware: [verifyToken, authorizeRoles("admin")],
+    handler: ingredientMutationHandler.updateIngredient,
+  },
+
+  deleteIngredient: {
+    middleware: [verifyToken, authorizeRoles("admin")],
+    handler: ingredientMutationHandler.deleteIngredient as any,
+  },
+
+  getAllIngredients: {
+    middleware: [verifyToken, authorizeRoles("admin")],
+    handler: ingredientQueryHandler.getAllIngredients,
+  },
+
+  getIngredientByID: {
+    middleware: [verifyToken, authorizeRoles("admin")],
+    handler: ingredientQueryHandler.getIngredientByID,
+  },
 });

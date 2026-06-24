@@ -86,7 +86,7 @@ export const branchContract = c.router({
     pathParams: z.object({
       branchID: z.string(),
     }),
-    body: z.object({}),
+    body: z.object({}).optional(),
     responses: {
       200: successSchema,
       404: errorSchema,

@@ -9,9 +9,16 @@ export const updateTicketStatus: AppRouteMutationImplementation<
     const { ticketID } = req.params;
     const { status } = req.body;
 
+    console.log("[updateTicketStatus] ticketID:", ticketID);
+    console.log("[updateTicketStatus] requested status:", status);
+
     const ticket = await kitchenTicketRepository.getByID(ticketID);
 
+    console.log("[updateTicketStatus] existing ticket:", ticket);
+
     if (!ticket) {
+      console.log("[updateTicketStatus] ticket not found");
+
       return {
         status: 404,
         body: {
@@ -21,10 +28,14 @@ export const updateTicketStatus: AppRouteMutationImplementation<
       };
     }
 
+    console.log("[updateTicketStatus] current status:", ticket.status);
+
     const updated = await kitchenTicketRepository.updateStatus(
       ticketID,
       status,
     );
+
+    console.log("[updateTicketStatus] updated ticket:", updated);
 
     return {
       status: 200,
@@ -35,6 +46,8 @@ export const updateTicketStatus: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[updateTicketStatus] error:", error);
+
     return {
       status: 500,
       body: {
@@ -51,9 +64,15 @@ export const removeTicket: AppRouteMutationImplementation<
   try {
     const { ticketID } = req.params;
 
+    console.log("[removeTicket] ticketID:", ticketID);
+
     const ticket = await kitchenTicketRepository.getByID(ticketID);
 
+    console.log("[removeTicket] existing ticket:", ticket);
+
     if (!ticket) {
+      console.log("[removeTicket] ticket not found");
+
       return {
         status: 404,
         body: {
@@ -63,7 +82,14 @@ export const removeTicket: AppRouteMutationImplementation<
       };
     }
 
-    await kitchenTicketRepository.updateStatus(ticketID, "cancelled");
+    console.log("[removeTicket] current status:", ticket.status);
+
+    const cancelled = await kitchenTicketRepository.updateStatus(
+      ticketID,
+      "cancelled",
+    );
+
+    console.log("[removeTicket] cancelled ticket:", cancelled);
 
     return {
       status: 200,
@@ -73,6 +99,8 @@ export const removeTicket: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[removeTicket] error:", error);
+
     return {
       status: 500,
       body: {

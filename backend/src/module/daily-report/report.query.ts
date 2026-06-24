@@ -6,32 +6,63 @@ export const getDailyReports: AppRouteQueryImplementation<
   typeof reportContract.getDailyReports
 > = async ({ req }) => {
   try {
+    console.log("[GET DAILY REPORTS] QUERY:", req.query);
+
     const page = Number(req.query.page ?? 1);
     const limit = Number(req.query.limit);
+
+    console.log("[GET DAILY REPORTS] PARSED PAGINATION:", {
+      page,
+      limit,
+    });
+
     const skip = (page - 1) * limit;
 
     const to = req.query.to as string | undefined;
     const from = req.query.from as string | undefined;
 
-    const result = await dailyReportRepository.getAll({skip, limit, to, from});
+    console.log("[GET DAILY REPORTS] FILTERS:", {
+      to,
+      from,
+      skip,
+    });
+
+    console.log("[GET DAILY REPORTS] FETCHING FROM DB...");
+
+    const result = await dailyReportRepository.getAll({
+      skip,
+      limit,
+      to,
+      from,
+    });
+
+    console.log("[GET DAILY REPORTS] DB RESULT:", {
+      total: result?.total,
+      returned: result?.data?.length,
+    });
+
+    const formatted = result.data.map((report) => ({
+      id: report._id.toString(),
+      reportDate: report.reportDate.toISOString(),
+      totalRevenue: report.totalRevenue,
+      totalOrders: report.totalOrders,
+      cashSales: report.cashSales,
+      onlineSales: report.onlineSales,
+      totalDiscount: report.totalDiscount,
+      totalTax: report.totalTax,
+      generatedAt: report.generatedAt.toISOString(),
+    }));
+
+    console.log(
+      "[GET DAILY REPORTS] FORMATTED RESULT COUNT:",
+      formatted.length,
+    );
 
     return {
       status: 200,
       body: {
         success: true,
-
-        data: result.data.map((report) => ({
-          id: report._id.toString(),
-          reportDate: report.reportDate.toISOString(),
-          totalRevenue: report.totalRevenue,
-          totalOrders: report.totalOrders,
-          cashSales: report.cashSales,
-          onlineSales: report.onlineSales,
-          totalDiscount: report.totalDiscount,
-          totalTax: report.totalTax,
-          generatedAt: report.generatedAt.toISOString(),
-        })),
-
+        data: formatted,
         pagination: {
           page,
           limit,
@@ -40,7 +71,10 @@ export const getDailyReports: AppRouteQueryImplementation<
         },
       },
     };
-  } catch {
+  } catch (error) {
+    console.error("[GET DAILY REPORTS] ERROR:", error);
+    console.error("[GET DAILY REPORTS] QUERY:", req.query);
+
     return {
       status: 500,
       body: {

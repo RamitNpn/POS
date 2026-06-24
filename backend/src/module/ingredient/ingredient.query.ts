@@ -6,14 +6,37 @@ export const getAllIngredients: AppRouteQueryImplementation<
   typeof ingredientContract.getAllIngredients
 > = async ({ req }) => {
   try {
+    console.log("[GET ALL INGREDIENTS] QUERY:", req.query);
+
     const page = Number(req.query.page ?? 1);
     const limit = Number(req.query.limit);
 
+    console.log("[GET ALL INGREDIENTS] PARSED PAGINATION:", {
+      page,
+      limit,
+    });
+
+    const skip = (page - 1) * limit;
+
+    console.log("[GET ALL INGREDIENTS] SKIP VALUE:", skip);
+
+    console.log("[GET ALL INGREDIENTS] FILTERS:", {
+      search: req.query.search,
+      isActive: req.query.isActive,
+    });
+
+    console.log("[GET ALL INGREDIENTS] FETCHING FROM DB...");
+
     const { data, total } = await ingredientRepository.getAll({
-      skip: (page - 1) * limit,
+      skip,
       limit,
       search: req.query.search as string,
       isActive: req.query.isActive as string,
+    });
+
+    console.log("[GET ALL INGREDIENTS] DB RESULT:", {
+      returned: data?.length,
+      total,
     });
 
     const formatted = data.map((ingredient: any) => ({
@@ -29,6 +52,8 @@ export const getAllIngredients: AppRouteQueryImplementation<
       updatedAt: ingredient.updatedAt,
     }));
 
+    console.log("[GET ALL INGREDIENTS] FORMATTED COUNT:", formatted.length);
+
     return {
       status: 200,
       body: {
@@ -41,7 +66,10 @@ export const getAllIngredients: AppRouteQueryImplementation<
         },
       },
     };
-  } catch {
+  } catch (error) {
+    console.error("[GET ALL INGREDIENTS] ERROR:", error);
+    console.error("[GET ALL INGREDIENTS] QUERY:", req.query);
+
     return {
       status: 500,
       body: {
@@ -56,11 +84,17 @@ export const getIngredientByID: AppRouteQueryImplementation<
   typeof ingredientContract.getIngredientByID
 > = async ({ req }) => {
   try {
+    console.log("[GET INGREDIENT BY ID] PARAMS:", req.params);
+
     const ingredient = await ingredientRepository.getByID(
       req.params.ingredientId,
     );
 
+    console.log("[GET INGREDIENT BY ID] DB RESULT:", ingredient);
+
     if (!ingredient) {
+      console.log("[GET INGREDIENT BY ID] NOT FOUND:", req.params.ingredientId);
+
       return {
         status: 404,
         body: {
@@ -86,6 +120,9 @@ export const getIngredientByID: AppRouteQueryImplementation<
       },
     };
   } catch (error) {
+    console.error("[GET INGREDIENT BY ID] ERROR:", error);
+    console.error("[GET INGREDIENT BY ID] PARAMS:", req.params);
+
     return {
       status: 500,
       body: {

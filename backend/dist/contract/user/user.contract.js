@@ -68,10 +68,11 @@ exports.userContract = c.router({
         pathParams: zod_1.z.object({
             userID: zod_1.z.string(),
         }),
-        body: c.noBody(),
+        body: zod_1.z.object({}).optional(),
         responses: {
             200: commonSchema_1.successSchema,
             404: commonSchema_1.errorSchema,
+            500: commonSchema_1.errorSchema,
         },
     },
 });

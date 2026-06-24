@@ -4,6 +4,8 @@ export default function PrintInvoice({ order }: any) {
 
   if (!order) return null;
 
+  console.log(order);
+
   const paymentLabel =
     order.paymentMethod === "mobile"
       ? "Mobile Payment"
@@ -81,8 +83,8 @@ export default function PrintInvoice({ order }: any) {
           </div>
 
           {order.items?.map((item: any) => (
-            <div key={item._id} className="grid grid-cols-12 py-1">
-              <span className="col-span-5 truncate">{item.menuItem?.name}</span>
+            <div key={item.menuItemId} className="grid grid-cols-12 py-1">
+              <span className="col-span-5 truncate">{item.menuItem}</span>
 
               <span className="col-span-2 text-center">{item.quantity}</span>
 

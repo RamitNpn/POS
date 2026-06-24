@@ -49,7 +49,7 @@ export function ActivityFeed({
               <div key={activity._id} className="flex items-start gap-3">
                 <Avatar className="size-8">
                   <AvatarFallback className={getActionColor(activity.action)}>
-                    {getInitials(activity.user.name)}
+                    {getInitials(activity.user?.name || "")}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 space-y-1">

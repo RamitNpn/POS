@@ -224,10 +224,8 @@ export default function CashierOrdersPage() {
           </Card>
 
           <OrderList
-            orders={filteredOrders}
             title="Active orders"
             emptyMessage="No matching orders"
-            onOrderClick={(order) => setSelectedOrder(order)}
           />
         </div>
 

@@ -3,10 +3,19 @@ import kitchenTicketRepository from "../../repository/ticket.repository";
 import { ticketContract } from "../../contract/ticket/ticket.contract";
 
 const mapTicket = (ticket: any) => {
+  console.log("[mapTicket] raw ticket:", {
+    id: ticket?._id,
+    ticketNumber: ticket?.ticketNumber,
+    status: ticket?.status,
+    orderId: ticket?.orderId,
+    tableId: ticket?.tableId,
+    itemCount: ticket?.items?.length ?? 0,
+  });
+
   const order = ticket.orderId;
   const table = ticket.tableId;
 
-  return {
+  const mapped = {
     _id: ticket._id?.toString?.(),
     ticketNumber: ticket.ticketNumber,
     status: ticket.status,
@@ -37,16 +46,37 @@ const mapTicket = (ticket: any) => {
       price: i.price,
     })),
   };
+
+  console.log("[mapTicket] mapped ticket:", {
+    id: mapped._id,
+    ticketNumber: mapped.ticketNumber,
+    status: mapped.status,
+    orderNumber: mapped.orderNumber,
+    tableName: mapped.table.tableName,
+    itemCount: mapped.items.length,
+  });
+
+  return mapped;
 };
 
 export const getAllTickets: AppRouteQueryImplementation<
   typeof ticketContract.getAllTickets
 > = async (req) => {
   try {
+    console.log("[getAllTickets] query:", req.query);
+
     const page = Number(req.query.page ?? 1);
     const limit = Number(req.query.limit);
     const search = req.query.search as string | undefined;
     const status = req.query.status as string | undefined;
+
+    console.log("[getAllTickets] filters:", {
+      page,
+      limit,
+      search,
+      status,
+    });
+
     if (status && status !== "all") {
       req.query.status = status;
     }
@@ -54,8 +84,13 @@ export const getAllTickets: AppRouteQueryImplementation<
     const tickets = await kitchenTicketRepository.getAll({
       skip: 0,
       limit,
-      status: status,
+      status,
       search,
+    });
+
+    console.log("[getAllTickets] repository result:", {
+      totalRecords: tickets.data.length,
+      sample: tickets.data[0],
     });
 
     return {
@@ -65,6 +100,8 @@ export const getAllTickets: AppRouteQueryImplementation<
       },
     };
   } catch (error) {
+    console.error("[getAllTickets] error:", error);
+
     return {
       status: 500,
       body: {
@@ -79,12 +116,19 @@ export const getLiveTickets: AppRouteQueryImplementation<
   typeof ticketContract.getLiveTickets
 > = async (req) => {
   try {
+    console.log("[getLiveTickets] query:", req.query);
+
     const search = req.query.search as string | undefined;
 
     const tickets = await kitchenTicketRepository.getLatestTickets({
       skip: 0,
       limit: 100,
       search,
+    });
+
+    console.log("[getLiveTickets] repository result:", {
+      totalRecords: tickets.data.length,
+      sample: tickets.data[0],
     });
 
     return {
@@ -94,7 +138,7 @@ export const getLiveTickets: AppRouteQueryImplementation<
       },
     };
   } catch (error) {
-    console.error("LIVE TICKETS ERROR:", error);
+    console.error("[getLiveTickets] error:", error);
 
     return {
       status: 500,
@@ -112,9 +156,15 @@ export const getTicketById: AppRouteQueryImplementation<
   try {
     const { ticketID } = req.params;
 
+    console.log("[getTicketById] ticketID:", ticketID);
+
     const ticket = await kitchenTicketRepository.getByID(ticketID);
 
+    console.log("[getTicketById] ticket:", ticket);
+
     if (!ticket) {
+      console.log("[getTicketById] ticket not found");
+
       return {
         status: 404,
         body: {
@@ -129,6 +179,8 @@ export const getTicketById: AppRouteQueryImplementation<
       body: mapTicket(ticket),
     };
   } catch (error) {
+    console.error("[getTicketById] error:", error);
+
     return {
       status: 500,
       body: {
@@ -145,9 +197,15 @@ export const getTicketsByOrder: AppRouteQueryImplementation<
   try {
     const { orderID } = req.params;
 
+    console.log("[getTicketsByOrder] orderID:", orderID);
+
     const tickets = await kitchenTicketRepository.getByOrderID(orderID);
 
+    console.log("[getTicketsByOrder] tickets found:", tickets?.length ?? 0);
+
     if (!tickets || tickets.length === 0) {
+      console.log("[getTicketsByOrder] no tickets found");
+
       return {
         status: 404,
         body: {
@@ -164,6 +222,8 @@ export const getTicketsByOrder: AppRouteQueryImplementation<
       },
     };
   } catch (error) {
+    console.error("[getTicketsByOrder] error:", error);
+
     return {
       status: 500,
       body: {

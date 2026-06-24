@@ -7,9 +7,16 @@ export const createMenuItem: AppRouteMutationImplementation<
   typeof menuItemContract.createMenuItem
 > = async ({ req }) => {
   try {
+    console.log("[CREATE MENU ITEM] REQUEST BODY:", req.body);
+    console.log("[CREATE MENU ITEM] FILES RAW:", req.files);
+
     const existing = await menuItemRepository.getByName(req.body.name);
 
+    console.log("[CREATE MENU ITEM] EXISTING CHECK:", existing);
+
     if (existing) {
+      console.log("[CREATE MENU ITEM] DUPLICATE ITEM:", req.body.name);
+
       return {
         status: 400,
         body: {
@@ -21,16 +28,23 @@ export const createMenuItem: AppRouteMutationImplementation<
 
     const amount = Number(req.body.price);
 
-    console.log("BODY:", req.body);
-    console.log("FILES:", req.files);
+    console.log("[CREATE MENU ITEM] PARSED PRICE:", amount);
 
     const files = req.files as {
       image?: Express.Multer.File[];
     };
 
-    console.log("IMAGE:", files?.image?.[0]);
+    console.log("[CREATE MENU ITEM] IMAGE FILE ARRAY:", files?.image);
 
     const profileUrl = files?.image?.[0]?.path || "";
+
+    console.log("[CREATE MENU ITEM] IMAGE PATH:", profileUrl);
+
+    console.log("[CREATE MENU ITEM] FINAL PAYLOAD:", {
+      ...req.body,
+      price: amount,
+      image: profileUrl,
+    });
 
     await menuItemRepository.create({
       ...req.body,
@@ -41,6 +55,8 @@ export const createMenuItem: AppRouteMutationImplementation<
       price: amount,
     });
 
+    console.log("[CREATE MENU ITEM] SUCCESS CREATED");
+
     return {
       status: 201,
       body: {
@@ -49,6 +65,9 @@ export const createMenuItem: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[CREATE MENU ITEM] ERROR:", error);
+    console.error("[CREATE MENU ITEM] REQUEST BODY:", req.body);
+
     return {
       status: 500,
       body: {
@@ -65,9 +84,17 @@ export const updateMenuItem: AppRouteMutationImplementation<
   try {
     const { itemID } = req.params;
 
+    console.log("[UPDATE MENU ITEM] PARAMS:", req.params);
+    console.log("[UPDATE MENU ITEM] BODY:", req.body);
+    console.log("[UPDATE MENU ITEM] FILES:", req.files);
+
     const item = await menuItemRepository.getByID(itemID);
 
+    console.log("[UPDATE MENU ITEM] EXISTING ITEM:", item);
+
     if (!item) {
+      console.log("[UPDATE MENU ITEM] NOT FOUND:", itemID);
+
       return {
         status: 404,
         body: {
@@ -78,9 +105,15 @@ export const updateMenuItem: AppRouteMutationImplementation<
     }
 
     if (req.body.name && req.body.name !== item.name) {
+      console.log("[UPDATE MENU ITEM] NAME CHANGE DETECTED");
+
       const exists = await menuItemRepository.getByName(req.body.name);
 
+      console.log("[UPDATE MENU ITEM] NAME CHECK:", exists);
+
       if (exists) {
+        console.log("[UPDATE MENU ITEM] DUPLICATE NAME:", req.body.name);
+
         return {
           status: 400,
           body: {
@@ -93,11 +126,21 @@ export const updateMenuItem: AppRouteMutationImplementation<
 
     const amount = Number(req.body.price);
 
+    console.log("[UPDATE MENU ITEM] PARSED PRICE:", amount);
+
     const files = req.files as {
       image?: Express.Multer.File[];
     };
 
     const profileUrl = files?.image?.[0]?.path || "";
+
+    console.log("[UPDATE MENU ITEM] IMAGE PATH:", profileUrl);
+
+    console.log("[UPDATE MENU ITEM] FINAL UPDATE PAYLOAD:", {
+      ...req.body,
+      price: amount,
+      image: profileUrl,
+    });
 
     await menuItemRepository.update(itemID, {
       ...req.body,
@@ -108,6 +151,8 @@ export const updateMenuItem: AppRouteMutationImplementation<
       price: amount,
     });
 
+    console.log("[UPDATE MENU ITEM] SUCCESS UPDATED");
+
     return {
       status: 200,
       body: {
@@ -116,6 +161,10 @@ export const updateMenuItem: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[UPDATE MENU ITEM] ERROR:", error);
+    console.error("[UPDATE MENU ITEM] PARAMS:", req.params);
+    console.error("[UPDATE MENU ITEM] BODY:", req.body);
+
     return {
       status: 500,
       body: {
@@ -132,9 +181,15 @@ export const removeMenuItem: AppRouteMutationImplementation<
   try {
     const { itemID } = req.params;
 
+    console.log("[DELETE MENU ITEM] PARAMS:", req.params);
+
     const item = await menuItemRepository.getByID(itemID);
 
+    console.log("[DELETE MENU ITEM] EXISTING ITEM:", item);
+
     if (!item) {
+      console.log("[DELETE MENU ITEM] NOT FOUND:", itemID);
+
       return {
         status: 404,
         body: {
@@ -144,7 +199,11 @@ export const removeMenuItem: AppRouteMutationImplementation<
       };
     }
 
+    console.log("[DELETE MENU ITEM] DELETING ITEM...");
+
     await menuItemRepository.delete(itemID);
+
+    console.log("[DELETE MENU ITEM] SUCCESS DELETED");
 
     return {
       status: 200,
@@ -154,6 +213,9 @@ export const removeMenuItem: AppRouteMutationImplementation<
       },
     };
   } catch (error) {
+    console.error("[DELETE MENU ITEM] ERROR:", error);
+    console.error("[DELETE MENU ITEM] PARAMS:", req.params);
+
     return {
       status: 500,
       body: {

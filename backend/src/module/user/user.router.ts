@@ -32,6 +32,6 @@ export const userRouter = s.router(userContract, {
   },
   removeUser: {
     middleware: [verifyToken, authorizeRoles("admin")],
-    handler: userMutationHandler.removeUser,
+    handler: userMutationHandler.removeUser as any,
   },
 });

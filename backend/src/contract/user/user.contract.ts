@@ -25,7 +25,8 @@ export const userContract = c.router({
   getAllUsers: {
     method: "GET",
     path: "/user",
-    summary: "Get a paginated list of users with optional search and role filtering",
+    summary:
+      "Get a paginated list of users with optional search and role filtering",
     query: z.object({
       page: z.coerce.number().optional(),
       limit: z.coerce.number().optional(),
@@ -75,10 +76,11 @@ export const userContract = c.router({
     pathParams: z.object({
       userID: z.string(),
     }),
-    body: c.noBody(),
+    body: z.object({}).optional(),
     responses: {
       200: successSchema,
       404: errorSchema,
+      500: errorSchema,
     },
   },
 });
