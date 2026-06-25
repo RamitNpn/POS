@@ -7,6 +7,7 @@ exports.authQueryHandler = exports.getMe = void 0;
 const user_repository_1 = __importDefault(require("../../repository/user.repository"));
 const getMe = async ({ req }) => {
     if (!req.user) {
+        console.log("Req user: ", req.user);
         return {
             status: 401,
             body: {
@@ -16,6 +17,7 @@ const getMe = async ({ req }) => {
         };
     }
     const user = await user_repository_1.default.getByID(req.user.id);
+    console.log("Requested user details: ", user);
     if (!user) {
         return {
             status: 401,

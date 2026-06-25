@@ -7,8 +7,11 @@ exports.menuCategoryMutationHandler = exports.removeMenuCategory = exports.updat
 const menu_category_repository_1 = __importDefault(require("../../repository/menu-category.repository"));
 const createMenuCategory = async ({ req }) => {
     try {
+        console.log("[CREATE MENU CATEGORY] REQUEST BODY:", req.body);
         const existing = await menu_category_repository_1.default.getByName(req.body.name);
+        console.log("[CREATE MENU CATEGORY] EXISTING CHECK:", existing);
         if (existing) {
+            console.log("[CREATE MENU CATEGORY] DUPLICATE NAME:", req.body.name);
             return {
                 status: 400,
                 body: {
@@ -17,7 +20,9 @@ const createMenuCategory = async ({ req }) => {
                 },
             };
         }
+        console.log("[CREATE MENU CATEGORY] CREATING CATEGORY...");
         await menu_category_repository_1.default.create(req.body);
+        console.log("[CREATE MENU CATEGORY] SUCCESS CREATED");
         return {
             status: 201,
             body: {
@@ -27,6 +32,8 @@ const createMenuCategory = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[CREATE MENU CATEGORY] ERROR:", error);
+        console.error("[CREATE MENU CATEGORY] REQUEST BODY:", req.body);
         return {
             status: 500,
             body: {
@@ -40,8 +47,12 @@ exports.createMenuCategory = createMenuCategory;
 const updateMenuCategory = async ({ req }) => {
     try {
         const { categoryID } = req.params;
+        console.log("[UPDATE MENU CATEGORY] PARAMS:", req.params);
+        console.log("[UPDATE MENU CATEGORY] BODY:", req.body);
         const category = await menu_category_repository_1.default.getByID(categoryID);
+        console.log("[UPDATE MENU CATEGORY] EXISTING CATEGORY:", category);
         if (!category) {
+            console.log("[UPDATE MENU CATEGORY] NOT FOUND:", categoryID);
             return {
                 status: 404,
                 body: {
@@ -51,8 +62,11 @@ const updateMenuCategory = async ({ req }) => {
             };
         }
         if (req.body.name && req.body.name !== category.name) {
+            console.log("[UPDATE MENU CATEGORY] NAME CHANGE DETECTED");
             const exists = await menu_category_repository_1.default.getByName(req.body.name);
+            console.log("[UPDATE MENU CATEGORY] NAME CONFLICT CHECK:", exists);
             if (exists) {
+                console.log("[UPDATE MENU CATEGORY] DUPLICATE NAME:", req.body.name);
                 return {
                     status: 400,
                     body: {
@@ -62,7 +76,9 @@ const updateMenuCategory = async ({ req }) => {
                 };
             }
         }
+        console.log("[UPDATE MENU CATEGORY] UPDATING CATEGORY...");
         await menu_category_repository_1.default.update(categoryID, req.body);
+        console.log("[UPDATE MENU CATEGORY] SUCCESS UPDATED");
         return {
             status: 200,
             body: {
@@ -72,6 +88,9 @@ const updateMenuCategory = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[UPDATE MENU CATEGORY] ERROR:", error);
+        console.error("[UPDATE MENU CATEGORY] PARAMS:", req.params);
+        console.error("[UPDATE MENU CATEGORY] BODY:", req.body);
         return {
             status: 500,
             body: {
@@ -85,8 +104,11 @@ exports.updateMenuCategory = updateMenuCategory;
 const removeMenuCategory = async ({ req }) => {
     try {
         const { categoryID } = req.params;
+        console.log("[DELETE MENU CATEGORY] PARAMS:", req.params);
         const category = await menu_category_repository_1.default.getByID(categoryID);
+        console.log("[DELETE MENU CATEGORY] EXISTING CATEGORY:", category);
         if (!category) {
+            console.log("[DELETE MENU CATEGORY] NOT FOUND:", categoryID);
             return {
                 status: 404,
                 body: {
@@ -95,7 +117,9 @@ const removeMenuCategory = async ({ req }) => {
                 },
             };
         }
+        console.log("[DELETE MENU CATEGORY] DELETING CATEGORY...");
         await menu_category_repository_1.default.delete(categoryID);
+        console.log("[DELETE MENU CATEGORY] SUCCESS DELETED");
         return {
             status: 200,
             body: {
@@ -105,6 +129,8 @@ const removeMenuCategory = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[DELETE MENU CATEGORY] ERROR:", error);
+        console.error("[DELETE MENU CATEGORY] PARAMS:", req.params);
         return {
             status: 500,
             body: {

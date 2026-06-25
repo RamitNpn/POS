@@ -7,7 +7,9 @@ exports.branchMutationHandler = exports.deleteBranch = exports.updateBranch = ex
 const branch_repository_1 = __importDefault(require("../../repository/branch.repository"));
 const createBranch = async ({ req }) => {
     try {
+        console.log("[CREATE BRANCH] REQUEST BODY:", req.body);
         const branch = await branch_repository_1.default.create(req.body);
+        console.log("[CREATE BRANCH] SUCCESS RESPONSE:", branch);
         return {
             status: 201,
             body: {
@@ -18,6 +20,8 @@ const createBranch = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[CREATE BRANCH] ERROR:", error);
+        console.error("[CREATE BRANCH] REQUEST BODY:", req.body);
         return {
             status: 500,
             body: {
@@ -30,8 +34,12 @@ const createBranch = async ({ req }) => {
 exports.createBranch = createBranch;
 const updateBranch = async ({ req }) => {
     try {
+        console.log("[UPDATE BRANCH] PARAMS:", req.params);
+        console.log("[UPDATE BRANCH] BODY:", req.body);
         const branch = await branch_repository_1.default.update(req.params.branchID, req.body);
+        console.log("[UPDATE BRANCH] DB RESULT:", branch);
         if (!branch) {
+            console.log("[UPDATE BRANCH] NOT FOUND:", req.params.branchID);
             return {
                 status: 404,
                 body: {
@@ -50,6 +58,9 @@ const updateBranch = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[UPDATE BRANCH] ERROR:", error);
+        console.error("[UPDATE BRANCH] PARAMS:", req.params);
+        console.error("[UPDATE BRANCH] BODY:", req.body);
         return {
             status: 500,
             body: {
@@ -62,8 +73,11 @@ const updateBranch = async ({ req }) => {
 exports.updateBranch = updateBranch;
 const deleteBranch = async ({ req }) => {
     try {
+        console.log("[DELETE BRANCH] PARAMS:", req.params);
         const branch = await branch_repository_1.default.delete(req.params.branchID);
+        console.log("[DELETE BRANCH] DB RESULT:", branch);
         if (!branch) {
+            console.log("[DELETE BRANCH] NOT FOUND:", req.params.branchID);
             return {
                 status: 404,
                 body: {
@@ -81,6 +95,8 @@ const deleteBranch = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[DELETE BRANCH] ERROR:", error);
+        console.error("[DELETE BRANCH] PARAMS:", req.params);
         return {
             status: 500,
             body: {

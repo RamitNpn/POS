@@ -1,5 +1,16 @@
  [
   {
+        "name": "Green Salad",
+    "description": "Fresh carrot, cucumber and radish salad",
+    "price": 175,
+    "categoryId": "6a3034064f59a5564b31fcf6",
+    "image":
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+  {
     "name": "Nepali Salad",
     "description": "Traditional Nepali style mixed salad",
     "price": 150,
@@ -17,6 +28,17 @@
     "categoryId": "6a3034064f59a5564b31fcf6",
     "image":
       "https://images.unsplash.com/photo-1564093497595-593b96d80180?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+    {
+    "name": "Bread Toast with Jam",
+    "description": "Toasted bread served with jam",
+    "price": 150,
+    "categoryId": "6a3034064f59a5564b31fcf7",
+    "image":
+      "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=800&q=80",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -77,7 +99,7 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Manchow Soup",
+    "name": "Manchow Soup (Veg)",
     "description": "Hot and spicy Indo-Chinese soup",
     "price": 175,
     "categoryId": "6a3034064f59a5564b31fcf8",
@@ -88,18 +110,7 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Clear Soup",
-    "description": "Light and healthy clear soup",
-    "price": 175,
-    "categoryId": "6a3034064f59a5564b31fcf8",
-    "image":
-      "https://plus.unsplash.com/premium_photo-1706003920144-ca73554a6801?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "status": "available",
-        "createdAt": "2026-06-26T17:32:39.621+00:00",
-    "updatedAt": "2026-06-26T17:32:39.621+00:00"
-  },
-  {
-    "name": "Mushroom Soup",
+    "name": "Mushroom Soup (Veg)",
     "description": "Creamy mushroom soup",
     "price": 160,
     "categoryId": "6a3034064f59a5564b31fcf8",
@@ -110,9 +121,42 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Hot and Sour Soup",
+    "name": "Hot and Sour Soup (Veg)",
     "description": "Spicy and tangy soup",
     "price": 165,
+    "categoryId": "6a3034064f59a5564b31fcf8",
+    "image":
+      "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+    {
+    "name": "Manchow Soup (Non-veg)",
+    "description": "Hot and spicy Indo-Chinese soup",
+    "price": 200,
+    "categoryId": "6a3034064f59a5564b31fcf8",
+    "image":
+      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+  {
+    "name": "Mushroom Soup (Non-veg)",
+    "description": "Creamy mushroom soup",
+    "price": 160,
+    "categoryId": "6a3034064f59a5564b31fcf8",
+    "image":
+      "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+  {
+    "name": "Hot and Sour Soup (Non-veg)",
+    "description": "Spicy and tangy soup",
+    "price": 190,
     "categoryId": "6a3034064f59a5564b31fcf8",
     "image":
       "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80",
@@ -134,7 +178,7 @@
   {
     "name": "Veg Noodles",
     "description": "Stir-fried vegetable noodles",
-    "price": 150,
+    "price": 100,
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
       "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
@@ -154,9 +198,20 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Schezwan Noodles",
+    "name": "Schezwan Noodles (Veg)",
     "description": "Spicy schezwan flavored noodles",
     "price": 180,
+    "categoryId": "6a3034064f59a5564b31fcf9",
+    "image":
+      "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+    {
+    "name": "Schezwan Noodles (Non-veg)",
+    "description": "Spicy schezwan flavored noodles",
+    "price": 225,
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
       "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=800&q=80",
@@ -198,7 +253,7 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Steam Momo",
+    "name": "Steam Momo (Veg)",
     "description": "Traditional steamed momo",
     "price": 120,
     "categoryId": "6a3034064f59a5564b31fcf2",
@@ -209,7 +264,7 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Fry Momo",
+    "name": "Fry Momo (Veg)",
     "description": "Deep fried momo",
     "price": 150,
     "categoryId": "6a3034064f59a5564b31fcf2",
@@ -220,7 +275,7 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Chilly Momo",
+    "name": "Chilly Momo(Veg)",
     "description": "Spicy chilly momo",
     "price": 175,
     "categoryId": "6a3034064f59a5564b31fcf2",
@@ -230,7 +285,7 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Jhol Momo",
+    "name": "Jhol Momo (Veg)",
     "description": "Momo served in spicy broth",
     "price": 150,
     "categoryId": "6a3034064f59a5564b31fcf2",
@@ -241,7 +296,7 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Kothey Momo",
+    "name": "Kothey Momo (Veg)",
     "description": "Pan-fried momo",
     "price": 175,
     "categoryId": "6a3034064f59a5564b31fcf2",
@@ -252,7 +307,7 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Sadheko Momo",
+    "name": "Sadheko Momo (Veg)",
     "description": "Spicy mixed momo",
     "price": 175,
     "categoryId": "6a3034064f59a5564b31fcf2",
@@ -263,9 +318,85 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Veg Thukpa",
+    "name": "Steam Momo (Non-veg)",
+    "description": "Traditional steamed non-veg momo",
+    "price": 150,
+    "categoryId": "6a3034064f59a5564b31fcf2",
+    "image":
+      "https://plus.unsplash.com/premium_photo-1671547329182-deaf1c94263e?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "status": "available",
+            "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+  {
+    "name": "Fry Momo (Non-veg)",
+    "description": "Deep fried momo",
+    "price": 175,
+    "categoryId": "6a3034064f59a5564b31fcf2",
+    "image":
+      "https://images.unsplash.com/photo-1738608084602-f9543952188e?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "status": "available",
+            "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+  {
+    "name": "Chilly Momo (Non-veg)",
+    "description": "Spicy chilly momo",
+    "price": 200,
+    "categoryId": "6a3034064f59a5564b31fcf2",
+    "image": "https://boliya.in/wp-content/uploads/2025/05/3-9.png",
+    "status": "available",
+            "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+  {
+    "name": "Jhol Momo (Non-veg)",
+    "description": "Momo served in spicy broth",
+    "price": 175,
+    "categoryId": "6a3034064f59a5564b31fcf2",
+    "image":
+      "https://images.news18.com/ibnlive/uploads/2025/12/jhol-momos-1-2025-12-caa875266cb632b781ff7464c9ad3f5d-4x3.jpg",
+    "status": "available",
+            "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+  {
+    "name": "Kothey Momo (Non-veg)",
+    "description": "Pan-fried momo",
+    "price": 200,
+    "categoryId": "6a3034064f59a5564b31fcf2",
+    "image":
+      "https://foodenginepokhara.com/wp-content/uploads/2025/05/kothey-momo.jpg",
+    "status": "available",
+            "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+  {
+    "name": "Sadheko Momo (Non-veg)",
+    "description": "Spicy mixed momo",
+    "price": 200,
+    "categoryId": "6a3034064f59a5564b31fcf2",
+    "image":
+      "https://d1w7312wesee68.cloudfront.net/apXnRLlS8wgSduDjUmh6wdvlUJJ7TXy2S5yKAjR9Hk8/resize:fit:720:720/plain/s3://toasttab/restaurants/restaurant-207226000000000000/menu/items/2/item-1200000013758324302_1777330497.jpg",
+    "status": "available",
+            "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+  {
+    "name": "Veg Thukpa Small",
     "description": "Vegetable noodle soup",
     "price": 175,
+    "categoryId": "6a3034064f59a5564b31fcf3",
+    "image":
+      "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+    {
+    "name": "Veg Thukpa Large",
+    "description": "Vegetable noodle soup",
+    "price": 200,
     "categoryId": "6a3034064f59a5564b31fcf3",
     "image":
       "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
@@ -362,9 +493,20 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Chicken Sadheko",
-    "description": "Boiled or fried chicken mixed with Nepali spices",
+    "name": "Chicken Sadheko (Fry)",
+    "description": "Fried chicken mixed with Nepali spices",
     "price": 275,
+    "categoryId": "6a3034064f59a5564b31fcfe",
+    "image":
+      "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+    {
+    "name": "Chicken Sadheko (Boil)",
+    "description": "Boiled chicken mixed with Nepali spices",
+    "price": 250,
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
       "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=800&q=80",
@@ -385,7 +527,7 @@
   },
   {
     "name": "Peanut Sadheko",
-    "price": 190,
+    "price": 180,
     "description": "Spicy roasted peanut salad",
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
@@ -474,7 +616,7 @@
   {
     "name": "Chicken Popcorn",
     "description": "Bite-sized crispy popcorn chicken",
-    "price": 250,
+    "price": 350,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&w=800&q=80",
@@ -516,9 +658,31 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Sausage",
+    "name": "Sausage (Chilly)",
     "description": "Available in boiled, fried or chilli style",
     "price": 275,
+    "categoryId": "6a3034064f59a5564b31fcfb",
+    "image":
+      "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+    {
+    "name": "Sausage (Boil)",
+    "description": "Available in boiled, fried or chilli style",
+    "price": 200,
+    "categoryId": "6a3034064f59a5564b31fcfb",
+    "image":
+      "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+    {
+    "name": "Sausage (Fry)",
+    "description": "Available in boiled, fried or chilli style",
+    "price": 200,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
@@ -551,7 +715,7 @@
   {
     "name": "Local Vibes Platter",
     "description":
-      "Momo, chicken lollipop, sausage, burger, chicken chilli and chicken fried rice",
+      "Momo, lollipop, sausage, burger, chicken chilli and chicken fried rice",
     "price": 725,
     "categoryId": "6a3034064f59a5564b31fd00",
     "image":
@@ -562,7 +726,7 @@
   },
   {
     "name": "Special Platter",
-    "description": "Momo, sausage chilli, chicken fry, lollipop and noodles",
+    "description": "Momo, sausage chilli, fresh fry, lollipop and noodles",
     "price": 525,
     "categoryId": "6a3034064f59a5564b31fd00",
     "image":
@@ -575,7 +739,7 @@
     "name": "Momo Platter",
     "description": "Steam Momo, Sadeko, Fry, Chilly and Kothey",
     "price": 425,
-    "categoryId": "6a3034064f59a5564b31fd00",
+    "categoryId": "6a3034064f59a5564b31fcf1",
     "image":
       "https://images.unsplash.com/photo-1626500155537-93690c24099e?auto=format&fit=crop&w=800&q=80",
     "status": "available",
@@ -583,8 +747,19 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Sweet Corn",
+    "name": "Sweet Corn (Boil)",
     "price": 150,
+    "description": "Boiled sweet corn",
+    "categoryId": "6a3034064f59a5564b31fcfa",
+    "image":
+      "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80",
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+  },
+    {
+    "name": "Sweet Corn (Fry)",
+    "price": 175,
     "description": "Boiled sweet corn",
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
@@ -660,7 +835,7 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Mustang Aloo",
+    "name": "Mustang Alu",
     "price": 225,
     "description": "Traditional Nepali spicy potato dish",
     "categoryId": "6a3034064f59a5564b31fcfa",
@@ -771,7 +946,7 @@
     "categoryId": "6a3034064f59a5564b31fd06",
 
     "image":
-      "https://hebmx.vtexassets.com/arquivos/ids/627293/577178-1663033324.jpg?v=638497816220830000",
+      "https://img.fatafatsewa.com/products/1572/wm4ac02205.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -800,7 +975,7 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Red Bull (Regular)",
+    "name": "Red Bull (Red Edition)",
     "description": "Classic Red Bull energy drink",
     "price": 150,
     "categoryId": "6a3034064f59a5564b31fd06",
@@ -815,7 +990,7 @@
     "description": "Blue edition energy drink",
     "price": 250,
     "categoryId": "6a3034064f59a5564b31fd06",
-    "image": "https://m.edia-amazon.com/images/I/61ptJdBOUsL.jpg",
+    "image": "https://assets.sainsburys-groceries.co.uk/gol/8158365/1/640x640.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -946,7 +1121,7 @@
   {
     "name": "8848 (360ml)",
     "description": "Premium Nepalese whisky",
-    "price": 825,
+    "price": 1600,
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/2038a687f4d62f40c6a1ba018bce49ca.jpg",
@@ -988,7 +1163,7 @@
   {
     "name": "Black Oak (180ml)",
     "description": "Smooth blended whisky",
-    "price": 573,
+    "price": 575,
     "categoryId": "6a3034064f59a5564b31fd03",
     "image": "https://darumandu.com/storage/product/2025-01-04-6779589d8980d.png",
     "status": "available",
@@ -1073,7 +1248,7 @@
   {
     "name": "Signature Whisky",
     "description": "Premium blended whisky",
-    "price": 350,
+    "price": 330,
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/d1e9eeae407a1eae8cb3d356aa1ee17a.jpg",
@@ -1182,7 +1357,7 @@
   },
   {
     "name": "Shikhar Ice",
-    "description": "Pack of Shikhar Ice cigarettes",
+    "description": "Per Piece of Shikhar Ice cigarettes",
     "price": 25,
     "categoryId": "6a3034064f59a5564b31fd04",
     "image":
@@ -1193,7 +1368,7 @@
   },
   {
     "name": "Surya Red Light",
-    "description": "Pack of Surya Red Light cigarettes",
+    "description": "Per Piece of Surya Red Light cigarettes",
     "price": 30,
     "categoryId": "6a3034064f59a5564b31fd04",
     "image":
@@ -1336,7 +1511,7 @@
     "name": "Buff Sukuti",
     "description":
       "Traditional Nepali buffalo meat jerky served with local spices",
-    "price": 380,
+    "price": 300,
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://barmandoo.com.np/products-images/6579beb1cb1011bbfe025cd7_1714853523334.png",
@@ -1346,7 +1521,7 @@
     },
 
   {
-    "name": "Buff Sadeko",
+    "name": "Sukuti Sadeko",
     "description":
       "Spicy marinated buffalo meat mixed with onion, chili and herbs",
     "price": 350,
@@ -1372,7 +1547,7 @@
     },
 
   {
-    "name": "Pork Sadeko",
+    "name": "Pork Dameko",
     "description": "Spicy Nepali-style pork salad with herbs and local spices",
     "price": 350,
     "categoryId": "6a3034064f59a5564b31fcfd",
@@ -1512,8 +1687,8 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Chicken Sandwich",
-    "description": "Chicken sandwich with fresh vegetables",
+    "name": "Non-veg Sandwich",
+    "description": "Sandwich with fresh meats and vegetables",
     "price": 200,
     "categoryId": "6a3034064f59a5564b31fcf4",
     "image":
@@ -1576,5 +1751,46 @@
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
-  }
+  },
+  {
+  "name": "Bhutuwa Mutton",
+  "description": "Traditional Nepalese style pan-fried mutton with local spices",
+  "price": 350,
+  "categoryId": "6a3034064f59a5564b31fcff",
+  "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=800&q=80",
+  "status": "available"
+},
+  {
+  "name": "Hekula (Fry)",
+  "description": "Crispy fried or spicy marinated mutton brisket chunk skewers",
+  "price": 450,
+  "categoryId": "6a3034064f59a5564b31fcff",
+  "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+  "status": "available"
+},
+  {
+  "name": "Hekula (Sadheko)",
+  "description": "Crispy fried or spicy marinated mutton brisket chunk skewers",
+  "price": 475,
+  "categoryId": "6a3034064f59a5564b31fcff",
+  "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+  "status": "available"
+},
+  {
+  "name": "Chicken Pangra Fry",
+  "description": "Deep-fried seasoned chicken gizzards tossed with onions and green chilies",
+  "price": 350,
+  "categoryId": "6a3034064f59a5564b31fcff",
+  "image": "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=800&q=80",
+  "status": "available"
+},
+
+  {
+  "name": "Chicken Dameko",
+  "description": "Char-grilled or pan-seared smoky chicken seasoned with traditional herbs",
+  "price": 400,
+  "categoryId": "6a3034064f59a5564b31fcff",
+  "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80",
+  "status": "available"
+}
 ]

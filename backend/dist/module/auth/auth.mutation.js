@@ -23,6 +23,7 @@ const createToken = (user) => {
 const login = async ({ req, res }) => {
     try {
         const { email, password } = req.body;
+        console.log("Login Credintials: ", email, password);
         const user = await user_repository_1.default.getByEmail(email.toLowerCase(), true);
         if (!user) {
             return {
@@ -35,6 +36,7 @@ const login = async ({ req, res }) => {
         }
         const passwordMatches = await bcryptjs_1.default.compare(password, user.password);
         if (!passwordMatches) {
+            console.log("Invalid password no matched");
             return {
                 status: 401,
                 body: {
@@ -44,6 +46,7 @@ const login = async ({ req, res }) => {
             };
         }
         if (user.status !== "active") {
+            console.log("Your account is not active");
             return {
                 status: 403,
                 body: {
@@ -53,19 +56,21 @@ const login = async ({ req, res }) => {
             };
         }
         const userId = user._id.toString();
+        console.log("User ID to generate token", userId);
         const token = createToken({
             id: userId,
             email: user.email,
             role: user.role,
             name: user.name,
         });
+        console.log("Generated token", token);
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
             sameSite: "none",
             maxAge: 8 * 60 * 60 * 1000,
         });
-        await log_repository_1.default.create({
+        const log = await log_repository_1.default.create({
             userId: new mongoose_1.default.Types.ObjectId(userId),
             action: "User Login",
             details: `${user.name} logged in at ${new Date().toLocaleString("en-US", {
@@ -75,6 +80,9 @@ const login = async ({ req, res }) => {
             entityId: "",
             entityType: "",
         });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {
@@ -103,8 +111,11 @@ const login = async ({ req, res }) => {
 exports.login = login;
 const logout = async ({ req, res }) => {
     const userId = req.user?.id;
+    console.log("User ID from params", userId);
     const user = await user_repository_1.default.getByID(userId || "");
+    console.log("User by ID details", user);
     if (!user) {
+        console.log("User ID not found");
         return {
             status: 401,
             body: {
@@ -118,7 +129,7 @@ const logout = async ({ req, res }) => {
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
     });
-    await log_repository_1.default.create({
+    const log = await log_repository_1.default.create({
         userId: new mongoose_1.default.Types.ObjectId(userId),
         action: "User Log Out",
         details: `${user.name} logged out at ${new Date().toLocaleString("en-US", {
@@ -128,6 +139,9 @@ const logout = async ({ req, res }) => {
         entityId: "",
         entityType: "",
     });
+    if (!log) {
+        console.log("User log not created", log);
+    }
     return {
         status: 200,
         body: {

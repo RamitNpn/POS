@@ -19,7 +19,6 @@ const mapOrder = (order) => {
                 item.menuItemId?.toString?.() ||
                 item.menuItemId,
             menuItem: item.menuItemId?.name ?? item.name,
-            category: item.menuItemId?.categoryId?.name ?? null,
             quantity: item.quantity,
             price: item.price,
             total: item.total ?? item.price * item.quantity,
@@ -43,6 +42,7 @@ const mapOrder = (order) => {
 };
 const getAllOrders = async ({ req }) => {
     try {
+        console.log("[GET ALL ORDERS] QUERY:", req.query);
         const page = Number(req.query.page ?? 1);
         const limit = Number(req.query.limit);
         const skip = (page - 1) * limit;
@@ -51,6 +51,17 @@ const getAllOrders = async ({ req }) => {
         const search = req.query.search;
         const to = req.query.to;
         const from = req.query.from;
+        console.log("[GET ALL ORDERS] PARSED FILTERS:", {
+            page,
+            limit,
+            skip,
+            status,
+            tableId,
+            search,
+            from,
+            to,
+        });
+        console.log("[GET ALL ORDERS] FETCHING FROM DB...");
         const { data, total } = await order_repository_1.default.getAll({
             skip,
             limit,
@@ -60,10 +71,16 @@ const getAllOrders = async ({ req }) => {
             to,
             from,
         });
+        console.log("[GET ALL ORDERS] DB RESULT:", {
+            returned: data?.length,
+            total,
+        });
+        const mapped = data.map(mapOrder);
+        console.log("[GET ALL ORDERS] MAPPED ORDERS:", mapped.length);
         return {
             status: 200,
             body: {
-                data: data.map(mapOrder),
+                data: mapped,
                 pagination: {
                     page,
                     limit,
@@ -74,6 +91,8 @@ const getAllOrders = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[GET ALL ORDERS] ERROR:", error);
+        console.error("[GET ALL ORDERS] QUERY:", req.query);
         return {
             status: 500,
             body: {
@@ -86,9 +105,12 @@ const getAllOrders = async ({ req }) => {
 exports.getAllOrders = getAllOrders;
 const getOrderByID = async ({ req }) => {
     try {
+        console.log("[GET ORDER BY ID] PARAMS:", req.params);
         const { orderID } = req.params;
         const order = await order_repository_1.default.getByID(orderID);
+        console.log("[GET ORDER BY ID] DB RESULT:", order);
         if (!order) {
+            console.log("[GET ORDER BY ID] NOT FOUND:", orderID);
             return {
                 status: 404,
                 body: {
@@ -103,6 +125,8 @@ const getOrderByID = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[GET ORDER BY ID] ERROR:", error);
+        console.error("[GET ORDER BY ID] PARAMS:", req.params);
         return {
             status: 500,
             body: {
@@ -115,9 +139,12 @@ const getOrderByID = async ({ req }) => {
 exports.getOrderByID = getOrderByID;
 const getActiveOrderByTable = async ({ req }) => {
     try {
+        console.log("[GET ACTIVE ORDER] PARAMS:", req.params);
         const { tableID } = req.params;
         const order = await order_repository_1.default.getActiveOrderByTable(tableID);
+        console.log("[GET ACTIVE ORDER] RESULT:", order);
         if (!order) {
+            console.log("[GET ACTIVE ORDER] NOT FOUND:", tableID);
             return {
                 status: 404,
                 body: {
@@ -153,6 +180,8 @@ const getActiveOrderByTable = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[GET ACTIVE ORDER] ERROR:", error);
+        console.error("[GET ACTIVE ORDER] PARAMS:", req.params);
         return {
             status: 500,
             body: {
@@ -165,8 +194,10 @@ const getActiveOrderByTable = async ({ req }) => {
 exports.getActiveOrderByTable = getActiveOrderByTable;
 const getOrdersByDate = async ({ req }) => {
     try {
+        console.log("[GET ORDERS BY DATE] QUERY:", req.query);
         const { dateReport } = req.query;
         if (!dateReport) {
+            console.log("[GET ORDERS BY DATE] MISSING DATE");
             return {
                 status: 400,
                 body: {
@@ -175,7 +206,9 @@ const getOrdersByDate = async ({ req }) => {
                 },
             };
         }
+        console.log("[GET ORDERS BY DATE] FETCHING FOR DATE:", dateReport);
         const orders = await order_repository_1.default.getOrdersByDate(dateReport);
+        console.log("[GET ORDERS BY DATE] RESULT COUNT:", orders.length);
         const data = orders.map(mapOrder);
         return {
             status: 200,
@@ -186,6 +219,8 @@ const getOrdersByDate = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[GET ORDERS BY DATE] ERROR:", error);
+        console.error("[GET ORDERS BY DATE] QUERY:", req.query);
         return {
             status: 500,
             body: {

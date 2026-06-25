@@ -9,8 +9,12 @@ const updateTicketStatus = async ({ req }) => {
     try {
         const { ticketID } = req.params;
         const { status } = req.body;
+        console.log("[updateTicketStatus] ticketID:", ticketID);
+        console.log("[updateTicketStatus] requested status:", status);
         const ticket = await ticket_repository_1.default.getByID(ticketID);
+        console.log("[updateTicketStatus] existing ticket:", ticket);
         if (!ticket) {
+            console.log("[updateTicketStatus] ticket not found");
             return {
                 status: 404,
                 body: {
@@ -19,7 +23,9 @@ const updateTicketStatus = async ({ req }) => {
                 },
             };
         }
+        console.log("[updateTicketStatus] current status:", ticket.status);
         const updated = await ticket_repository_1.default.updateStatus(ticketID, status);
+        console.log("[updateTicketStatus] updated ticket:", updated);
         return {
             status: 200,
             body: {
@@ -30,6 +36,7 @@ const updateTicketStatus = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[updateTicketStatus] error:", error);
         return {
             status: 500,
             body: {
@@ -43,8 +50,11 @@ exports.updateTicketStatus = updateTicketStatus;
 const removeTicket = async ({ req }) => {
     try {
         const { ticketID } = req.params;
+        console.log("[removeTicket] ticketID:", ticketID);
         const ticket = await ticket_repository_1.default.getByID(ticketID);
+        console.log("[removeTicket] existing ticket:", ticket);
         if (!ticket) {
+            console.log("[removeTicket] ticket not found");
             return {
                 status: 404,
                 body: {
@@ -53,7 +63,9 @@ const removeTicket = async ({ req }) => {
                 },
             };
         }
-        await ticket_repository_1.default.updateStatus(ticketID, "cancelled");
+        console.log("[removeTicket] current status:", ticket.status);
+        const cancelled = await ticket_repository_1.default.updateStatus(ticketID, "cancelled");
+        console.log("[removeTicket] cancelled ticket:", cancelled);
         return {
             status: 200,
             body: {
@@ -63,6 +75,7 @@ const removeTicket = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[removeTicket] error:", error);
         return {
             status: 500,
             body: {

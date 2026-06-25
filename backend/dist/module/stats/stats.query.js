@@ -10,11 +10,19 @@ const reservation_repository_1 = __importDefault(require("../../repository/reser
 const expenses_repository_1 = __importDefault(require("../../repository/expenses.repository"));
 const ticket_repository_1 = __importDefault(require("../../repository/ticket.repository"));
 const getDashboardStats = async () => {
+    console.log("[getDashboardStats] start");
     const stats = await order_repository_1.default.getDashboardStats();
+    console.log("[getDashboardStats] raw stats:", stats);
     const currentRevenue = stats.currentMonth.totalRevenue;
     const previousRevenue = stats.previousMonth.totalRevenue;
     const totalOrders = stats.currentMonth.totalOrders;
     const previousOrders = stats.previousMonth.totalOrders;
+    console.log("[getDashboardStats] extracted values:", {
+        currentRevenue,
+        previousRevenue,
+        totalOrders,
+        previousOrders,
+    });
     const revenueChange = previousRevenue > 0
         ? Number((((currentRevenue - previousRevenue) / previousRevenue) *
             100).toFixed(2))
@@ -22,6 +30,10 @@ const getDashboardStats = async () => {
     const ordersChange = previousOrders > 0
         ? Number((((totalOrders - previousOrders) / previousOrders) * 100).toFixed(2))
         : 0;
+    console.log("[getDashboardStats] computed:", {
+        revenueChange,
+        ordersChange,
+    });
     return {
         status: 200,
         body: {
@@ -38,7 +50,9 @@ const getDashboardStats = async () => {
 };
 exports.getDashboardStats = getDashboardStats;
 const getTableStats = async () => {
+    console.log("[getTableStats] start");
     const stats = await table_repository_1.default.getTableStats();
+    console.log("[getTableStats] raw stats:", stats);
     return {
         status: 200,
         body: {
@@ -53,50 +67,64 @@ const getTableStats = async () => {
 };
 exports.getTableStats = getTableStats;
 const getRevenueChart = async ({ query }) => {
+    console.log("[getRevenueChart] period:", query.period);
     const data = await order_repository_1.default.getRevenueChart(query.period);
+    console.log("[getRevenueChart] raw data length:", data.length);
+    const mapped = data.map((item) => ({
+        date: item._id,
+        revenue: item.revenue,
+        orders: item.orders,
+    }));
+    console.log("[getRevenueChart] mapped sample:", mapped.slice(0, 3));
     return {
         status: 200,
         body: {
             success: true,
-            data: data.map((item) => ({
-                date: item._id,
-                revenue: item.revenue,
-                orders: item.orders,
-            })),
+            data: mapped,
         },
     };
 };
 exports.getRevenueChart = getRevenueChart;
 const getRevenueStats = async () => {
     try {
+        console.log("[getRevenueStats] start");
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999);
+        console.log("[getRevenueStats] date range:", {
+            startOfToday,
+            endOfToday,
+        });
         const ordersResult = await order_repository_1.default.getAll({
             skip: 0,
             limit: 1000,
         });
+        console.log("[getRevenueStats] total orders fetched:", ordersResult.data.length);
         const orders = ordersResult.data;
         const todayOrders = orders.filter((order) => {
             const d = new Date(order.createdAt);
             return d >= startOfToday && d <= endOfToday;
         });
+        console.log("[getRevenueStats] today orders:", todayOrders.length);
         const totalRevenue = todayOrders.reduce((sum, order) => {
             if (order.paymentStatus === "paid") {
                 return sum + (order.subtotal || 0);
             }
             return sum;
         }, 0);
+        console.log("[getRevenueStats] totalRevenue:", totalRevenue);
         const reservationsResult = await reservation_repository_1.default.getAll({
             skip: 0,
             limit: 1000,
         });
+        console.log("[getRevenueStats] reservations fetched:", reservationsResult.data.length);
         const reservations = reservationsResult.data;
         const reservationsToday = reservations.filter((r) => {
             const d = new Date(r.createdAt);
             return d >= startOfToday && d <= endOfToday;
         });
+        console.log("[getRevenueStats] reservations today:", reservationsToday.length);
         return {
             status: 200,
             body: {
@@ -109,6 +137,7 @@ const getRevenueStats = async () => {
         };
     }
     catch (error) {
+        console.error("[getRevenueStats] error:", error);
         return {
             status: 500,
             body: {
@@ -121,7 +150,9 @@ const getRevenueStats = async () => {
 exports.getRevenueStats = getRevenueStats;
 const getProfitLossStats = async ({ req }) => {
     try {
+        console.log("[getProfitLossStats] start");
         const period = req.query.period ?? "30d";
+        console.log("[getProfitLossStats] period:", period);
         const now = new Date();
         const start = new Date();
         const mapPeriod = {
@@ -133,52 +164,65 @@ const getProfitLossStats = async ({ req }) => {
             all: 3650,
         };
         start.setDate(now.getDate() - mapPeriod[period]);
+        console.log("[getProfitLossStats] date range:", { start, now });
         const ordersRes = await order_repository_1.default.getAll({
             skip: 0,
             limit: 10000,
         });
+        console.log("[getProfitLossStats] orders fetched:", ordersRes.data.length);
         const orders = ordersRes.data.filter((o) => {
             const d = new Date(o.createdAt);
             return d >= start && d <= now;
         });
+        console.log("[getProfitLossStats] filtered orders:", orders.length);
         const expensesRes = await expenses_repository_1.default.getAll({
             skip: 0,
             limit: 10000,
         });
-        console.log("Data", expensesRes);
+        console.log("[getProfitLossStats] raw expenses:", expensesRes.data.length);
         const expenses = expensesRes.data.filter((e) => {
             const d = new Date(e.date);
             return d >= start && d <= now;
         });
-        console.log("Array", expenses);
+        console.log("[getProfitLossStats] filtered expenses:", expenses.length);
         const totalRevenue = orders.reduce((sum, o) => {
             if (o.status === "completed") {
-                return sum + (o.subtotal ?? o.subtotal ?? 0);
+                return sum + (o.subtotal ?? 0);
             }
             return sum;
         }, 0);
+        console.log("[getProfitLossStats] totalRevenue:", totalRevenue);
         const totalExpenses = expenses.reduce((sum, e) => {
             const amount = Number(e.amount ?? 0);
             return sum + amount;
         }, 0);
-        console.log(totalExpenses);
+        console.log("[getProfitLossStats] totalExpenses:", totalExpenses);
         const profit = Math.max(totalRevenue - totalExpenses, 0);
         const loss = Math.max(totalExpenses - totalRevenue, 0);
         const netProfit = totalRevenue - totalExpenses;
+        console.log("[getProfitLossStats] profit metrics:", {
+            profit,
+            loss,
+            netProfit,
+        });
         const seriesMap = new Map();
         const formatKey = (d) => d.toISOString().split("T")[0];
         for (const o of orders) {
             if (o.status !== "completed")
                 continue;
             const key = formatKey(new Date(o.createdAt));
-            const prev = seriesMap.get(key) || { revenue: 0, expense: 0 };
+            const prev = seriesMap.get(key) || {
+                revenue: 0,
+                expense: 0,
+                orders: 0,
+            };
             prev.revenue += o.subtotal ?? 0;
+            prev.orders += 1;
             seriesMap.set(key, prev);
         }
         for (const e of expenses) {
             const key = formatKey(new Date(e.date));
-            const prev = seriesMap.get(key) || { revenue: 0, expense: 0 };
-            // Explicitly cast to Number to prevent string concatenation bugs
+            const prev = seriesMap.get(key) || { revenue: 0, expense: 0, orders: 0 };
             const amount = Number(e.amount ?? 0);
             prev.expense += amount;
             seriesMap.set(key, prev);
@@ -188,7 +232,9 @@ const getProfitLossStats = async ({ req }) => {
             revenue: val.revenue,
             expense: val.expense,
             profit: val.revenue - val.expense,
+            totalOrders: val.orders,
         }));
+        console.log("[getProfitLossStats] series sample:", revenueSeries.slice(0, 3));
         return {
             status: 200,
             body: {
@@ -206,6 +252,7 @@ const getProfitLossStats = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[getProfitLossStats] error:", error);
         return {
             status: 500,
             body: {
@@ -218,7 +265,7 @@ const getProfitLossStats = async ({ req }) => {
 exports.getProfitLossStats = getProfitLossStats;
 const getCashierCheckoutStats = async () => {
     try {
-        const [totalActiveOrders, readyForCheckout, pendingPayments, tableStats,] = await Promise.all([
+        const [totalActiveOrders, readyForCheckout, pendingPayments, tableStats] = await Promise.all([
             ticket_repository_1.default.count({
                 status: {
                     $in: ["pending", "served"],

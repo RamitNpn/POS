@@ -7,25 +7,47 @@ exports.supplierQueryHandler = exports.getSupplierByID = exports.getAllSuppliers
 const supplier_repository_1 = __importDefault(require("../../repository/supplier.repository"));
 const getAllSuppliers = async ({ req }) => {
     try {
+        console.log("[getAllSuppliers] query params:", req.query);
         const page = Number(req.query.page ?? 1);
         const limit = Number(req.query.limit ?? 10);
+        const search = req.query.search;
+        const isActive = req.query.isActive;
+        console.log("[getAllSuppliers] filters:", {
+            page,
+            limit,
+            search,
+            isActive,
+            skip: (page - 1) * limit,
+        });
         const { data, total } = await supplier_repository_1.default.getAll({
             skip: (page - 1) * limit,
             limit,
-            search: req.query.search,
-            isActive: req.query.isActive,
+            search,
+            isActive,
         });
-        const formatted = data.map((s) => ({
-            _id: s._id.toString(),
-            name: s.name,
-            contactPerson: s.contactPerson,
-            phone: s.phone,
-            email: s.email,
-            address: s.address,
-            isActive: s.isActive,
-            createdAt: s.createdAt,
-            updatedAt: s.updatedAt,
-        }));
+        console.log("[getAllSuppliers] repository response:", {
+            total,
+            dataLength: data?.length,
+        });
+        const formatted = data.map((s, index) => {
+            console.log(`[getAllSuppliers] mapping supplier ${index}:`, {
+                id: s?._id,
+                name: s?.name,
+                email: s?.email,
+            });
+            return {
+                _id: s._id.toString(),
+                name: s.name,
+                contactPerson: s.contactPerson,
+                phone: s.phone,
+                email: s.email,
+                address: s.address,
+                isActive: s.isActive,
+                createdAt: s.createdAt,
+                updatedAt: s.updatedAt,
+            };
+        });
+        console.log("[getAllSuppliers] formatted sample:", formatted.slice(0, 2));
         return {
             status: 200,
             body: {
@@ -39,7 +61,8 @@ const getAllSuppliers = async ({ req }) => {
             },
         };
     }
-    catch {
+    catch (error) {
+        console.error("[getAllSuppliers] error:", error);
         return {
             status: 500,
             body: {
@@ -52,8 +75,12 @@ const getAllSuppliers = async ({ req }) => {
 exports.getAllSuppliers = getAllSuppliers;
 const getSupplierByID = async ({ req }) => {
     try {
-        const supplier = await supplier_repository_1.default.getByID(req.params.supplierId);
+        const { supplierId } = req.params;
+        console.log("[getSupplierByID] supplierId:", supplierId);
+        const supplier = await supplier_repository_1.default.getByID(supplierId);
+        console.log("[getSupplierByID] supplier found:", supplier);
         if (!supplier) {
+            console.log("[getSupplierByID] supplier not found");
             return {
                 status: 404,
                 body: {
@@ -62,22 +89,25 @@ const getSupplierByID = async ({ req }) => {
                 },
             };
         }
+        const formattedSupplier = {
+            _id: supplier._id.toString(),
+            name: supplier.name,
+            contactPerson: supplier.contactPerson,
+            phone: supplier.phone,
+            email: supplier.email,
+            address: supplier.address || "",
+            isActive: supplier.isActive,
+            createdAt: supplier.createdAt,
+            updatedAt: supplier.updatedAt,
+        };
+        console.log("[getSupplierByID] formatted supplier:", formattedSupplier);
         return {
             status: 200,
-            body: {
-                _id: supplier._id.toString(),
-                name: supplier.name,
-                contactPerson: supplier.contactPerson,
-                phone: supplier.phone,
-                email: supplier.email,
-                address: supplier.address || "",
-                isActive: supplier.isActive,
-                createdAt: supplier.createdAt,
-                updatedAt: supplier.updatedAt,
-            },
+            body: formattedSupplier,
         };
     }
     catch (error) {
+        console.error("[getSupplierByID] error:", error);
         return {
             status: 500,
             body: {

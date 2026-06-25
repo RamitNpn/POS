@@ -7,9 +7,15 @@ exports.roomMutationHandler = exports.removeRoom = exports.updateRoom = exports.
 const room_repository_1 = __importDefault(require("../../repository/room.repository"));
 const createRoom = async ({ req }) => {
     try {
+        console.log("[CREATE ROOM] BODY:", req.body);
         const { name, description, isActive } = req.body;
         const existingRoom = await room_repository_1.default.getByName(name);
+        console.log("[CREATE ROOM] EXISTING CHECK:", {
+            name,
+            exists: !!existingRoom,
+        });
         if (existingRoom) {
+            console.warn("[CREATE ROOM] ROOM ALREADY EXISTS:", name);
             return {
                 status: 400,
                 body: {
@@ -18,11 +24,13 @@ const createRoom = async ({ req }) => {
                 },
             };
         }
-        await room_repository_1.default.create({
+        console.log("[CREATE ROOM] CREATING ROOM...");
+        const created = await room_repository_1.default.create({
             name,
             description,
             isActive,
         });
+        console.log("[CREATE ROOM] CREATED ROOM ID:", created?._id);
         return {
             status: 201,
             body: {
@@ -32,6 +40,8 @@ const createRoom = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[CREATE ROOM] ERROR:", error);
+        console.error("[CREATE ROOM] BODY:", req.body);
         return {
             status: 500,
             body: {
@@ -44,9 +54,16 @@ const createRoom = async ({ req }) => {
 exports.createRoom = createRoom;
 const updateRoom = async ({ req }) => {
     try {
+        console.log("[UPDATE ROOM] PARAMS:", req.params);
+        console.log("[UPDATE ROOM] BODY:", req.body);
         const { roomID } = req.params;
         const room = await room_repository_1.default.getByID(roomID);
+        console.log("[UPDATE ROOM] FOUND:", {
+            roomID,
+            exists: !!room,
+        });
         if (!room) {
+            console.warn("[UPDATE ROOM] NOT FOUND:", roomID);
             return {
                 status: 404,
                 body: {
@@ -58,7 +75,12 @@ const updateRoom = async ({ req }) => {
         const { name, description, isActive } = req.body;
         if (name && name !== room.name) {
             const exists = await room_repository_1.default.getByName(name);
+            console.log("[UPDATE ROOM] NAME CHECK:", {
+                name,
+                exists: !!exists,
+            });
             if (exists) {
+                console.warn("[UPDATE ROOM] DUPLICATE NAME:", name);
                 return {
                     status: 400,
                     body: {
@@ -68,11 +90,13 @@ const updateRoom = async ({ req }) => {
                 };
             }
         }
+        console.log("[UPDATE ROOM] UPDATING...");
         await room_repository_1.default.update(roomID, {
             name,
             description,
             isActive,
         });
+        console.log("[UPDATE ROOM] UPDATED SUCCESSFULLY:", roomID);
         return {
             status: 200,
             body: {
@@ -82,6 +106,9 @@ const updateRoom = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[UPDATE ROOM] ERROR:", error);
+        console.error("[UPDATE ROOM] PARAMS:", req.params);
+        console.error("[UPDATE ROOM] BODY:", req.body);
         return {
             status: 500,
             body: {
@@ -94,9 +121,15 @@ const updateRoom = async ({ req }) => {
 exports.updateRoom = updateRoom;
 const removeRoom = async ({ req }) => {
     try {
+        console.log("[DELETE ROOM] PARAMS:", req.params);
         const { roomID } = req.params;
         const room = await room_repository_1.default.getByID(roomID);
+        console.log("[DELETE ROOM] FOUND:", {
+            roomID,
+            exists: !!room,
+        });
         if (!room) {
+            console.warn("[DELETE ROOM] NOT FOUND:", roomID);
             return {
                 status: 404,
                 body: {
@@ -105,7 +138,9 @@ const removeRoom = async ({ req }) => {
                 },
             };
         }
+        console.log("[DELETE ROOM] DELETING...");
         await room_repository_1.default.delete(roomID);
+        console.log("[DELETE ROOM] DELETED:", roomID);
         return {
             status: 200,
             body: {
@@ -115,6 +150,8 @@ const removeRoom = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[DELETE ROOM] ERROR:", error);
+        console.error("[DELETE ROOM] PARAMS:", req.params);
         return {
             status: 500,
             body: {

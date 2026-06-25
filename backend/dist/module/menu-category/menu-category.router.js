@@ -21,7 +21,7 @@ exports.menuCategoryRouter = s.router(menu_category_contract_1.menuCategoryContr
         handler: menu_category_mutation_1.menuCategoryMutationHandler.removeMenuCategory,
     },
     getAllMenuCategories: {
-        middleware: [auth_middleware_1.verifyToken, (0, auth_middleware_1.authorizeRoles)("admin")],
+        middleware: [auth_middleware_1.verifyToken, (0, auth_middleware_1.authorizeRoles)("admin", "waiter", "cashier")],
         handler: menu_category_query_1.menuCategoryQueryHandler.getAllMenuCategories,
     },
     getMenuCategoryByID: {

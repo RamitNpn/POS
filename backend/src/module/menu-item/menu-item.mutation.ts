@@ -142,14 +142,21 @@ export const updateMenuItem: AppRouteMutationImplementation<
       image: profileUrl,
     });
 
-    await menuItemRepository.update(itemID, {
+    const updatePayload: any = {
       ...req.body,
       categoryId: req.body.categoryId
         ? new mongoose.Types.ObjectId(req.body.categoryId)
         : undefined,
-      image: profileUrl,
       price: amount,
-    });
+    };
+
+    if (profileUrl) {
+      updatePayload.image = profileUrl;
+    }
+
+    console.log("[UPDATE MENU ITEM] FINAL UPDATE PAYLOAD:", updatePayload);
+
+    await menuItemRepository.update(itemID, updatePayload);
 
     console.log("[UPDATE MENU ITEM] SUCCESS UPDATED");
 

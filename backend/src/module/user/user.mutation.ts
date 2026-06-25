@@ -132,12 +132,12 @@ export const updateUser: AppRouteMutationImplementation<
 
     const updateData: Record<string, any> = {};
 
-    if (name) updateData.name = name;
-    if (email) updateData.email = email.toLowerCase();
-    if (role) updateData.role = role;
-    if (phone) updateData.phone = phone;
-    if (status) updateData.status = status;
-    if (profileUrl) updateData.profile = profileUrl;
+    if (name !== undefined) updateData.name = name;
+    if (email !== undefined) updateData.email = email.toLowerCase();
+    if (role !== undefined) updateData.role = role;
+    if (phone !== undefined) updateData.phone = phone;
+    if (status !== undefined) updateData.status = status;
+    if (profileUrl !== undefined) updateData.profile = profileUrl;
 
     if (password) {
       console.log("[updateUser] hashing new password");

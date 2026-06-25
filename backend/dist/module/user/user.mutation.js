@@ -8,9 +8,18 @@ const user_repository_1 = __importDefault(require("../../repository/user.reposit
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const createUser = async ({ req }) => {
     try {
-        const { name, email, role, password, phone, status } = req.body;
+        const { name, email, role, phone, status } = req.body;
+        console.log("[createUser] request:", {
+            name,
+            email,
+            role,
+            phone,
+            status,
+        });
         const existingUser = await user_repository_1.default.getByEmail(email.toLowerCase());
+        console.log("[createUser] existing user:", existingUser);
         if (existingUser) {
+            console.log("[createUser] email already exists:", email);
             return {
                 status: 400,
                 body: {
@@ -20,9 +29,12 @@ const createUser = async ({ req }) => {
                 },
             };
         }
-        const hashedPassword = await bcryptjs_1.default.hash(password, 10);
+        console.log("[createUser] hashing password");
+        const hashedPassword = await bcryptjs_1.default.hash(req.body.password, 10);
         const files = req.files;
+        console.log("[createUser] uploaded files:", files);
         const profileUrl = files?.profile?.[0]?.path || "";
+        console.log("[createUser] profile url:", profileUrl);
         const created = await user_repository_1.default.create({
             name,
             email: email.toLowerCase(),
@@ -31,6 +43,11 @@ const createUser = async ({ req }) => {
             password: hashedPassword,
             phone,
             status,
+        });
+        console.log("[createUser] created user:", {
+            id: created?._id,
+            email: created?.email,
+            role: created?.role,
         });
         return {
             status: 201,
@@ -41,6 +58,7 @@ const createUser = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[createUser] error:", error);
         return {
             status: 500,
             body: {
@@ -53,8 +71,11 @@ const createUser = async ({ req }) => {
 const updateUser = async ({ req }) => {
     try {
         const { userID } = req.params;
+        console.log("[updateUser] userID:", userID);
         const existingUser = await user_repository_1.default.getByID(userID);
+        console.log("[updateUser] existing user:", existingUser);
         if (!existingUser) {
+            console.log("[updateUser] user not found");
             return {
                 status: 404,
                 body: {
@@ -64,25 +85,40 @@ const updateUser = async ({ req }) => {
             };
         }
         const { name, email, role, password, phone, status } = req.body;
+        console.log("[updateUser] payload:", {
+            name,
+            email,
+            role,
+            phone,
+            status,
+            passwordProvided: !!password,
+        });
         const files = req.files;
+        console.log("[updateUser] uploaded files:", files);
         const profileUrl = files?.profile?.[0]?.path;
         const updateData = {};
-        if (name)
+        if (name !== undefined)
             updateData.name = name;
-        if (email)
+        if (email !== undefined)
             updateData.email = email.toLowerCase();
-        if (role)
+        if (role !== undefined)
             updateData.role = role;
-        if (phone)
+        if (phone !== undefined)
             updateData.phone = phone;
-        if (status)
+        if (status !== undefined)
             updateData.status = status;
-        if (profileUrl)
+        if (profileUrl !== undefined)
             updateData.profile = profileUrl;
         if (password) {
+            console.log("[updateUser] hashing new password");
             updateData.password = await bcryptjs_1.default.hash(password, 10);
         }
+        console.log("[updateUser] final updateData:", {
+            ...updateData,
+            password: updateData.password ? "[HASHED]" : undefined,
+        });
         const updated = await user_repository_1.default.update(userID, updateData);
+        console.log("[updateUser] updated user:", updated);
         if (!updated) {
             return {
                 status: 404,
@@ -101,6 +137,7 @@ const updateUser = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[updateUser] error:", error);
         return {
             status: 500,
             body: {
@@ -114,8 +151,11 @@ exports.updateUser = updateUser;
 const removeUser = async ({ req }) => {
     try {
         const { userID } = req.params;
+        console.log("[removeUser] userID:", userID);
         const existingUser = await user_repository_1.default.getByID(userID);
+        console.log("[removeUser] existing user:", existingUser);
         if (!existingUser) {
+            console.log("[removeUser] user not found");
             return {
                 status: 404,
                 body: {
@@ -125,6 +165,7 @@ const removeUser = async ({ req }) => {
             };
         }
         const deleted = await user_repository_1.default.delete(userID);
+        console.log("[removeUser] delete result:", deleted);
         if (!deleted) {
             return {
                 status: 404,
@@ -134,6 +175,7 @@ const removeUser = async ({ req }) => {
                 },
             };
         }
+        console.log("[removeUser] user deleted successfully");
         return {
             status: 200,
             body: {
@@ -143,6 +185,7 @@ const removeUser = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[removeUser] error:", error);
         return {
             status: 500,
             body: {

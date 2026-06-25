@@ -12,7 +12,7 @@ exports.statsRouter = s.router(stats_contract_1.statsContract, {
         handler: stats_query_1.statsQueryHandler.getDashboardStats,
     },
     getTableStats: {
-        middleware: [auth_middleware_1.verifyToken, (0, auth_middleware_1.authorizeRoles)("admin")],
+        middleware: [auth_middleware_1.verifyToken, (0, auth_middleware_1.authorizeRoles)("admin", "waiter", "cashier")],
         handler: stats_query_1.statsQueryHandler.getTableStats,
     },
     getRevenueChart: {

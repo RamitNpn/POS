@@ -8,25 +8,41 @@ const room_repository_1 = __importDefault(require("../../repository/room.reposit
 const table_repository_1 = __importDefault(require("../../repository/table.repository"));
 const getAllRooms = async ({ req }) => {
     try {
+        console.log("[getAllRooms] incoming req.query:", req.query);
         const page = Number(req.query.page ?? 1);
         const limit = Number(req.query.limit ?? 10);
         const search = req.query.search;
         const skip = (page - 1) * limit;
-        const { data, total } = await room_repository_1.default.getAll({
+        console.log("[getAllRooms] parsed params:", {
+            page,
+            limit,
+            search,
+            skip,
+        });
+        const result = await room_repository_1.default.getAll({
             skip,
             limit,
             search,
         });
-        const formattedData = await Promise.all(data.map(async (room) => {
-            const tableCount = await table_repository_1.default.countByRoom(room._id.toString());
+        console.log("[getAllRooms] repository result:", result);
+        const formattedData = await Promise.all(result.data.map(async (room) => {
+            console.log("[getAllRooms] processing room:", room);
+            const roomId = room._id.toString();
+            console.log("[getAllRooms] roomId:", roomId);
+            const tableCount = await table_repository_1.default.countByRoom(roomId);
+            console.log("[getAllRooms] tableCount:", {
+                roomId,
+                tableCount,
+            });
             return {
-                _id: room._id.toString(),
+                _id: roomId,
                 name: room.name,
                 description: room.description,
                 tableCount,
                 isActive: room.isActive,
             };
         }));
+        console.log("[getAllRooms] formattedData:", formattedData);
         return {
             status: 200,
             body: {
@@ -34,13 +50,14 @@ const getAllRooms = async ({ req }) => {
                 pagination: {
                     page,
                     limit,
-                    total,
-                    totalPages: Math.ceil(total / limit),
+                    total: result.total,
+                    totalPages: Math.ceil(result.total / limit),
                 },
             },
         };
     }
-    catch {
+    catch (error) {
+        console.error("[getAllRooms] ERROR:", error);
         return {
             status: 500,
             body: {
@@ -53,9 +70,13 @@ const getAllRooms = async ({ req }) => {
 exports.getAllRooms = getAllRooms;
 const getRoomByID = async ({ req }) => {
     try {
+        console.log("[getRoomByID] req.params:", req.params);
         const { roomID } = req.params;
+        console.log("[getRoomByID] roomID:", roomID);
         const room = await room_repository_1.default.getByID(roomID);
+        console.log("[getRoomByID] repository room:", room);
         if (!room) {
+            console.log("[getRoomByID] room NOT FOUND");
             return {
                 status: 404,
                 body: {
@@ -64,19 +85,23 @@ const getRoomByID = async ({ req }) => {
                 },
             };
         }
-        const tableCount = await table_repository_1.default.countByRoom(room._id.toString());
+        const roomIdStr = room._id.toString();
+        console.log("[getRoomByID] resolved roomId:", roomIdStr);
+        const tableCount = await table_repository_1.default.countByRoom(roomIdStr);
+        console.log("[getRoomByID] tableCount:", tableCount);
         return {
             status: 200,
             body: {
-                _id: room._id.toString(),
+                _id: roomIdStr,
                 name: room.name,
                 description: room.description,
-                tableCount: tableCount,
+                tableCount,
                 isActive: room.isActive,
             },
         };
     }
-    catch {
+    catch (error) {
+        console.error("[getRoomByID] ERROR:", error);
         return {
             status: 500,
             body: {

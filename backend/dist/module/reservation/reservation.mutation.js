@@ -9,8 +9,14 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const table_repository_1 = __importDefault(require("../../repository/table.repository"));
 const createReservation = async ({ req }) => {
     try {
+        console.log("[CREATE RESERVATION] BODY:", req.body);
         const table = await table_repository_1.default.getByID(req.body.tableId);
+        console.log("[CREATE RESERVATION] TABLE LOOKUP:", {
+            tableId: req.body.tableId,
+            found: !!table,
+        });
         if (!table) {
+            console.warn("[CREATE RESERVATION] TABLE NOT FOUND:", req.body.tableId);
             return {
                 status: 404,
                 body: {
@@ -19,13 +25,20 @@ const createReservation = async ({ req }) => {
                 },
             };
         }
+        console.log("[CREATE RESERVATION] CREATING RESERVATION...");
         const data = await reservation_repository_1.default.create({
             ...req.body,
             tableId: new mongoose_1.default.Types.ObjectId(req.body.tableId),
         });
+        console.log("[CREATE RESERVATION] CREATED:", data?._id);
         const status = "reserved";
+        console.log("[CREATE RESERVATION] UPDATING TABLE STATUS:", {
+            tableId: req.body.tableId,
+            status,
+        });
         const updated = await table_repository_1.default.updateStatus(req.body.tableId, status);
         if (!updated) {
+            console.error("[CREATE RESERVATION] TABLE UPDATE FAILED");
             return {
                 status: 404,
                 body: {
@@ -35,6 +48,7 @@ const createReservation = async ({ req }) => {
                 },
             };
         }
+        console.log("[CREATE RESERVATION] SUCCESS");
         return {
             status: 201,
             body: {
@@ -44,6 +58,8 @@ const createReservation = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[CREATE RESERVATION] ERROR:", error);
+        console.error("[CREATE RESERVATION] BODY:", req.body);
         return {
             status: 500,
             body: {
@@ -56,10 +72,13 @@ const createReservation = async ({ req }) => {
 exports.createReservation = createReservation;
 const updateReservation = async ({ req }) => {
     try {
+        console.log("[UPDATE RESERVATION] PARAMS:", req.params);
+        console.log("[UPDATE RESERVATION] BODY:", req.body);
         const data = await reservation_repository_1.default.update(req.params.reservationId, {
             ...req.body,
             tableId: new mongoose_1.default.Types.ObjectId(req.body.tableId),
         });
+        console.log("[UPDATE RESERVATION] RESULT:", data?._id);
         if (data) {
             return {
                 status: 200,
@@ -69,6 +88,7 @@ const updateReservation = async ({ req }) => {
                 },
             };
         }
+        console.warn("[UPDATE RESERVATION] NOT FOUND:", req.params.reservationId);
         return {
             status: 401,
             body: {
@@ -78,6 +98,8 @@ const updateReservation = async ({ req }) => {
         };
     }
     catch (error) {
+        console.error("[UPDATE RESERVATION] ERROR:", error);
+        console.error("[UPDATE RESERVATION] PARAMS:", req.params);
         return {
             status: 500,
             body: {
@@ -89,13 +111,28 @@ const updateReservation = async ({ req }) => {
 };
 exports.updateReservation = updateReservation;
 const deleteReservation = async ({ req }) => {
-    await reservation_repository_1.default.delete(req.params.reservationId);
-    return {
-        status: 200,
-        body: {
-            success: true,
-        },
-    };
+    try {
+        console.log("[DELETE RESERVATION] PARAMS:", req.params);
+        const result = await reservation_repository_1.default.delete(req.params.reservationId);
+        console.log("[DELETE RESERVATION] RESULT:", result);
+        return {
+            status: 200,
+            body: {
+                success: true,
+            },
+        };
+    }
+    catch (error) {
+        console.error("[DELETE RESERVATION] ERROR:", error);
+        console.error("[DELETE RESERVATION] PARAMS:", req.params);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: error.message,
+            },
+        };
+    }
 };
 exports.deleteReservation = deleteReservation;
 exports.reservationMutationHandler = {

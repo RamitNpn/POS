@@ -45,9 +45,8 @@ class MenuCategoryRepository {
         }
         const data = await this.model
             .find(filter)
-            .sort({
-            createdAt: -1,
-        })
+            .collation({ locale: "en", strength: 2 })
+            .sort({ name: 1 })
             .skip(skip)
             .limit(limit);
         const total = await this.model.countDocuments(filter);

@@ -73,6 +73,7 @@ exports.statsContract = c.router({
                         revenue: zod_1.z.number(),
                         expense: zod_1.z.number(),
                         profit: zod_1.z.number(),
+                        totalOrders: zod_1.z.number(),
                     })),
                 }),
             }),
