@@ -63,8 +63,6 @@ export default function PublicItemsViewPage() {
         title="Menu"
         description="All the items listed here are available but it may not match exactly as shown"
       />
-
-      <ScrollToggleButton targetId="checkout" />
       <div
         className="flex flex-col gap-6"
       >
