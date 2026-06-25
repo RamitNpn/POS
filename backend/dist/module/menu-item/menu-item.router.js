@@ -21,10 +21,7 @@ exports.menuItemRouter = s.router(menu_item_contract_1.menuItemContract, {
         middleware: [auth_middleware_1.verifyToken, (0, auth_middleware_1.authorizeRoles)("admin")],
         handler: menu_item_mutation_1.menuItemMutationHandler.removeMenuItem,
     },
-    getAllMenuItems: {
-        middleware: [auth_middleware_1.verifyToken],
-        handler: menu_item_query_1.menuItemQueryHandler.getAllMenuItems,
-    },
+    getAllMenuItems: menu_item_query_1.menuItemQueryHandler.getAllMenuItems,
     getMenuItemByID: {
         middleware: [auth_middleware_1.verifyToken],
         handler: menu_item_query_1.menuItemQueryHandler.getMenuItemByID,

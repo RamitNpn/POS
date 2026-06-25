@@ -5,7 +5,7 @@
     "price": 175,
     "categoryId": "6a3034064f59a5564b31fcf6",
     "image":
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+      "https://c8.alamy.com/comp/BFP095/hma-62147-green-salad-carrots-radish-onions-tomatoes-beetroot-cucumber-BFP095.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -16,7 +16,7 @@
     "price": 150,
     "categoryId": "6a3034064f59a5564b31fcf6",
     "image":
-      "https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=800&q=80",
+      "https://i.pinimg.com/736x/c3/f8/c2/c3f8c21817f4af676b20d44442f2603f.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -27,7 +27,7 @@
     "price": 300,
     "categoryId": "6a3034064f59a5564b31fcf6",
     "image":
-      "https://images.unsplash.com/photo-1564093497595-593b96d80180?auto=format&fit=crop&w=800&q=80",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX545CgyK4C9w732Jsudod1d8TxqX7cRKa2w&s",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -38,7 +38,7 @@
     "price": 150,
     "categoryId": "6a3034064f59a5564b31fcf7",
     "image":
-      "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=800&q=80",
+      "https://toasterovenlove.com/wp-content/uploads/toasted-peanut-butter-and-jelly-sandwich-1.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -60,7 +60,7 @@
     "price": 50,
     "categoryId": "6a3034064f59a5564b31fcf7",
     "image":
-      "https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?auto=format&fit=crop&w=800&q=80",
+      "https://healthyrecipesblogs.com/wp-content/uploads/2024/07/hard-boiled-eggs-featured-1-2024.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -82,7 +82,7 @@
     "price": 80,
     "categoryId": "6a3034064f59a5564b31fcf7",
     "image":
-      "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80",
+      "https://static.toiimg.com/photo/53109843.cms",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -104,7 +104,7 @@
     "price": 175,
     "categoryId": "6a3034064f59a5564b31fcf8",
     "image":
-      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80",
+      "https://sinfullyspicy.com/wp-content/uploads/2023/12/1200-by-1200-images-1-500x500.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -115,7 +115,7 @@
     "price": 160,
     "categoryId": "6a3034064f59a5564b31fcf8",
     "image":
-      "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?auto=format&fit=crop&w=800&q=80",
+      "https://www.averiecooks.com/wp-content/uploads/2017/02/mushroomsoup-6.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -126,7 +126,7 @@
     "price": 165,
     "categoryId": "6a3034064f59a5564b31fcf8",
     "image":
-      "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80",
+      "https://www.cookingcarnival.com/wp-content/uploads/2023/09/Hot-and-sour-soup-4.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -170,7 +170,7 @@
     "price": 225,
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
-      "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
+      "https://hungerend.com/wp-content/uploads/2025/02/Chicken-Keema-Noodles-Delivery.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -181,7 +181,7 @@
     "price": 100,
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
-      "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
+      "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/02/veg-noodles-vegetable-noodles-recipe.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -192,7 +192,7 @@
     "price": 175,
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
-      "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
+      "https://i.ytimg.com/vi/MhzBUy-JOCE/maxresdefault.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -203,7 +203,7 @@
     "price": 180,
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
-      "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=800&q=80",
+      "https://thephotowali.wordpress.com/wp-content/uploads/2021/02/img20200527130944-21318503324010551748.jpeg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -214,7 +214,7 @@
     "price": 225,
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
-      "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=800&q=80",
+      "https://thephotowali.wordpress.com/wp-content/uploads/2021/02/img20200527130944-21318503324010551748.jpeg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -225,7 +225,7 @@
     "price": 150,
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
-      "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80",
+      "https://annapurnaexpress.prixacdn.net/media/albums/chicken_chowmein_WUA7kDvFx2.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -236,13 +236,13 @@
     "price": 300,
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
-      "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=800&q=80",
+      "https://static.toiimg.com/thumb/75356205.cms?imgsize=1503855&width=800&height=800",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Current Bowl Noodles",
+    "name": "Current Ramen Noodle",
     "description": "Special house noodle bowl",
     "price": 200,
     "categoryId": "6a3034064f59a5564b31fcf9",
@@ -383,34 +383,23 @@
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Veg Thukpa Small",
+    "name": "Veg Thukpa",
     "description": "Vegetable noodle soup",
     "price": 175,
     "categoryId": "6a3034064f59a5564b31fcf3",
     "image":
-      "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
-    "status": "available",
-        "createdAt": "2026-06-26T17:32:39.621+00:00",
-    "updatedAt": "2026-06-26T17:32:39.621+00:00"
-  },
-    {
-    "name": "Veg Thukpa Large",
-    "description": "Vegetable noodle soup",
-    "price": 200,
-    "categoryId": "6a3034064f59a5564b31fcf3",
-    "image":
-      "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
+      "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgbQp28cpuyWIOPS4qpqvuZ4YEy5ULCU1x2q9ZGy35njJmy_bKU_3Jv83DiAr7NJjk_K-w1jGxksF29Ob768W8vjn4iH4LOh19WclawAOHEbzGXvvPxcf4FgrK4xmbTf2q4AVRrum_guKE/s1600/Vegan+spicy+noodle+soup+nepali+thukpa+3.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
-    "name": "Chicken Veg Thukpa",
-    "description": "Chicken and vegetable thukpa",
+    "name": "Chicken Thukpa",
+    "description": "Chicken items thukpa",
     "price": 200,
     "categoryId": "6a3034064f59a5564b31fcf3",
     "image":
-      "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
+      "https://i.ytimg.com/vi/4qCMTpcxLiU/maxresdefault.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -421,7 +410,7 @@
     "price": 250,
     "categoryId": "6a3034064f59a5564b31fcf3",
     "image":
-      "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=800&q=80",
+      "https://junifoods.com/wp-content/uploads/2024/05/The-Best-Chicken-Thukpa-Tibetan-Noodle-Soup-%E0%A4%95%E0%A5%81%E0%A4%96%E0%A5%81%E0%A4%B0%E0%A4%BE%E0%A4%95%E0%A5%8B-%E0%A4%A5%E0%A5%81%E0%A4%95%E0%A5%8D%E0%A4%AA%E0%A4%BE--500x500.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -432,7 +421,7 @@
     "price": 180,
     "categoryId": "6a3034064f59a5564b31fcfc",
     "image":
-      "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
+      "https://www.chefkunalkapur.com/wp-content/uploads/2021/03/fried-rice-1-scaled.jpg?v=1619920385",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -454,7 +443,7 @@
     "price": 250,
     "categoryId": "6a3034064f59a5564b31fcfc",
     "image":
-      "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=800&q=80",
+      "https://lifeloveandgoodfood.com/wp-content/uploads/2023/03/chicken_fried_rice00032a-1200x1200-1.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -465,7 +454,7 @@
     "price": 350,
     "categoryId": "6a3034064f59a5564b31fcfc",
     "image":
-      "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=800&q=80",
+      "https://i.ytimg.com/vi/iIvz3PtV6_8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBe76In2quyAsoW_jaX8gyXHw1Dow",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -476,7 +465,7 @@
     "price": 450,
     "categoryId": "6a3034064f59a5564b31fcfc",
     "image":
-      "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=800&q=80",
+      "https://twoplaidaprons.com/wp-content/uploads/2022/05/shrimp-fried-rice-on-plate-thumbnail.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -487,7 +476,7 @@
     "description": "Spicy Wai Wai noodle salad",
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
-      "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
+      "https://media-cdn.tripadvisor.com/media/photo-s/14/33/be/94/wai-wai-sadeko-spicy.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -498,7 +487,7 @@
     "price": 275,
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
-      "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=800&q=80",
+      "https://barmandoo.com.np/products-images/6579beb1cb1011bbfe025cd7_1714853343440.png",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -509,7 +498,7 @@
     "price": 250,
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
-      "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=800&q=80",
+      "https://barmandoo.com.np/products-images/6579beb1cb1011bbfe025cd7_1714853343440.png",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -520,7 +509,7 @@
     "description": "Mixed Wai Wai salad with vegetables and spices",
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
-      "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=800&q=80",
+      "https://i.ytimg.com/vi/vAK4hls013Q/maxresdefault.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -531,7 +520,7 @@
     "description": "Spicy roasted peanut salad",
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
-      "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=80",
+      "https://i1.wp.com/bittersweetblog.com/wp-content/uploads/2020/02/Peanut-Sadeko.jpg?resize=720%2C540&ssl=1",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -542,7 +531,7 @@
     "description": "Spiced roasted soybean salad",
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+      "https://jslight.com.np/wp-content/uploads/2022/06/Sadheko_Bhatmas.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -553,7 +542,7 @@
     "price": 300,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=800&q=80",
+      "https://c.ndtvimg.com/2020-01/tlauod6_chilli-chicken_625x300_21_January_20.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -564,7 +553,7 @@
     "price": 375,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80",
+      "https://recipe52.com/wp-content/uploads/2022/02/chicken-65-fb-1-of-1-1.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -575,7 +564,7 @@
     "price": 300,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=800&q=80",
+      "https://www.licious.in/blog/wp-content/uploads/2022/05/shutterstock_1587847900.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -586,7 +575,7 @@
     "price": 350,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?auto=format&fit=crop&w=800&q=80",
+      "https://www.sharmispassions.com/wp-content/uploads/2022/06/ChickenGravy1.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -597,7 +586,7 @@
     "price": 375,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=800&q=80",
+      "https://www.allrecipes.com/thmb/q-IfK20zxeyp1DgKWhrVp6CQ43w=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/AR-89268-triple-dipped-fried-chicken-beauty-4x3-3961ac838ddd41958e7cb9f49376cd68.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -608,7 +597,7 @@
     "price": 450,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1625944230945-1b7dd3b949ab?auto=format&fit=crop&w=800&q=80",
+      "https://recipe52.com/wp-content/uploads/2026/04/Chicken-cheese-nuggets-5_1-500x500.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -641,7 +630,7 @@
     "price": 350,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=800&q=80",
+      "https://i.ytimg.com/vi/3ZnqbxEnk-A/sddefault.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -652,7 +641,7 @@
     "price": 400,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+      "https://flavorquotient.com/wp-content/uploads/2023/08/Dragon-Chicken-FQ-2-3099.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -663,7 +652,7 @@
     "price": 275,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
+      "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj4GoiGND6C4249ioDkGAyQwgOIHIBRrXKcQNicEMBV1gGEbEqsjBJ7Yp8LyozyEnZzZqcPYkaCVilC25s1sLV0njwlutPz_txKFSbrS9GtOcUr5VT_K8Gi5QqCV9c0P3M7NfTi8cSwjAye/s6000/sausagechilli1.JPG",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -674,7 +663,7 @@
     "price": 200,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvUCML64FvqBVzpGi5L9ggQfHETlzDfB1adw&s",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -685,7 +674,7 @@
     "price": 200,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
+      "https://usegeniius.com/optimized/608aa4276d648-Buff%20Sausage.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -696,18 +685,7 @@
     "price": 350,
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
-      "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=800&q=80",
-    "status": "available",
-        "createdAt": "2026-06-26T17:32:39.621+00:00",
-    "updatedAt": "2026-06-26T17:32:39.621+00:00"
-  },
-  {
-    "name": "Mix Seafood Chilli",
-    "description": "Mixed seafood tossed in spicy chilli sauce",
-    "price": 475,
-    "categoryId": "6a3034064f59a5564b31fcfb",
-    "image":
-      "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=800&q=80",
+      "https://static.toiimg.com/thumb/53222175.cms?imgsize=288245&width=800&height=800",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -741,7 +719,7 @@
     "price": 425,
     "categoryId": "6a3034064f59a5564b31fcf1",
     "image":
-      "https://images.unsplash.com/photo-1626500155537-93690c24099e?auto=format&fit=crop&w=800&q=80",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrtYS5dJGY4HBdUlSyKh_zkKCXNweYEFyQAA&s",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -752,7 +730,7 @@
     "description": "Boiled sweet corn",
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
-      "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80",
+      "https://www.vegrecipesofindia.com/wp-content/uploads/2016/08/masala-corn-recipe-2.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -763,7 +741,7 @@
     "description": "Boiled sweet corn",
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
-      "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80",
+      "https://aayanshkitchen.com/wp-content/uploads/2024/05/IMG_9371-scaled.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -774,7 +752,7 @@
     "description": "Sweet corn tossed with salt and pepper",
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
-      "https://images.unsplash.com/photo-1619719015141-8f5c1b8dfedf?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://jeyporedukaan.in/wp-content/uploads/2022/09/images-23.jpeg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -785,7 +763,7 @@
     "description": "Crispy golden french fries",
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
-      "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
+      "https://static.toiimg.com/thumb/54659021.cms?imgsize=275086&width=800&height=800",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -796,7 +774,7 @@
     "description": "Spicy chilli mushroom",
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
+      "https://instamart-media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_960,w_960//InstamartAssets/1/Chilli_Mushrooms.webp",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -807,7 +785,7 @@
     "description": "Paneer tossed in spicy chilli sauce",
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
-      "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80",
+      "https://www.cookclickndevour.com/wp-content/uploads/2016/05/chilli-paneer-recipe-1.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -818,7 +796,7 @@
     "description": "Spicy chilli potato",
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
-      "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80",
+      "https://recipes.timesofindia.com/thumb/52532656.cms?width=1200&height=900",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -829,7 +807,7 @@
     "description": "Grilled vegetable satay skewers",
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
-      "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+      "https://production-media.gousto.co.uk/cms/mood-image/688---Roasted-Veg-Satay-Skewers-with-Coriander-Rice_0241-1606823551985.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -840,7 +818,7 @@
     "description": "Traditional Nepali spicy potato dish",
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
-      "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80",
+      "https://jslight.com.np/wp-content/uploads/2022/06/786531615118034.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -852,7 +830,7 @@
     "price": 20,
     "categoryId": "6a3034064f59a5564b31fd05",
     "image":
-      "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=800&q=80",
+      "https://i.ndtvimg.com/i/2017-10/black-tea-encourages-weight-loss_650x400_51507196055.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -863,7 +841,7 @@
     "price": 25,
     "categoryId": "6a3034064f59a5564b31fd05",
     "image":
-      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=800&q=80",
+      "https://www.usmed.com/wp-content/uploads/2021/10/GingerLemonTea_576x394.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -874,7 +852,7 @@
     "price": 35,
     "categoryId": "6a3034064f59a5564b31fd05",
     "image":
-      "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=800&q=80",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -885,7 +863,7 @@
     "price": 50,
     "categoryId": "6a3034064f59a5564b31fd05",
     "image":
-      "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?auto=format&fit=crop&w=800&q=80",
+      "https://goqii.com/blog/wp-content/uploads/shutterstock_1024718095-1024x682.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -897,7 +875,7 @@
     "categoryId": "6a3034064f59a5564b31fd05",
 
     "image":
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80",
+      "https://cdn.shopify.com/s/files/1/0918/3414/files/perfect-cup-black-coffee.jpg?v=1498751612",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -909,7 +887,7 @@
     "categoryId": "6a3034064f59a5564b31fd05",
 
     "image":
-      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80",
+      "https://www.foodlovinfamily.com/wp-content/uploads/2022/02/Coffee-with-condensed-milk.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -922,7 +900,7 @@
     "categoryId": "6a3034064f59a5564b31fd06",
 
     "image":
-      "https://5.imimg.com/data5/PX/IG/WF/SELLER-78937821/250ml-tropicana-slice-mango-drink.jpg",
+      "https://www.rashanpani.co.uk/wp-content/uploads/2021/09/SliceMangoDrinkGlassBottle250ml.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1514,7 +1492,7 @@
     "price": 300,
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
-      "https://barmandoo.com.np/products-images/6579beb1cb1011bbfe025cd7_1714853523334.png",
+      "https://barmandoo.com.np/products-images/6579beb1cb1011bbfe025cd7_1714853818792.png",
       "status": "available",
           "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1527,7 +1505,7 @@
     "price": 350,
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
-      "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+      "https://images.deliveryhero.io/image/talabat/MenuItems/Silver_Sadeko_Sukuti_prvn638355664527246382.jpg",
       "status": "available",
           "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1540,7 +1518,7 @@
     "price": 300,
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
-      "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=800&q=80",
+      "https://theovenfresh.ca/wp-content/uploads/2023/06/chilli-chicken.jpg",
       "status": "available",
           "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1559,24 +1537,12 @@
     },
 
   {
-    "name": "Pork Gravy",
-    "description": "Tender pork cooked in rich Nepali-style gravy",
-    "price": 375,
-    "categoryId": "6a3034064f59a5564b31fcfd",
-    "image":
-      "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=800&q=80",
-      "status": "available",
-          "createdAt": "2026-06-26T17:32:39.621+00:00",
-    "updatedAt": "2026-06-26T17:32:39.621+00:00"
-    },
-
-  {
     "name": "Pork Fry Sadeko",
     "description": "Crispy fried pork tossed with Nepali spices and herbs",
     "price": 375,
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
-      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+      "https://d1w7312wesee68.cloudfront.net/2hqoeE-HS_9iytb4gsuTOg6DnRUUHzX_7QUn--SG1Mk/resize:fit:720:720/plain/s3://toasttab/restaurants/restaurant-268542000000000000/menu/items/1/item-1400000000079309061_1753314770.jpg",
       "status": "available",
           "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1589,7 +1555,7 @@
     "price": 275,
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
+      "https://snapcalorie-webflow-website.s3.us-east-2.amazonaws.com/media/food_pics_v2/medium/buff_choila.jpg",
       "status": "available",
           "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1601,7 +1567,7 @@
     "price": 225,
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
-      "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=800&q=80",
+      "https://rajdhanigr.com/wp-content/uploads/2025/01/buff-choumin.png.webp",
       "status": "available",
           "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1613,7 +1579,7 @@
     "price": 275,
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
-      "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
+      "https://bhojannepal.com/images/menu/1a61f54e50837aadd7994f7df827957f.jpg",
       "status": "available",
           "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1625,7 +1591,7 @@
     "price": 225,
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
-      "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
+      "https://www.hairybikers.com/uploads/images/_recipeImage/Pork-chow-mein.jpg",
       "status": "available",
           "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1637,8 +1603,7 @@
     "price": 275,
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
-      "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
-      "status": "available",
+      "https://junifoods.com/wp-content/uploads/2024/05/Pork-Thukpa-Tibetan-Noodle-Soup-%E0%A4%B8%E0%A5%81%E0%A4%82%E0%A4%97%E0%A5%81%E0%A4%B0%E0%A4%95%E0%A5%8B-%E0%A4%A5%E0%A5%81%E0%A4%95%E0%A5%8D%E0%A4%AA%E0%A4%BE-300x300.jpg",
           "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
@@ -1670,7 +1635,7 @@
     "price": 300,
     "categoryId": "6a3034064f59a5564b31fcf4",
     "image":
-      "https://images.unsplash.com/photo-1550317138-10000687a72b?auto=format&fit=crop&w=800&q=80",
+      "https://fantabulosity.com/wp-content/uploads/2021/10/Crispy-Chicken-Burger.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1703,7 +1668,7 @@
     "price": 300,
     "categoryId": "6a3034064f59a5564b31fcf4",
     "image":
-      "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=800&q=80",
+      "https://www.shanazrafiq.com/wp-content/uploads/2020/12/6-Grilled-Chicken-Sandwich-6.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1725,7 +1690,7 @@
     "price": 200,
     "categoryId": "6a3034064f59a5564b31fcf5",
     "image":
-      "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80",
+      "https://assets.bonappetit.com/photos/664656425029c0da2565ccbb/1:1/w_5087,h_5087,c_limit/240403_BON_APPETIT_SIMPLE_SUMMER_COOKING_PEDENMUNK_KATHI_ROLL_0436.jpg",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1736,18 +1701,7 @@
     "price": 150,
     "categoryId": "6a3034064f59a5564b31fcf5",
     "image":
-      "https://images.unsplash.com/photo-1530469912745-a215c6b256ea?auto=format&fit=crop&w=800&q=80",
-    "status": "available",
-        "createdAt": "2026-06-26T17:32:39.621+00:00",
-    "updatedAt": "2026-06-26T17:32:39.621+00:00"
-  },
-  {
-    "name": "Sausage Wrap",
-    "description": "Tortilla wrap stuffed with sausage and vegetables",
-    "price": 150,
-    "categoryId": "6a3034064f59a5564b31fcf5",
-    "image":
-      "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+      "https://static.toiimg.com/thumb/75456053.cms?imgsize=1386602&width=800&height=800",
     "status": "available",
         "createdAt": "2026-06-26T17:32:39.621+00:00",
     "updatedAt": "2026-06-26T17:32:39.621+00:00"
@@ -1757,8 +1711,10 @@
   "description": "Traditional Nepalese style pan-fried mutton with local spices",
   "price": 350,
   "categoryId": "6a3034064f59a5564b31fcff",
-  "image": "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=800&q=80",
-  "status": "available"
+  "image": "https://walnutbistronepal.com/wp-content/uploads/2023/11/Khasi-ko-Bhutuwa.png",
+  "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
 },
   {
   "name": "Hekula (Fry)",
@@ -1766,23 +1722,29 @@
   "price": 450,
   "categoryId": "6a3034064f59a5564b31fcff",
   "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
-  "status": "available"
+  "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
 },
   {
   "name": "Hekula (Sadheko)",
   "description": "Crispy fried or spicy marinated mutton brisket chunk skewers",
   "price": 475,
   "categoryId": "6a3034064f59a5564b31fcff",
-  "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
-  "status": "available"
+  "image": "https://i.ytimg.com/vi/W0fWaCreUmE/maxresdefault.jpg",
+  "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
 },
   {
   "name": "Chicken Pangra Fry",
   "description": "Deep-fried seasoned chicken gizzards tossed with onions and green chilies",
   "price": 350,
   "categoryId": "6a3034064f59a5564b31fcff",
-  "image": "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=800&q=80",
-  "status": "available"
+  "image": "https://i.ytimg.com/vi/ddnO42JX5_w/maxresdefault.jpg",
+  "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
 },
 
   {
@@ -1791,6 +1753,214 @@
   "price": 400,
   "categoryId": "6a3034064f59a5564b31fcff",
   "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80",
-  "status": "available"
-}
+  "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+},
+  {
+    "name": "KitKat Shake",
+    "description":
+      "Rich chocolate milkshake blended with KitKat chunks and ice cream",
+    "price": 280,
+    "categoryId": "6a3d630c66082c559203ee94",
+    "image":
+      "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Oreo Shake",
+    "description":
+      "Creamy milkshake blended with Oreo cookies and vanilla ice cream",
+    "price": 250,
+    "categoryId": "6a3d630c66082c559203ee94",
+    "image":
+      "https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Ice Cream Shake",
+    "description":
+      "Classic creamy milkshake topped with premium vanilla ice cream",
+    "price": 250,
+    "categoryId": "6a3d630c66082c559203ee94",
+    "image":
+      "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Mango Smoothie",
+    "description":
+      "Refreshing mango smoothie made with ripe mangoes and yogurt",
+    "price": 220,
+    "categoryId": "6a3d630c66082c559203ee94",
+    "image":
+      "https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Strawberry Smoothie",
+    "description":
+      "Fresh strawberry smoothie blended with yogurt and ice",
+    "price": 220,
+    "categoryId": "6a3d630c66082c559203ee94",
+    "image":
+      "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Virgin Mojito",
+    "description":
+      "Classic mint and lime mocktail with soda and crushed ice",
+    "price": 175,
+    "categoryId": "6a3d631866082c559203ee95",
+    "image":
+      "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Blue Angel",
+    "description":
+      "Refreshing blue curacao-style mocktail with citrus flavors",
+    "price": 175,
+    "categoryId": "6a3d631866082c559203ee95",
+    "image":
+      "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Mint Lemonade",
+    "description":
+      "Fresh lemonade infused with mint leaves and crushed ice",
+    "price": 150,
+    "categoryId": "6a3d631866082c559203ee95",
+    "image":
+      "https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Mickey Mouse",
+    "description":
+      "Colorful fruit-based mocktail with a sweet tropical flavor",
+    "price": 175,
+    "categoryId": "6a3d631866082c559203ee95",
+    "image":
+      "https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Peach Ice Tea",
+    "description":
+      "Chilled black tea infused with sweet peach flavor",
+    "price": 180,
+    "categoryId": "6a3d631866082c559203ee95",
+    "image":
+      "https://images.unsplash.com/photo-1499638673689-79a0b5115d87?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Twisted Cola",
+    "description":
+      "Classic cola with citrus twist and refreshing garnishes",
+    "price": 160,
+    "categoryId": "6a3d631866082c559203ee95",
+    "image":
+      "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Lemon Sprite",
+    "description":
+      "Refreshing Sprite-based drink with fresh lemon and ice",
+    "price": 130,
+    "categoryId": "6a3d631866082c559203ee95",
+    "image":
+      "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+  {
+    "name": "Plain Lassi",
+    "description":
+      "Traditional chilled yogurt drink",
+    "price": 100,
+    "categoryId": "6a3d632566082c559203ee96",
+    "image":
+      "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Banana Lassi",
+    "description":
+      "Creamy yogurt drink blended with fresh bananas",
+    "price": 120,
+    "categoryId": "6a3d632566082c559203ee96",
+    "image":
+      "https://images.unsplash.com/photo-1553787499-6f913324e6c8?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Mango Lassi",
+    "description":
+      "Sweet mango-flavored yogurt drink",
+    "price": 150,
+    "categoryId": "6a3d632566082c559203ee96",
+    "image":
+      "https://images.unsplash.com/photo-1600271886742-f049cd5bba3f?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    },
+
+  {
+    "name": "Special Lassi",
+    "description":
+      "Premium lassi topped with dry fruits, ice cream and flavored syrup",
+    "price": 180,
+    "categoryId": "6a3d632566082c559203ee96",
+    "image":
+      "https://images.unsplash.com/photo-1579954115545-a95591f28bfc?auto=format&fit=crop&w=800&q=80",
+      "status": "available",
+              "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
+    }
 ]

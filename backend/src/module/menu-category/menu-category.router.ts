@@ -23,10 +23,7 @@ export const menuCategoryRouter = s.router(menuCategoryContract, {
     handler: menuCategoryMutationHandler.removeMenuCategory as any,
   },
 
-  getAllMenuCategories: {
-    middleware: [verifyToken, authorizeRoles("admin", "waiter", "cashier")],
-    handler: menuCategoryQueryHandler.getAllMenuCategories,
-  },
+  getAllMenuCategories: menuCategoryQueryHandler.getAllMenuCategories,
 
   getMenuCategoryByID: {
     middleware: [verifyToken, authorizeRoles("admin")],

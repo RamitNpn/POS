@@ -95,7 +95,8 @@ export default function CashierReportsPage() {
         (order.table?.name || "").toString().toLowerCase().includes(q) ||
         (order.waiter?.name || "").toString().toLowerCase().includes(q);
 
-      const matchesStatus = statusFilter === "all" || order.paymentStatus === statusFilter;
+      const matchesStatus =
+        statusFilter === "all" || order.paymentStatus === statusFilter;
 
       return matchesSearch && matchesStatus;
     });
@@ -377,30 +378,27 @@ export default function CashierReportsPage() {
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        {order.paymentStatus === "paid" ? (
-                          <Button
-                            variant="secondary"
-                            className="text-gray-300 cursor-pointer hover:text-white"
-                            size="icon"
-                            onClick={() => {
-                              setPrintOrder(order);
-                              setTimeout(() => {
-                                handlePrintInvoice();
-                              }, 100);
-                            }}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="secondary"
-                            className="text-gray-300 cursor-pointer hover:bg-green-700 hover:text-white"
-                            size="icon"
-                            onClick={() => updateOrderStatus(order._id)}
-                          >
-                            <CreditCard className="h-4 w-4" />
-                          </Button>
-                        )}
+                        <Button
+                          variant="secondary"
+                          className="text-gray-300 cursor-pointer hover:text-white"
+                          size="icon"
+                          onClick={() => {
+                            setPrintOrder(order);
+                            setTimeout(() => {
+                              handlePrintInvoice();
+                            }, 100);
+                          }}
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          className="text-gray-300 cursor-pointer hover:bg-green-700 hover:text-white"
+                          size="icon"
+                          onClick={() => updateOrderStatus(order._id)}
+                        >
+                          <CreditCard className="h-4 w-4" />
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>

@@ -252,15 +252,6 @@ export default function WaiterMenuPage() {
                     ))}
                   </SelectContent>
                 </Select>
-                {/* <div>
-                  <a
-                    href="#checkout"
-                    className="lg:hidden text-primary text-sm font-medium bg-primary/10 px-3 py-2 rounded-full flex items-center gap-1"
-                  >
-                    Invoice
-                    <ArrowDown className="size-3" />
-                  </a>
-                </div> */}
               </div>
 
               {filteredAvailableMenuItems.length === 0 ? (

@@ -40,7 +40,8 @@ class MenuItemRepository {
         return { data, total };
     }
     async countByCategory(categoryId) {
-        return menu_item_model_1.default.countDocuments({ categoryId });
+        const objectId = new mongoose_1.default.Types.ObjectId(categoryId);
+        return menu_item_model_1.default.countDocuments({ categoryId: objectId });
     }
 }
 exports.default = new MenuItemRepository();

@@ -25,10 +25,7 @@ export const menuItemRouter = s.router(menuItemContract, {
     handler: menuItemMutationHandler.removeMenuItem as any,
   },
 
-  getAllMenuItems: {
-    middleware: [verifyToken],
-    handler: menuItemQueryHandler.getAllMenuItems,
-  },
+  getAllMenuItems: menuItemQueryHandler.getAllMenuItems,
 
   getMenuItemByID: {
     middleware: [verifyToken],

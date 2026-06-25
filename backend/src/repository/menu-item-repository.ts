@@ -43,8 +43,10 @@ class MenuItemRepository {
 
     return { data, total };
   }
+
   async countByCategory(categoryId: string) {
-    return MenuItem.countDocuments({ categoryId });
+    const objectId = new mongoose.Types.ObjectId(categoryId);
+    return MenuItem.countDocuments({ categoryId: objectId });
   }
 }
 
