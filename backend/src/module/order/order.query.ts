@@ -25,8 +25,6 @@ const mapOrder = (order: any) => {
 
       menuItem: item.menuItemId?.name ?? item.name,
 
-      category: item.menuItemId?.categoryId?.name ?? null,
-
       quantity: item.quantity,
       price: item.price,
       total: item.total ?? item.price * item.quantity,
@@ -208,7 +206,6 @@ export const getActiveOrderByTable: AppRouteQueryImplementation<
         notes: order.notes,
         items: order.items.map((item: any) => ({
           menuItemId: item.menuItemId.toString(),
-          category: item.menuItemId?.categoryId?.name ?? null,
           name: item.name,
           price: item.price,
           quantity: item.quantity,

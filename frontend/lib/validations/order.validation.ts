@@ -10,7 +10,6 @@ export const orderItemSchema = z.object({
   price: z.number(),
   quantity: z.number().min(1),
   total: z.number(),
-  category: z.string(),
 });
 
 export const createOrderSchema = z.object({

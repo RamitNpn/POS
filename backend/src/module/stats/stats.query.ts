@@ -28,12 +28,19 @@ export const getDashboardStats: AppRouteQueryImplementation<
 
   const revenueChange =
     previousRevenue > 0
-      ? Number((((currentRevenue - previousRevenue) / previousRevenue) * 100).toFixed(2))
+      ? Number(
+          (
+            ((currentRevenue - previousRevenue) / previousRevenue) *
+            100
+          ).toFixed(2),
+        )
       : 0;
 
   const ordersChange =
     previousOrders > 0
-      ? Number((((totalOrders - previousOrders) / previousOrders) * 100).toFixed(2))
+      ? Number(
+          (((totalOrders - previousOrders) / previousOrders) * 100).toFixed(2),
+        )
       : 0;
 
   console.log("[getDashboardStats] computed:", {
@@ -124,7 +131,10 @@ export const getRevenueStats: AppRouteQueryImplementation<
       limit: 1000,
     });
 
-    console.log("[getRevenueStats] total orders fetched:", ordersResult.data.length);
+    console.log(
+      "[getRevenueStats] total orders fetched:",
+      ordersResult.data.length,
+    );
 
     const orders = ordersResult.data;
 
@@ -149,7 +159,10 @@ export const getRevenueStats: AppRouteQueryImplementation<
       limit: 1000,
     });
 
-    console.log("[getRevenueStats] reservations fetched:", reservationsResult.data.length);
+    console.log(
+      "[getRevenueStats] reservations fetched:",
+      reservationsResult.data.length,
+    );
 
     const reservations = reservationsResult.data;
 
@@ -158,7 +171,10 @@ export const getRevenueStats: AppRouteQueryImplementation<
       return d >= startOfToday && d <= endOfToday;
     });
 
-    console.log("[getRevenueStats] reservations today:", reservationsToday.length);
+    console.log(
+      "[getRevenueStats] reservations today:",
+      reservationsToday.length,
+    );
 
     return {
       status: 200,
@@ -261,7 +277,10 @@ export const getProfitLossStats: AppRouteQueryImplementation<
       netProfit,
     });
 
-    const seriesMap = new Map<string, { revenue: number; expense: number }>();
+    const seriesMap = new Map<
+      string,
+      { revenue: number; expense: number; orders: number }
+    >();
 
     const formatKey = (d: Date) => d.toISOString().split("T")[0];
 
@@ -269,15 +288,22 @@ export const getProfitLossStats: AppRouteQueryImplementation<
       if (o.status !== "completed") continue;
 
       const key = formatKey(new Date(o.createdAt));
-      const prev = seriesMap.get(key) || { revenue: 0, expense: 0 };
+
+      const prev = seriesMap.get(key) || {
+        revenue: 0,
+        expense: 0,
+        orders: 0,
+      };
 
       prev.revenue += o.subtotal ?? 0;
+      prev.orders += 1;
+
       seriesMap.set(key, prev);
     }
 
     for (const e of expenses) {
       const key = formatKey(new Date(e.date));
-      const prev = seriesMap.get(key) || { revenue: 0, expense: 0 };
+      const prev = seriesMap.get(key) || { revenue: 0, expense: 0, orders: 0 };
 
       const amount = Number(e.amount ?? 0);
       prev.expense += amount;
@@ -291,10 +317,14 @@ export const getProfitLossStats: AppRouteQueryImplementation<
         revenue: val.revenue,
         expense: val.expense,
         profit: val.revenue - val.expense,
+        totalOrders: val.orders,
       }),
     );
 
-    console.log("[getProfitLossStats] series sample:", revenueSeries.slice(0, 3));
+    console.log(
+      "[getProfitLossStats] series sample:",
+      revenueSeries.slice(0, 3),
+    );
 
     return {
       status: 200,
@@ -328,33 +358,29 @@ export const getCashierCheckoutStats: AppRouteQueryImplementation<
   typeof statsContract.cashierCheckoutStats
 > = async () => {
   try {
-    const [
-      totalActiveOrders,
-      readyForCheckout,
-      pendingPayments,
-      tableStats,
-    ] = await Promise.all([
-      ticketRepository.count({
-        status: {
-          $in: ["pending", "served"],
-        },
-      }),
+    const [totalActiveOrders, readyForCheckout, pendingPayments, tableStats] =
+      await Promise.all([
+        ticketRepository.count({
+          status: {
+            $in: ["pending", "served"],
+          },
+        }),
 
-      orderRepository.count({
-        status: "completed",
-        paymentStatus: {
-          $ne: "paid",
-        },
-      }),
+        orderRepository.count({
+          status: "completed",
+          paymentStatus: {
+            $ne: "paid",
+          },
+        }),
 
-      orderRepository.count({
-        paymentStatus: {
-          $ne: "paid",
-        },
-      }),
+        orderRepository.count({
+          paymentStatus: {
+            $ne: "paid",
+          },
+        }),
 
-      tableRepository.getTableStats(),
-    ]);
+        tableRepository.getTableStats(),
+      ]);
 
     return {
       status: 200,
@@ -369,13 +395,13 @@ export const getCashierCheckoutStats: AppRouteQueryImplementation<
       },
     };
   } catch (error) {
-      return {
-        status: 500,
-        body: {
-          success: false,
-          error: "Failed to fetch cashier checkout stats",
-        },
-      };
+    return {
+      status: 500,
+      body: {
+        success: false,
+        error: "Failed to fetch cashier checkout stats",
+      },
+    };
   }
 };
 

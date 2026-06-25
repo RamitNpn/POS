@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { tableContract } from "../../contract/table/table.contract";
 import tableRepository from "../../repository/table.repository";
 import ticketRepository from "../../repository/ticket.repository";
+import reservationRepository from "../../repository/reservation.repository";
 
 export const createTable: AppRouteMutationImplementation<
   typeof tableContract.createTable
@@ -162,6 +163,36 @@ export const updateTableStatus: AppRouteMutationImplementation<
       };
     }
 
+    // Prevent unnecessary updates
+    if (table.status === status) {
+      console.log(`[updateTableStatus] table already has status: ${status}`);
+
+      return {
+        status: 400,
+        body: {
+          success: false,
+          error: `Table is already ${status}`,
+        },
+      };
+    }
+
+    // Check active reservation before making table available
+    if (status === "available") {
+
+      const reservation =
+        await reservationRepository.getActiveReservationForToday(tableID);
+
+      if (reservation) {
+        return {
+          status: 400,
+          body: {
+            success: false,
+            error: "Table has an active reservation",
+          },
+        };
+      }
+    }
+
     const tickets = await ticketRepository.getByTableID(tableID);
 
     console.log("[updateTableStatus] tickets found:", tickets.length);
@@ -174,7 +205,7 @@ export const updateTableStatus: AppRouteMutationImplementation<
     );
 
     const hasUnservedTickets = tickets.some(
-      (ticket) => ticket.status !== "served",
+      (ticket) => ticket.status === "pending",
     );
 
     console.log("[updateTableStatus] hasUnservedTickets:", hasUnservedTickets);

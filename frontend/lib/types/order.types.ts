@@ -30,7 +30,6 @@ export interface TOrder {
     quantity: number;
     price: number;
     total?: number;
-    category?: string;
     menuItemId?: {
       _id: string;
       name: string;

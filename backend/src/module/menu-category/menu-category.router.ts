@@ -24,7 +24,7 @@ export const menuCategoryRouter = s.router(menuCategoryContract, {
   },
 
   getAllMenuCategories: {
-    middleware: [verifyToken, authorizeRoles("admin")],
+    middleware: [verifyToken, authorizeRoles("admin", "waiter", "cashier")],
     handler: menuCategoryQueryHandler.getAllMenuCategories,
   },
 

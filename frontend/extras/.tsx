@@ -6,7 +6,9 @@
     "categoryId": "6a3034064f59a5564b31fcf6",
     "image":
       "https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Fruit Salad",
@@ -15,7 +17,9 @@
     "categoryId": "6a3034064f59a5564b31fcf6",
     "image":
       "https://images.unsplash.com/photo-1564093497595-593b96d80180?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Bread Omelette",
@@ -24,7 +28,9 @@
     "categoryId": "6a3034064f59a5564b31fcf7",
     "image":
       "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Boiled Egg",
@@ -33,7 +39,9 @@
     "categoryId": "6a3034064f59a5564b31fcf7",
     "image":
       "https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "American Breakfast",
@@ -42,7 +50,9 @@
     "categoryId": "6a3034064f59a5564b31fcf7",
     "image":
       "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Aloo Paratha",
@@ -51,7 +61,9 @@
     "categoryId": "6a3034064f59a5564b31fcf7",
     "image":
       "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Masala Omelette",
@@ -60,7 +72,9 @@
     "categoryId": "6a3034064f59a5564b31fcf7",
     "image":
       "https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Manchow Soup",
@@ -69,7 +83,9 @@
     "categoryId": "6a3034064f59a5564b31fcf8",
     "image":
       "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Clear Soup",
@@ -78,7 +94,9 @@
     "categoryId": "6a3034064f59a5564b31fcf8",
     "image":
       "https://plus.unsplash.com/premium_photo-1706003920144-ca73554a6801?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Mushroom Soup",
@@ -87,7 +105,9 @@
     "categoryId": "6a3034064f59a5564b31fcf8",
     "image":
       "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Hot and Sour Soup",
@@ -96,7 +116,9 @@
     "categoryId": "6a3034064f59a5564b31fcf8",
     "image":
       "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Keema Noodles",
@@ -105,7 +127,9 @@
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
       "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Veg Noodles",
@@ -114,7 +138,9 @@
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
       "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Noodles",
@@ -123,7 +149,9 @@
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
       "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Schezwan Noodles",
@@ -132,7 +160,9 @@
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
       "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Egg Noodles",
@@ -141,7 +171,9 @@
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
       "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Mix Noodles",
@@ -150,7 +182,9 @@
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
       "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Current Bowl Noodles",
@@ -159,7 +193,9 @@
     "categoryId": "6a3034064f59a5564b31fcf9",
     "image":
       "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Steam Momo",
@@ -168,7 +204,9 @@
     "categoryId": "6a3034064f59a5564b31fcf2",
     "image":
       "https://plus.unsplash.com/premium_photo-1671547329182-deaf1c94263e?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Fry Momo",
@@ -177,7 +215,9 @@
     "categoryId": "6a3034064f59a5564b31fcf2",
     "image":
       "https://images.unsplash.com/photo-1738608084602-f9543952188e?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chilly Momo",
@@ -185,7 +225,9 @@
     "price": 175,
     "categoryId": "6a3034064f59a5564b31fcf2",
     "image": "https://boliya.in/wp-content/uploads/2025/05/3-9.png",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Jhol Momo",
@@ -194,7 +236,9 @@
     "categoryId": "6a3034064f59a5564b31fcf2",
     "image":
       "https://images.news18.com/ibnlive/uploads/2025/12/jhol-momos-1-2025-12-caa875266cb632b781ff7464c9ad3f5d-4x3.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Kothey Momo",
@@ -203,7 +247,9 @@
     "categoryId": "6a3034064f59a5564b31fcf2",
     "image":
       "https://foodenginepokhara.com/wp-content/uploads/2025/05/kothey-momo.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Sadheko Momo",
@@ -212,7 +258,9 @@
     "categoryId": "6a3034064f59a5564b31fcf2",
     "image":
       "https://d1w7312wesee68.cloudfront.net/apXnRLlS8wgSduDjUmh6wdvlUJJ7TXy2S5yKAjR9Hk8/resize:fit:720:720/plain/s3://toasttab/restaurants/restaurant-207226000000000000/menu/items/2/item-1200000013758324302_1777330497.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Veg Thukpa",
@@ -221,7 +269,9 @@
     "categoryId": "6a3034064f59a5564b31fcf3",
     "image":
       "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Veg Thukpa",
@@ -230,7 +280,9 @@
     "categoryId": "6a3034064f59a5564b31fcf3",
     "image":
       "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Mix Thukpa",
@@ -239,7 +291,9 @@
     "categoryId": "6a3034064f59a5564b31fcf3",
     "image":
       "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Veg Fried Rice",
@@ -248,7 +302,9 @@
     "categoryId": "6a3034064f59a5564b31fcfc",
     "image":
       "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Egg Fried Rice",
@@ -257,7 +313,9 @@
     "categoryId": "6a3034064f59a5564b31fcfc",
     "image":
       "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Fried Rice",
@@ -266,7 +324,9 @@
     "categoryId": "6a3034064f59a5564b31fcfc",
     "image":
       "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Mixed Fried Rice",
@@ -275,7 +335,9 @@
     "categoryId": "6a3034064f59a5564b31fcfc",
     "image":
       "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Seafood Fried Rice",
@@ -284,7 +346,9 @@
     "categoryId": "6a3034064f59a5564b31fcfc",
     "image":
       "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Wai Wai Sadheko",
@@ -293,7 +357,9 @@
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
       "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Sadheko",
@@ -302,7 +368,9 @@
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
       "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Mix Wai Wai Sadheko",
@@ -311,7 +379,9 @@
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
       "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Peanut Sadheko",
@@ -320,7 +390,9 @@
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
       "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Bhatmas Sadheko",
@@ -329,7 +401,9 @@
     "categoryId": "6a3034064f59a5564b31fcfe",
     "image":
       "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Chilli",
@@ -338,7 +412,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken 65",
@@ -347,7 +423,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Fry",
@@ -356,7 +434,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Gravy",
@@ -365,7 +445,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Crispy Chicken",
@@ -374,7 +456,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Cheese Ball",
@@ -383,7 +467,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1625944230945-1b7dd3b949ab?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Popcorn",
@@ -392,7 +478,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Timur Chicken",
@@ -401,7 +489,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Choila",
@@ -410,7 +500,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Dragon Chicken",
@@ -419,7 +511,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Sausage",
@@ -428,7 +522,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Lollipop",
@@ -437,7 +533,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Mix Seafood Chilli",
@@ -446,7 +544,9 @@
     "categoryId": "6a3034064f59a5564b31fcfb",
     "image":
       "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Local Vibes Platter",
@@ -456,7 +556,9 @@
     "categoryId": "6a3034064f59a5564b31fd00",
     "image":
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Special Platter",
@@ -465,7 +567,9 @@
     "categoryId": "6a3034064f59a5564b31fd00",
     "image":
       "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Momo Platter",
@@ -474,7 +578,9 @@
     "categoryId": "6a3034064f59a5564b31fd00",
     "image":
       "https://images.unsplash.com/photo-1626500155537-93690c24099e?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Sweet Corn",
@@ -483,7 +589,9 @@
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
       "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Corn Salt & Pepper",
@@ -492,7 +600,9 @@
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
       "https://images.unsplash.com/photo-1619719015141-8f5c1b8dfedf?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "French Fries",
@@ -501,7 +611,9 @@
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
       "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Mushroom Chilli",
@@ -510,7 +622,9 @@
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Paneer Chilli",
@@ -519,7 +633,9 @@
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
       "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Potato Chilli",
@@ -528,7 +644,9 @@
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
       "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Veg Satay",
@@ -537,7 +655,9 @@
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
       "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Mustang Aloo",
@@ -546,7 +666,9 @@
     "categoryId": "6a3034064f59a5564b31fcfa",
     "image":
       "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
 
   {
@@ -556,7 +678,9 @@
     "categoryId": "6a3034064f59a5564b31fd05",
     "image":
       "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Lemon Tea",
@@ -565,7 +689,9 @@
     "categoryId": "6a3034064f59a5564b31fd05",
     "image":
       "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Milk Tea",
@@ -574,7 +700,9 @@
     "categoryId": "6a3034064f59a5564b31fd05",
     "image":
       "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Masala Tea",
@@ -583,7 +711,9 @@
     "categoryId": "6a3034064f59a5564b31fd05",
     "image":
       "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Black Coffee",
@@ -593,7 +723,9 @@
 
     "image":
       "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
   {
     "name": "Milk Coffee",
@@ -603,7 +735,9 @@
 
     "image":
       "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -614,7 +748,9 @@
 
     "image":
       "https://5.imimg.com/data5/PX/IG/WF/SELLER-78937821/250ml-tropicana-slice-mango-drink.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
   {
     "name": "Mountain Dew",
@@ -624,7 +760,9 @@
 
     "image":
       "https://prod-spinneys-cdn-new.azureedge.net/media/cache/d1/59/d159a16938fbd26f257e0f0e133df24a.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
   {
     "name": "Sprite",
@@ -634,7 +772,9 @@
 
     "image":
       "https://hebmx.vtexassets.com/arquivos/ids/627293/577178-1663033324.jpg?v=638497816220830000",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
   {
     "name": "Coca-Cola",
@@ -644,7 +784,9 @@
 
     "image":
       "https://hebmx.vtexassets.com/arquivos/ids/627293/577178-1663033324.jpg?v=638497816220830000",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
   {
     "name": "Fanta",
@@ -653,7 +795,9 @@
     "categoryId": "6a3034064f59a5564b31fd06",
     "image":
       "https://www.osterlenbryggarna.se/wp-content/uploads/2019/01/fanta-25cl.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Red Bull (Regular)",
@@ -662,7 +806,9 @@
     "categoryId": "6a3034064f59a5564b31fd06",
     "image":
       "https://media.rainpos.com/3226/71r5aajatcl_sl1500__20180628133009.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Red Bull (Blue Edition)",
@@ -670,7 +816,9 @@
     "price": 250,
     "categoryId": "6a3034064f59a5564b31fd06",
     "image": "https://m.edia-amazon.com/images/I/61ptJdBOUsL.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Real Juice",
@@ -679,7 +827,9 @@
     "categoryId": "6a3034064f59a5564b31fd06",
     "image":
       "https://img.drz.lazcdn.com/g/kf/Se40a95af06a54c09a31edf50741337d38.jpg_720x720q80.jpg_.webp",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
 
   {
@@ -689,7 +839,9 @@
     "categoryId": "6a3034064f59a5564b31fd07",
     "image":
       "https://media.istockphoto.com/id/1324085825/photo/glass-of-fresh-homemade-indian-lassi-drink-made-of-ripe-banana-fruit-and-yogurt-served-with.jpg?s=612x612&w=0&k=20&c=x07kAjgurApe_Wmf2gutmKl0RHN1hn96CXQsUvHqRT8=",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Plain Lassi",
@@ -698,7 +850,9 @@
     "categoryId": "6a3034064f59a5564b31fd07",
     "image":
       "https://tiimg.tistatic.com/fp/5/007/789/excellent-sterilized-original-milk-flavoring-tasty-sweet-white-lassi--010.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Virgin Mojito",
@@ -707,7 +861,9 @@
     "categoryId": "6a3034064f59a5564b31fd07",
     "image":
       "https://t3.ftcdn.net/jpg/15/23/26/76/360_F_1523267674_kyREEQ9uQL35dFeQxYRGwOroZAoVvGwE.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Iced Peach Tea",
@@ -716,7 +872,9 @@
     "categoryId": "6a3034064f59a5564b31fd07",
     "image":
       "https://mrpuffs.com/cdn/shop/files/MrPuffs_Theglace_Peche.jpg?v=1713886905",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Cold Coffee",
@@ -725,7 +883,9 @@
     "categoryId": "6a3034064f59a5564b31fd07",
     "image":
       "https://itallianbox.com/wp-content/uploads/2025/06/cold-coffe-2.png",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Iced Lemon Tea",
@@ -734,7 +894,9 @@
     "categoryId": "6a3034064f59a5564b31fd07",
     "image":
       "https://leelalicious.com/wp-content/uploads/2016/04/Thai-Lemon-Iced-Tea-Recipe.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Watermelon Refresher",
@@ -743,7 +905,9 @@
     "categoryId": "6a3034064f59a5564b31fd07",
     "image":
       "https://fishbowl.s3.amazonaws.com/recipes/94_watermelon-refhresher_web.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
 
   {
@@ -753,7 +917,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/2038a687f4d62f40c6a1ba018bce49ca.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "8848 (90ml)",
@@ -762,7 +928,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/2038a687f4d62f40c6a1ba018bce49ca.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "8848 (180ml)",
@@ -771,7 +939,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/2038a687f4d62f40c6a1ba018bce49ca.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "8848 (360ml)",
@@ -780,7 +950,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/2038a687f4d62f40c6a1ba018bce49ca.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "8848 (Full Bottle)",
@@ -789,7 +961,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/2038a687f4d62f40c6a1ba018bce49ca.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Black Oak (60ml)",
@@ -797,7 +971,9 @@
     "price": 150,
     "categoryId": "6a3034064f59a5564b31fd03",
     "image": "https://darumandu.com/storage/product/2025-01-04-6779589d8980d.png",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Black Oak (90ml)",
@@ -805,7 +981,9 @@
     "price": 290,
     "categoryId": "6a3034064f59a5564b31fd03",
     "image": "https://darumandu.com/storage/product/2025-01-04-6779589d8980d.png",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Black Oak (180ml)",
@@ -813,7 +991,9 @@
     "price": 573,
     "categoryId": "6a3034064f59a5564b31fd03",
     "image": "https://darumandu.com/storage/product/2025-01-04-6779589d8980d.png",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Black Oak (360ml)",
@@ -821,7 +1001,9 @@
     "price": 1150,
     "categoryId": "6a3034064f59a5564b31fd03",
     "image": "https://darumandu.com/storage/product/2025-01-04-6779589d8980d.png",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Black Oak (Full Bottle)",
@@ -829,7 +1011,9 @@
     "price": 2450,
     "categoryId": "6a3034064f59a5564b31fd03",
     "image": "https://darumandu.com/storage/product/2025-01-04-6779589d8980d.png",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Kukuri Rum (60ml)",
@@ -838,7 +1022,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/3da199cec3db5c2d011a9f22efafe912.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Kukuri Rum (90ml)",
@@ -847,7 +1033,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/3da199cec3db5c2d011a9f22efafe912.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Kukuri Rum (180ml)",
@@ -856,7 +1044,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/3da199cec3db5c2d011a9f22efafe912.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Kukuri Rum (360ml)",
@@ -865,7 +1055,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/3da199cec3db5c2d011a9f22efafe912.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Kukuri Rum (Full Bottle)",
@@ -874,7 +1066,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/3da199cec3db5c2d011a9f22efafe912.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Signature Whisky",
@@ -883,7 +1077,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/d1e9eeae407a1eae8cb3d356aa1ee17a.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Signature Whisky (90ml)",
@@ -892,7 +1088,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/d1e9eeae407a1eae8cb3d356aa1ee17a.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Signature Whisky (180ml)",
@@ -901,7 +1099,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/d1e9eeae407a1eae8cb3d356aa1ee17a.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Signature Whisky (360ml)",
@@ -910,7 +1110,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/d1e9eeae407a1eae8cb3d356aa1ee17a.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Signature Whisky (Full Bottle)",
@@ -919,7 +1121,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://static-01.daraz.com.np/p/d1e9eeae407a1eae8cb3d356aa1ee17a.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Old Durbar Whisky (60ml)",
@@ -928,7 +1132,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://img.fatafatsewa.com/products/939/old-durbar-750-ml-price-in-nepal.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Old Durbar Whisky (90ml)",
@@ -937,7 +1143,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://img.fatafatsewa.com/products/939/old-durbar-750-ml-price-in-nepal.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Old Durbar Whisky (180ml)",
@@ -946,7 +1154,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://img.fatafatsewa.com/products/939/old-durbar-750-ml-price-in-nepal.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Old Durbar Whisky (360ml)",
@@ -955,7 +1165,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://img.fatafatsewa.com/products/939/old-durbar-750-ml-price-in-nepal.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Old Durbar Whisky (Full Bottle)",
@@ -964,7 +1176,9 @@
     "categoryId": "6a3034064f59a5564b31fd03",
     "image":
       "https://img.fatafatsewa.com/products/939/old-durbar-750-ml-price-in-nepal.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Shikhar Ice",
@@ -973,7 +1187,9 @@
     "categoryId": "6a3034064f59a5564b31fd04",
     "image":
       "https://hungerend.com/wp-content/uploads/2022/05/shikhar-ice-pcs.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Surya Red Light",
@@ -982,7 +1198,9 @@
     "categoryId": "6a3034064f59a5564b31fd04",
     "image":
       "https://hungerend.com/wp-content/uploads/2022/03/surya-red-pcs-min.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Gorkha Beer (330ml)",
@@ -991,7 +1209,9 @@
     "categoryId": "6a3034064f59a5564b31fd01",
     "image":
       "https://fulltimeexplorer.com/wp-content/uploads/2020/10/nepali-beers-gorka-premium-and-strong.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Gorkha Beer (500ml)",
@@ -1000,7 +1220,9 @@
     "categoryId": "6a3034064f59a5564b31fd01",
     "image":
       "https://fulltimeexplorer.com/wp-content/uploads/2020/10/nepali-beers-gorka-premium-and-strong.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Tuborg Strong (330ml)",
@@ -1008,7 +1230,9 @@
     "price": 275,
     "categoryId": "6a3034064f59a5564b31fd01",
     "image": "https://ferdico.it/img-prodotti/8007950016244.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Tuborg Strong (500ml)",
@@ -1016,7 +1240,9 @@
     "price": 500,
     "categoryId": "6a3034064f59a5564b31fd01",
     "image": "https://ferdico.it/img-prodotti/8007950016244.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Tuborg Gold (330ml)",
@@ -1025,7 +1251,9 @@
     "categoryId": "6a3034064f59a5564b31fd01",
     "image":
       "https://static-01.daraz.com.np/p/0fc94b19bce1812fd0f475426d7a65de.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Tuborg Gold (500ml)",
@@ -1034,7 +1262,9 @@
     "categoryId": "6a3034064f59a5564b31fd01",
     "image":
       "https://static-01.daraz.com.np/p/0fc94b19bce1812fd0f475426d7a65de.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Barahsinghe Beer (330ml)",
@@ -1043,7 +1273,9 @@
     "categoryId": "6a3034064f59a5564b31fd01",
     "image":
       "https://static-01.daraz.com.np/p/32ce4f5bb2f238136116d31d7a47a4b5.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Barahsinghe Beer (500ml)",
@@ -1052,7 +1284,9 @@
     "categoryId": "6a3034064f59a5564b31fd01",
     "image":
       "https://static-01.daraz.com.np/p/32ce4f5bb2f238136116d31d7a47a4b5.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Pan Mint Hookah",
@@ -1061,7 +1295,9 @@
     "categoryId": "6a3034064f59a5564b31fd02",
     "image":
       "https://iconhookah.com/cdn/shop/products/moze-breeze-two-hookah-wavy-blue_800x.jpg?v=1644428737",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Local Vibes Special Hookah",
@@ -1070,7 +1306,9 @@
     "categoryId": "6a3034064f59a5564b31fd02",
     "image":
       "https://images-eu.ssl-images-amazon.com/images/I/61OQTDpuyuL._AC_UL495_SR435,495_.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Hookah Refill",
@@ -1079,7 +1317,9 @@
     "categoryId": "6a3034064f59a5564b31fd02",
     "image":
       "https://shopdop.in/cdn/shop/articles/Hookah_Bowl_Filling.jpg?v=1658320959",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Hookah Coil",
@@ -1088,7 +1328,9 @@
     "categoryId": "6a3034064f59a5564b31fd02",
     "image":
       "https://420shop.nl/media/catalog/product/cache/72f5e12cc3bd3881fe4970b99275a0da/w/a/waterpijp-kooltjes_1.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Buff Sukuti",
@@ -1098,7 +1340,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://barmandoo.com.np/products-images/6579beb1cb1011bbfe025cd7_1714853523334.png",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -1109,7 +1353,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -1120,7 +1366,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&w=800&q=80",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -1130,7 +1378,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -1140,7 +1390,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=800&q=80",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -1150,7 +1402,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -1161,7 +1415,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -1171,7 +1427,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=800&q=80",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -1181,7 +1439,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -1191,7 +1451,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
 
   {
@@ -1201,7 +1463,9 @@
     "categoryId": "6a3034064f59a5564b31fcfd",
     "image":
       "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=800&q=80",
-      "status": "available"
+      "status": "available",
+          "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
     },
   {
     "name": "Veg Burger",
@@ -1210,7 +1474,9 @@
     "categoryId": "6a3034064f59a5564b31fcf4",
     "image":
       "https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Burger",
@@ -1219,7 +1485,9 @@
     "categoryId": "6a3034064f59a5564b31fcf4",
     "image":
       "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Crispy Burger",
@@ -1228,7 +1496,9 @@
     "categoryId": "6a3034064f59a5564b31fcf4",
     "image":
       "https://images.unsplash.com/photo-1550317138-10000687a72b?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Veg Sandwich",
@@ -1237,7 +1507,9 @@
     "categoryId": "6a3034064f59a5564b31fcf4",
     "image":
       "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Sandwich",
@@ -1246,7 +1518,9 @@
     "categoryId": "6a3034064f59a5564b31fcf4",
     "image":
       "https://images.unsplash.com/photo-1539252554453-80ab65ce3586?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Grilled Chicken Sandwich",
@@ -1255,7 +1529,9 @@
     "categoryId": "6a3034064f59a5564b31fcf4",
     "image":
       "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Katti Roll",
@@ -1264,7 +1540,9 @@
     "categoryId": "6a3034064f59a5564b31fcf5",
     "image":
       "https://static.vecteezy.com/system/resources/previews/066/277/664/large_2x/a-plate-of-chicken-kathi-roll-with-chicken-cooked-with-spices-and-wrapped-in-a-paratha-isolated-on-photo.jpg",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Paneer Katti Roll",
@@ -1273,7 +1551,9 @@
     "categoryId": "6a3034064f59a5564b31fcf5",
     "image":
       "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Chicken Wrap",
@@ -1282,7 +1562,9 @@
     "categoryId": "6a3034064f59a5564b31fcf5",
     "image":
       "https://images.unsplash.com/photo-1530469912745-a215c6b256ea?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   },
   {
     "name": "Sausage Wrap",
@@ -1291,6 +1573,8 @@
     "categoryId": "6a3034064f59a5564b31fcf5",
     "image":
       "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
-    "status": "available"
+    "status": "available",
+        "createdAt": "2026-06-26T17:32:39.621+00:00",
+    "updatedAt": "2026-06-26T17:32:39.621+00:00"
   }
 ]

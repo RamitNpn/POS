@@ -84,6 +84,7 @@ export const statsContract = c.router({
               revenue: z.number(),
               expense: z.number(),
               profit: z.number(),
+              totalOrders: z.number(),
             }),
           ),
         }),

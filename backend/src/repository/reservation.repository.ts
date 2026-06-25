@@ -11,6 +11,20 @@ class ReservationRepository {
     return this.model.findById(id).populate("tableId");
   }
 
+  async getByTableId(tableId: string) {
+    return this.model.find({ tableId }).populate("tableId");
+  }
+
+  async getActiveReservationForToday(tableId: string) {
+    const today = new Date().toISOString().split("T")[0];
+
+    return this.model.findOne({
+      tableId,
+      date: { $gte: today },
+      status: { $ne: "confirmed" },
+    });
+  }
+
   async update(id: string, payload: Partial<IReservation>) {
     return this.model.findByIdAndUpdate(id, payload, {
       new: true,

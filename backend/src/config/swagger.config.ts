@@ -6,5 +6,5 @@ export const openApiDocument = generateOpenApi(contract, {
     title: "Local Vibes API",
     version: "1.0.0",
   },
-  baseUrl: "http://localhost:4000",
+  baseUrl: "https://pos-backend-q4r0.onrender.com",
 });

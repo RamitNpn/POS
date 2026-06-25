@@ -128,7 +128,7 @@ export function ProfitLossChart({
                       </p>
 
                       <p className="text-xs text-muted-foreground">
-                        Orders: {data.orders}
+                        Orders: {data.totalOrders}
                       </p>
                     </div>
                   );

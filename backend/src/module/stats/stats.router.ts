@@ -13,7 +13,7 @@ export const statsRouter = s.router(statsContract, {
   },
 
   getTableStats: {
-    middleware: [verifyToken, authorizeRoles("admin")],
+    middleware: [verifyToken, authorizeRoles("admin", "waiter", "cashier")],
     handler: statsQueryHandler.getTableStats,
   },
 
