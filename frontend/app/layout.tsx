@@ -25,13 +25,18 @@ export const metadata: Metadata = {
     "thermal receipt printing",
     "Local Vibes POS",
   ],
-  applicationName: "Local Vibes POS",
+  applicationName: "Local Vibes",
   creator: "Local Vibes",
-  publisher: "Local Vibes",
+  publisher: "Cornor Tech Pvt. Ltd",
   category: "Business",
   robots: {
     index: true,
     follow: true,
+  },
+  other: {
+    developer: "Gaurav Karki",
+    company: "Corner Tech Pvt. Ltd",
+    copyright: `© ${new Date().getFullYear()} Corner Tech Pvt. Ltd`,
   },
   icons: {
     icon: [
@@ -72,11 +77,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark bg-background">
-      <head>
-        <title>Local Vibes</title>
-        {/* Gaurav Karki
-        gauravkarki0927@gmail.com */}
-      </head>
       <body className="font-sans antialiased">
         {children}
         {process.env.NODE_ENV === "production" && <Analytics />}

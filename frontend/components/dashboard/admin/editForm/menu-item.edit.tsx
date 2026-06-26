@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,12 +37,14 @@ export default function MenuItemEditForm({
   const item = itemData?.data ?? itemData;
   const { data: categoriesData } = useAllMenuCategories({});
   const categories = categoriesData?.data ?? [];
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<TUpdateMenuItemSchema>({
     resolver: zodResolver(updateMenuItemSchema),
     defaultValues: {
@@ -69,6 +72,22 @@ export default function MenuItemEditForm({
 
   const queryClient = useQueryClient();
 
+  const selectedImage = watch("image");
+
+  useEffect(() => {
+    if (!selectedImage?.length) {
+      setImagePreview(null);
+      return;
+    }
+
+    const file = selectedImage[0];
+    const url = URL.createObjectURL(file);
+
+    setImagePreview(url);
+
+    return () => URL.revokeObjectURL(url);
+  }, [selectedImage]);
+
   const { mutate, isPending } = useMutation({
     mutationFn: ({
       menuItemId,
@@ -84,6 +103,7 @@ export default function MenuItemEditForm({
         description: "The menu item was updated successfully.",
       });
       onClose();
+      setImagePreview(null);
     },
     onError: (error: any) => {
       toast({
@@ -216,15 +236,43 @@ export default function MenuItemEditForm({
                 <Input
                   id="edit-item-image"
                   type="file"
+                  accept="image/*"
                   {...register("image")}
                 />
-                {item?.image && (
-                  <img
-                    src={item?.image}
-                    alt={item?.name}
-                    className="mt-3 h-24 w-24 rounded border border-border object-cover"
-                  />
-                )}
+
+                <div className="mt-4 flex flex-wrap gap-8">
+                  {item?.image && (
+                    <div>
+                      <p className="mb-2 text-sm font-medium text-muted-foreground">
+                        Current Image
+                      </p>
+
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        width={160}
+                        height={160}
+                        className="rounded-lg border border-primary object-cover"
+                      />
+                    </div>
+                  )}
+
+                  {imagePreview && (
+                    <div>
+                      <p className="mb-2 text-sm font-medium text-muted-foreground">
+                        New Image
+                      </p>
+
+                      <Image
+                        src={imagePreview}
+                        alt="New Preview"
+                        width={160}
+                        height={160}
+                        className="rounded-lg border-2 border-destructive object-cover"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </PageSection>

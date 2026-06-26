@@ -12,14 +12,13 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import ScrollToggleButton from "@/components/dashboard/flotable-button";
 import { useAllMenuCategories } from "@/hooks/admin/menu-category/getAllMenuCategories";
 import { useAllMenuItems } from "@/hooks/admin/menu-item/getAllMenuItems";
 import { TMenuItem } from "@/lib/types/menu-item.types";
 import { TMenuCategory } from "@/lib/types/menu-category.types";
+import Image from "next/image";
 
 export default function PublicItemsViewPage() {
-
   const { data: menuCategories } = useAllMenuCategories({});
   const mockCategories = menuCategories?.data ?? [];
 
@@ -58,14 +57,12 @@ export default function PublicItemsViewPage() {
   }, [availableMenuItems, search, categoryFilter]);
 
   return (
-    <div id="search" className="space-y-6 p-8">
+    <div id="search" className="space-y-6 p-8 card">
       <DashboardHeader
         title="Menu"
         description="All the items listed here are available but it may not match exactly as shown"
       />
-      <div
-        className="flex flex-col gap-6"
-      >
+      <div className="flex flex-col gap-6">
         <div className="space-y-4">
           <Card className="border-border">
             <CardHeader>
@@ -108,19 +105,23 @@ export default function PublicItemsViewPage() {
                   No menu items match your search.
                 </p>
               ) : (
-                <div
-                  className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                >
+                <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {filteredAvailableMenuItems.map((menuItem: TMenuItem) => (
                     <div
                       key={menuItem._id}
                       className="rounded-3xl border border-border p-4 flex flex-col"
                     >
                       <div className="mb-3 overflow-hidden rounded-md">
-                        <img
+                        <Image
                           src={menuItem.image ?? "/placeholder.jpg"}
                           alt={menuItem.name}
+                          width={400}
+                          height={250}
                           className="w-full h-40 object-cover"
+                          loading="lazy"
+                          sizes="(max-width: 768px) 100vw,
+         (max-width: 1200px) 50vw,
+         25vw"
                         />
                       </div>
                       <div className="flex flex-1 flex-col justify-between gap-3">
@@ -153,4 +154,3 @@ export default function PublicItemsViewPage() {
     </div>
   );
 }
-

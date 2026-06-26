@@ -28,6 +28,7 @@ import { useForm } from "react-hook-form";
 import { orderApi } from "@/lib/api/order.api";
 import { useAuth } from "@/context/auth-context";
 import ScrollToggleButton from "@/components/dashboard/flotable-button";
+import Image from "next/image";
 
 export default function WaiterMenuPage() {
   const { user } = useAuth();
@@ -268,10 +269,16 @@ export default function WaiterMenuPage() {
                       className="rounded-3xl border border-border p-4 flex flex-col"
                     >
                       <div className="mb-3 overflow-hidden rounded-md">
-                        <img
+                        <Image
                           src={menuItem.image ?? "/placeholder.jpg"}
                           alt={menuItem.name}
+                          width={400}
+                          height={250}
                           className="w-full h-40 object-cover"
+                          loading="lazy"
+                          sizes="(max-width: 768px) 100vw,
+         (max-width: 1200px) 50vw,
+         25vw"
                         />
                       </div>
                       <div className="flex flex-1 flex-col justify-between gap-3">
@@ -415,9 +422,7 @@ export default function WaiterMenuPage() {
                   {/* 3. Added helpful error alerts at bottom if anything fails schema rules */}
                   {Object.keys(errors).length > 0 && (
                     <div className="p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg text-xs space-y-1">
-                      <p className="font-semibold">
-                        Something went wrong:
-                      </p>
+                      <p className="font-semibold">Something went wrong:</p>
                       {errors.tableId && <p>• Table selection is missing.</p>}
                       {errors.items && (
                         <p>• You must add menu items to the order.</p>

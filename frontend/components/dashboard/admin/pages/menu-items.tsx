@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
 import { Button } from "@/components/ui/button";
@@ -51,11 +51,14 @@ export default function MenuItemsPage() {
   const { data: itemData } = useAllMenuItems({ search: filter });
   const items = itemData?.data ?? [];
 
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm({
     resolver: zodResolver(createMenuItemSchema),
     defaultValues: {
@@ -69,6 +72,22 @@ export default function MenuItemsPage() {
     },
   });
 
+  const selectedImage = watch("image");
+
+  useEffect(() => {
+    if (!selectedImage?.length) {
+      setImagePreview(null);
+      return;
+    }
+
+    const file = selectedImage[0];
+    const url = URL.createObjectURL(file);
+
+    setImagePreview(url);
+
+    return () => URL.revokeObjectURL(url);
+  }, [selectedImage]);
+
   const { mutate, isPending } = useMutation({
     mutationFn: menuItemApi.createMenuItem,
     onSuccess: () => {
@@ -78,6 +97,7 @@ export default function MenuItemsPage() {
       });
       reset();
       setFormVisible(false);
+      setImagePreview(null);
     },
     onError: (error: any) => {
       toast({
@@ -265,20 +285,6 @@ export default function MenuItemsPage() {
                   </p>
                 )}
               </div>
-
-              {/* <div>
-              <Label htmlFor="new-item-prep-time">Prep time (minutes)</Label>
-              <Input
-                id="new-item-prep-time"
-                type="number"
-                {...register("preparationTime", { valueAsNumber: true })}
-              />
-              {errors.preparationTime && (
-                <p className="text-red-500 text-[12px] mt-1">
-                  {errors.preparationTime.message}
-                </p>
-              )}
-            </div> */}
               <div>
                 <Label htmlFor="new-item-description">Description</Label>
                 <Input
@@ -293,10 +299,31 @@ export default function MenuItemsPage() {
                 )}
               </div>
               <div>
+                <Label htmlFor="new-user-image">Image</Label>
+                <Input
+                  id="new-user-image"
+                  type="file"
+                  accept="image/*"
+                  {...register("image")}
+                />
+
+                {imagePreview && (
+                  <div className="mt-4">
+                    <Image
+                      src={imagePreview}
+                      alt="Preview"
+                      width={220}
+                      height={160}
+                      className="rounded-lg border object-cover"
+                    />
+                  </div>
+                )}
+              </div>
+              <div>
                 <Label htmlFor="new-item-status">Status</Label>
                 <select
                   id="new-item-status"
-                  className="mt-2 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   {...register("status")}
                 >
                   <option value="available">Available</option>
@@ -308,14 +335,16 @@ export default function MenuItemsPage() {
                   </p>
                 )}
               </div>
-              <div>
-                <Label htmlFor="new-user-image">Image</Label>
-                <Input id="new-user-image" type="file" {...register("image")} />
-              </div>
             </div>
-            <CardFooter className="justify-end pt-4">
+            <CardFooter className="justify-end flex gap-3 pt-4">
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={() => setFormVisible(false)}
+              >
+                Close
+              </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? "Adding..." : "Add item"}
+                {isPending ? "Adding..." : "Add Item"}
               </Button>
             </CardFooter>
           </PageSection>
@@ -368,6 +397,7 @@ export default function MenuItemsPage() {
                         width={120}
                         src={item.image || "itemimage.png"}
                         alt={item.image || item.name}
+                        loading="lazy"
                         className="rounded-md object-cover h-16 w-24"
                       />
                     </TableCell>

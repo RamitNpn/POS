@@ -18,7 +18,7 @@ const env_1 = __importDefault(require("./config/env"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: [
-        env_1.default.frontend_url || "https://localvibes.cornortech.com",
+        env_1.default.frontend_url || "http://localhost:3000",
     ],
     credentials: true,
 }));

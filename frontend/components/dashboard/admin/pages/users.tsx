@@ -378,6 +378,7 @@ export default function UsersPage() {
                         width={80}
                         height={100}
                         alt="Profile"
+                        loading="lazy"
                         className="rounded border border-border cursor-zoom-in"
                       />
                     </a>
