@@ -1,9 +1,8 @@
-
 import cron from "node-cron";
 import { generateDailyReport } from "../module/daily-report/report.mutation";
 
 cron.schedule(
-  "5 0 * * *",
+  "30 22 * * *",
   async () => {
     try {
       await generateDailyReport({
