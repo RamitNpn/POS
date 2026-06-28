@@ -48,6 +48,19 @@ export const getAllKitchenTicketsSchema = z.array(kitchenTicketSchema);
 
 export const getKitchenTicketByIdSchema = kitchenTicketSchema;
 
+export const getKitchenTicketBytableIdSchema = z.array(kitchenTicketSchema);
+
 export const updateKitchenTicketSchema = z.object({
   status: kitchenTicketStatusEnum.optional(),
+});
+
+export const updateKitchenTicketItemsSchema = z.object({
+  items: z.array(
+    z.object({
+      menuItemId: z.string(),
+      name: z.string(),
+      quantity: z.number().min(1),
+      price: z.number().min(0),
+    })
+  ),
 });

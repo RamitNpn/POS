@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { UserRole } from "@/lib/types";
+import { useActivityLogs } from "@/hooks/admin/log/getAllLogs";
+import { TActivityLog } from "@/lib/types/log.types";
+import Link from "next/link";
 
 interface TopbarProps {
   title?: string;
@@ -37,6 +40,13 @@ export function Topbar({ title }: TopbarProps) {
 
   const roleDisplay = getRoleDisplayName(user.role);
   const isAdmin = roleDisplay.includes("Administrator");
+
+  const { data: logData } = useActivityLogs({
+    page: 1,
+    limit: 5,
+  });
+
+  const logs = logData?.data ?? [];
 
   return (
     <>
@@ -70,7 +80,6 @@ export function Topbar({ title }: TopbarProps) {
           )}
 
           <div className="ml-auto flex items-center gap-2">
-
             {/* Notifications */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -92,36 +101,25 @@ export function Topbar({ title }: TopbarProps) {
               <DropdownMenuContent align="end" className="w-80">
                 <DropdownMenuLabel>Notifications</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="flex flex-col items-start gap-1 py-3">
-                  <div className="flex items-center gap-2">
-                    <span className="size-2 rounded-full bg-success" />
-                    <span className="font-medium">Order Ready</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground">
-                    Order #1044 for Table 7 is ready to serve
-                  </span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex flex-col items-start gap-1 py-3">
-                  <div className="flex items-center gap-2">
-                    <span className="size-2 rounded-full bg-info" />
-                    <span className="font-medium">New Order</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground">
-                    New order #1043 received for Table 3
-                  </span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex flex-col items-start gap-1 py-3">
-                  <div className="flex items-center gap-2">
-                    <span className="size-2 rounded-full bg-warning" />
-                    <span className="font-medium">Low Stock Alert</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground">
-                    House Red Wine is running low (3 bottles left)
-                  </span>
-                </DropdownMenuItem>
+                {logs.map((log: TActivityLog) => (
+                  <DropdownMenuItem
+                    key={log._id}
+                    className="flex flex-col items-start gap-1 hover:bg-gray-300 py-3"
+                  >
+                    <div className="flex items-center gap-2">
+                      {/* <span className="size-2 rounded-full bg-success" /> */}
+                      <span className="font-medium">{log.action}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {log.details}
+                    </span>
+                  </DropdownMenuItem>
+                ))}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="justify-center text-primary">
-                  View all notifications
+                  <Link href={`/dashboard/admin/notifications`}>
+                    View all notifications
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

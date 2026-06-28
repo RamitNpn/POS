@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.expensesMutationHandler = exports.deleteExpense = exports.updateExpense = exports.createExpense = void 0;
 const expenses_repository_1 = __importDefault(require("../../repository/expenses.repository"));
 const log_repository_1 = __importDefault(require("../../repository/log.repository"));
-const user_repository_1 = __importDefault(require("../../repository/user.repository"));
-const createExpense = async ({ body }) => {
+const mongoose_1 = __importDefault(require("mongoose"));
+const createExpense = async ({ body, req }) => {
     try {
         console.log("[CREATE EXPENSE] REQUEST BODY:", body);
         const expense = await expenses_repository_1.default.create({
@@ -15,24 +15,20 @@ const createExpense = async ({ body }) => {
             date: new Date(body.date),
         });
         console.log("[CREATE EXPENSE] DB RESULT:", expense);
-        const admins = await user_repository_1.default.getByRole("admin");
-        console.log("[CREATE EXPENSE] ADMINS FOUND:", admins?.length);
-        const admin = admins?.[0];
-        if (admin) {
-            console.log("[CREATE EXPENSE] LOGGING FOR ADMIN:", admin._id);
-            await log_repository_1.default.create({
-                userId: admin._id,
-                action: "Expense Create",
-                details: `${admin.name} added an expense in ${body.category}`,
-                module: "Expense",
-                entityId: `${expense._id}`,
-                entityType: "Expense",
-            });
-            console.log("[CREATE EXPENSE] LOG CREATED");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Create",
+            details: `${expense?.description} deleted at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Expense",
+            entityId: `${expense._id}`,
+            entityType: "Expense",
+        });
+        if (!log) {
+            console.log("User log not created", log);
         }
-        else {
-            console.log("[CREATE EXPENSE] NO ADMIN FOUND");
-        }
+        console.log("[CREATE EXPENSE] LOG CREATED");
         return {
             status: 201,
             body: {
@@ -71,24 +67,20 @@ const updateExpense = async ({ req }) => {
                 },
             };
         }
-        const admins = await user_repository_1.default.getByRole("admin");
-        console.log("[UPDATE EXPENSE] ADMINS FOUND:", admins?.length);
-        const admin = admins?.[0];
-        if (admin) {
-            console.log("[UPDATE EXPENSE] LOGGING UPDATE BY ADMIN:", admin._id);
-            await log_repository_1.default.create({
-                userId: admin._id,
-                action: "Expense Update",
-                details: `${admin.name} updated an expense in ${req.body.category || "list"}`,
-                module: "Expense",
-                entityId: `${updated._id}`,
-                entityType: "Expense",
-            });
-            console.log("[UPDATE EXPENSE] LOG CREATED");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `${updated?.description} updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Expense",
+            entityId: `${updated._id}`,
+            entityType: "Expense",
+        });
+        if (!log) {
+            console.log("User log not created", log);
         }
-        else {
-            console.log("[UPDATE EXPENSE] NO ADMIN FOUND");
-        }
+        console.log("[UPDATE EXPENSE] LOG CREATED");
         return {
             status: 200,
             body: {
@@ -114,6 +106,32 @@ exports.updateExpense = updateExpense;
 const deleteExpense = async ({ req }) => {
     try {
         console.log("[DELETE EXPENSE] PARAMS:", req.params);
+        const existing = await expenses_repository_1.default.getById(req.params.expenseId);
+        console.log("[DELETE EXPENSE] EXISTING CHECK:", existing);
+        if (!existing) {
+            console.log("[DELETE EXPENSE] EXPENSE NOT FOUND:", req.params.expenseId);
+            return {
+                status: 400,
+                body: {
+                    success: false,
+                    error: "Expense do not exists",
+                },
+            };
+        }
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Delete",
+            details: `${existing?.description} deleted at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Expense",
+            entityId: `${existing._id}`,
+            entityType: "Expense",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
+        console.log("[DELETE EXPENSE] LOG CREATED");
         const deleted = await expenses_repository_1.default.delete(req.params.expenseId);
         console.log("[DELETE EXPENSE] DB RESULT:", deleted);
         if (!deleted) {
@@ -125,24 +143,6 @@ const deleteExpense = async ({ req }) => {
                     error: "Expense not found",
                 },
             };
-        }
-        const admins = await user_repository_1.default.getByRole("admin");
-        console.log("[DELETE EXPENSE] ADMINS FOUND:", admins?.length);
-        const admin = admins?.[0];
-        if (admin) {
-            console.log("[DELETE EXPENSE] LOGGING DELETE BY ADMIN:", admin._id);
-            await log_repository_1.default.create({
-                userId: admin._id,
-                action: "Expense deleted",
-                details: `${admin.name} deleted an expense from ${deleted.category || "list"}`,
-                module: "Expense",
-                entityId: `${deleted._id}`,
-                entityType: "Expense",
-            });
-            console.log("[DELETE EXPENSE] LOG CREATED");
-        }
-        else {
-            console.log("[DELETE EXPENSE] NO ADMIN FOUND");
         }
         return {
             status: 200,

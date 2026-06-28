@@ -191,6 +191,49 @@ export const getTicketById: AppRouteQueryImplementation<
   }
 };
 
+export const getTicketByTableId: AppRouteQueryImplementation<
+  typeof ticketContract.getTicketByTableID
+> = async ({ req }) => {
+  try {
+    const { tableID } = req.params;
+
+    console.log("[getTicketById] tableID:", tableID);
+
+    const ticket = await kitchenTicketRepository.getByTableID(tableID);
+
+    console.log("[getTicketById] ticket:", ticket);
+
+    if (!ticket) {
+      console.log("[getTicketById] ticket not found");
+
+      return {
+        status: 404,
+        body: {
+          success: false,
+          error: "Ticket not found",
+        },
+      };
+    }
+
+    return {
+      status: 200,
+      body: {
+        data: ticket.map(mapTicket),
+      },
+    };
+  } catch (error) {
+    console.error("[getTicketById] error:", error);
+
+    return {
+      status: 500,
+      body: {
+        success: false,
+        error: "Failed to fetch ticket",
+      },
+    };
+  }
+};
+
 export const getTicketsByOrder: AppRouteQueryImplementation<
   typeof ticketContract.getTicketsByOrder
 > = async ({ req }) => {
@@ -239,4 +282,5 @@ export const ticketQueryHandler = {
   getTicketById,
   getLiveTickets,
   getTicketsByOrder,
+  getTicketByTableId,
 };

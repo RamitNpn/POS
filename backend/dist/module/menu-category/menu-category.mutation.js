@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.menuCategoryMutationHandler = exports.removeMenuCategory = exports.updateMenuCategory = exports.createMenuCategory = void 0;
 const menu_category_repository_1 = __importDefault(require("../../repository/menu-category.repository"));
+const log_repository_1 = __importDefault(require("../../repository/log.repository"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const createMenuCategory = async ({ req }) => {
     try {
         console.log("[CREATE MENU CATEGORY] REQUEST BODY:", req.body);
@@ -21,8 +23,21 @@ const createMenuCategory = async ({ req }) => {
             };
         }
         console.log("[CREATE MENU CATEGORY] CREATING CATEGORY...");
-        await menu_category_repository_1.default.create(req.body);
+        const menuCategoryData = await menu_category_repository_1.default.create(req.body);
         console.log("[CREATE MENU CATEGORY] SUCCESS CREATED");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `${menuCategoryData.name} updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "MCategory",
+            entityId: `${menuCategoryData._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 201,
             body: {
@@ -77,8 +92,21 @@ const updateMenuCategory = async ({ req }) => {
             }
         }
         console.log("[UPDATE MENU CATEGORY] UPDATING CATEGORY...");
-        await menu_category_repository_1.default.update(categoryID, req.body);
+        const menuCategoryData = await menu_category_repository_1.default.update(categoryID, req.body);
         console.log("[UPDATE MENU CATEGORY] SUCCESS UPDATED");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `${menuCategoryData?.name} updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "MCategory",
+            entityId: `${menuCategoryData?._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {
@@ -118,6 +146,19 @@ const removeMenuCategory = async ({ req }) => {
             };
         }
         console.log("[DELETE MENU CATEGORY] DELETING CATEGORY...");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Delete",
+            details: `${category?.name} deleted at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "MCategory",
+            entityId: `${category?._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         await menu_category_repository_1.default.delete(categoryID);
         console.log("[DELETE MENU CATEGORY] SUCCESS DELETED");
         return {

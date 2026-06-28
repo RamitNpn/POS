@@ -164,26 +164,40 @@ class OrderRepository {
     }
   }
 
-  async updateStatus(
-    ticketId: string,
-    status: "active" | "completed" | "cancelled" | undefined,
-    paymentStatus: "pending" | "paid" | "partial" | undefined,
-  ) {
-    try {
-      return await this.model.findByIdAndUpdate(
-        ticketId,
-        {
-          status,
-          paymentStatus,
+  updateStatus = async (
+    orderID: string,
+    data: {
+      status?: string;
+      paymentStatus?: string;
+      paymentMethod?: string;
+      discount?: number;
+      total: number;
+    },
+  ) => {
+    return await OrderModel.findByIdAndUpdate(
+      orderID,
+      {
+        $set: {
+          ...(data.status && { status: data.status }),
+          ...(data.paymentStatus && {
+            paymentStatus: data.paymentStatus,
+          }),
+          ...(data.paymentMethod && {
+            paymentMethod: data.paymentMethod,
+          }),
+          ...(data.discount !== undefined && {
+            discount: data.discount,
+          }),
+          ...(data.total && {
+            total: data.total,
+          }),
         },
-        {
-          new: true,
-        },
-      );
-    } catch (error) {
-      throw new Error(`Error updating ticket status: ${error}`);
-    }
-  }
+      },
+      {
+        new: true,
+      },
+    );
+  };
 
   async delete(id: string) {
     try {

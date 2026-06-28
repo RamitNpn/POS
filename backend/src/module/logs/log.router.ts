@@ -18,7 +18,7 @@ export const activityLogRouter = s.router(activityLogContract, {
   },
 
   getAllActivityLogs: {
-    middleware: [verifyToken, authorizeRoles("admin")],
+    middleware: [verifyToken, authorizeRoles("waiter", "cashier", "admin")],
     handler: activityLogQueryHandler.getAllActivityLogs,
   },
 

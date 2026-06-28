@@ -22,6 +22,7 @@ const report_contract_1 = require("./daily-report/report.contract");
 const role_contract_1 = require("./role/role.contract");
 const branch_contract_1 = require("./branch/branch.contract");
 const sales_contract_1 = require("./sales/sales.contract");
+const ledger_contract_1 = require("./ledger/ledger.contract");
 const c = (0, core_1.initContract)();
 exports.contract = c.router({
     auth: auth_contract_1.authContract,
@@ -44,4 +45,5 @@ exports.contract = c.router({
     role: role_contract_1.roleContract,
     branch: branch_contract_1.branchContract,
     sales: sales_contract_1.salesContract,
+    ledger: ledger_contract_1.ledgerContract,
 });

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.menuItemMutationHandler = exports.removeMenuItem = exports.updateMenuItem = exports.createMenuItem = void 0;
 const menu_item_repository_1 = __importDefault(require("../../repository/menu-item-repository"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const log_repository_1 = __importDefault(require("../../repository/log.repository"));
 const createMenuItem = async ({ req }) => {
     try {
         console.log("[CREATE MENU ITEM] REQUEST BODY:", req.body);
@@ -33,7 +34,7 @@ const createMenuItem = async ({ req }) => {
             price: amount,
             image: profileUrl,
         });
-        await menu_item_repository_1.default.create({
+        const menuItem = await menu_item_repository_1.default.create({
             ...req.body,
             categoryId: req.body.categoryId
                 ? new mongoose_1.default.Types.ObjectId(req.body.categoryId)
@@ -42,6 +43,19 @@ const createMenuItem = async ({ req }) => {
             price: amount,
         });
         console.log("[CREATE MENU ITEM] SUCCESS CREATED");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Create",
+            details: `${menuItem?.name} created at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "MenuItem",
+            entityId: `${menuItem?._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 201,
             body: {
@@ -117,8 +131,21 @@ const updateMenuItem = async ({ req }) => {
             updatePayload.image = profileUrl;
         }
         console.log("[UPDATE MENU ITEM] FINAL UPDATE PAYLOAD:", updatePayload);
-        await menu_item_repository_1.default.update(itemID, updatePayload);
+        const menuItem = await menu_item_repository_1.default.update(itemID, updatePayload);
         console.log("[UPDATE MENU ITEM] SUCCESS UPDATED");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `${menuItem?.name} updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "MenuItem",
+            entityId: `${menuItem?._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {
@@ -158,6 +185,19 @@ const removeMenuItem = async ({ req }) => {
             };
         }
         console.log("[DELETE MENU ITEM] DELETING ITEM...");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `${item?.name} updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "MenuItem",
+            entityId: `${item?._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         await menu_item_repository_1.default.delete(itemID);
         console.log("[DELETE MENU ITEM] SUCCESS DELETED");
         return {

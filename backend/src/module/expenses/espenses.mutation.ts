@@ -2,11 +2,11 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { expenseContract } from "../../contract/expenses/expenses.contract";
 import expensesRepository from "../../repository/expenses.repository";
 import logRepository from "../../repository/log.repository";
-import userRepository from "../../repository/user.repository";
+import mongoose from "mongoose";
 
 export const createExpense: AppRouteMutationImplementation<
   typeof expenseContract.createExpense
-> = async ({ body }) => {
+> = async ({ body, req }) => {
   try {
     console.log("[CREATE EXPENSE] REQUEST BODY:", body);
 
@@ -17,27 +17,25 @@ export const createExpense: AppRouteMutationImplementation<
 
     console.log("[CREATE EXPENSE] DB RESULT:", expense);
 
-    const admins = await userRepository.getByRole("admin");
-    console.log("[CREATE EXPENSE] ADMINS FOUND:", admins?.length);
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Create",
+      details: `${expense?.description} deleted at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Expense",
+      entityId: `${expense._id}`,
+      entityType: "Expense",
+    });
 
-    const admin = admins?.[0];
-
-    if (admin) {
-      console.log("[CREATE EXPENSE] LOGGING FOR ADMIN:", admin._id);
-
-      await logRepository.create({
-        userId: admin._id,
-        action: "Expense Create",
-        details: `${admin.name} added an expense in ${body.category}`,
-        module: "Expense",
-        entityId: `${expense._id}`,
-        entityType: "Expense",
-      });
-
-      console.log("[CREATE EXPENSE] LOG CREATED");
-    } else {
-      console.log("[CREATE EXPENSE] NO ADMIN FOUND");
+    if (!log) {
+      console.log("User log not created", log);
     }
+
+    console.log("[CREATE EXPENSE] LOG CREATED");
 
     return {
       status: 201,
@@ -85,29 +83,25 @@ export const updateExpense: AppRouteMutationImplementation<
       };
     }
 
-    const admins = await userRepository.getByRole("admin");
-    console.log("[UPDATE EXPENSE] ADMINS FOUND:", admins?.length);
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `${updated?.description} updated at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Expense",
+      entityId: `${updated._id}`,
+      entityType: "Expense",
+    });
 
-    const admin = admins?.[0];
-
-    if (admin) {
-      console.log("[UPDATE EXPENSE] LOGGING UPDATE BY ADMIN:", admin._id);
-
-      await logRepository.create({
-        userId: admin._id,
-        action: "Expense Update",
-        details: `${admin.name} updated an expense in ${
-          req.body.category || "list"
-        }`,
-        module: "Expense",
-        entityId: `${updated._id}`,
-        entityType: "Expense",
-      });
-
-      console.log("[UPDATE EXPENSE] LOG CREATED");
-    } else {
-      console.log("[UPDATE EXPENSE] NO ADMIN FOUND");
+    if (!log) {
+      console.log("User log not created", log);
     }
+
+    console.log("[UPDATE EXPENSE] LOG CREATED");
 
     return {
       status: 200,
@@ -137,6 +131,42 @@ export const deleteExpense: AppRouteMutationImplementation<
   try {
     console.log("[DELETE EXPENSE] PARAMS:", req.params);
 
+    const existing = await expensesRepository.getById(req.params.expenseId);
+
+    console.log("[DELETE EXPENSE] EXISTING CHECK:", existing);
+
+    if (!existing) {
+      console.log("[DELETE EXPENSE] EXPENSE NOT FOUND:", req.params.expenseId);
+
+      return {
+        status: 400,
+        body: {
+          success: false,
+          error: "Expense do not exists",
+        },
+      };
+    }
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Delete",
+      details: `${existing?.description} deleted at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Expense",
+      entityId: `${existing._id}`,
+      entityType: "Expense",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
+
+    console.log("[DELETE EXPENSE] LOG CREATED");
+
     const deleted = await expensesRepository.delete(req.params.expenseId);
 
     console.log("[DELETE EXPENSE] DB RESULT:", deleted);
@@ -151,30 +181,6 @@ export const deleteExpense: AppRouteMutationImplementation<
           error: "Expense not found",
         },
       };
-    }
-
-    const admins = await userRepository.getByRole("admin");
-    console.log("[DELETE EXPENSE] ADMINS FOUND:", admins?.length);
-
-    const admin = admins?.[0];
-
-    if (admin) {
-      console.log("[DELETE EXPENSE] LOGGING DELETE BY ADMIN:", admin._id);
-
-      await logRepository.create({
-        userId: admin._id,
-        action: "Expense deleted",
-        details: `${admin.name} deleted an expense from ${
-          deleted.category || "list"
-        }`,
-        module: "Expense",
-        entityId: `${deleted._id}`,
-        entityType: "Expense",
-      });
-
-      console.log("[DELETE EXPENSE] LOG CREATED");
-    } else {
-      console.log("[DELETE EXPENSE] NO ADMIN FOUND");
     }
 
     return {

@@ -22,6 +22,7 @@ import { reportRouter } from "./daily-report/report.router";
 import { roleRouter } from "./role/role.router";
 import { branchRouter } from "./branch/branch.router";
 import { salesRouter } from "./sales/sales.router";
+import { creditLedgerRouter } from "./ledger/ledger.router";
 
 const s = initServer();
 
@@ -46,4 +47,5 @@ export const router = s.router(contract, {
   role: roleRouter,
   branch: branchRouter,
   sales: salesRouter,
+  ledger: creditLedgerRouter,
 });

@@ -5,6 +5,8 @@ import { tableContract } from "../../contract/table/table.contract";
 import tableRepository from "../../repository/table.repository";
 import ticketRepository from "../../repository/ticket.repository";
 import reservationRepository from "../../repository/reservation.repository";
+import logRepository from "../../repository/log.repository";
+import { table } from "node:console";
 
 export const createTable: AppRouteMutationImplementation<
   typeof tableContract.createTable
@@ -38,6 +40,24 @@ export const createTable: AppRouteMutationImplementation<
     const created = await tableRepository.create(payload);
 
     console.log("[createTable] created table:", created);
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Create",
+      details: `Table ${table.name} created at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Table",
+      entityId: `${created._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 201,
@@ -117,6 +137,24 @@ export const updateTable: AppRouteMutationImplementation<
 
     console.log("[updateTable] updated table:", updated);
 
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `Table ${table.name} updated at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Table",
+      entityId: `${tableID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
+
     return {
       status: 200,
       body: {
@@ -178,7 +216,6 @@ export const updateTableStatus: AppRouteMutationImplementation<
 
     // Check active reservation before making table available
     if (status === "available") {
-
       const reservation =
         await reservationRepository.getActiveReservationForToday(tableID);
 
@@ -227,6 +264,24 @@ export const updateTableStatus: AppRouteMutationImplementation<
 
     console.log("[updateTableStatus] updated result:", updated);
 
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `Table ${table.name} status updated at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Table",
+      entityId: `${tableID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
+
     return {
       status: 200,
       body: {
@@ -270,6 +325,24 @@ export const removeTable: AppRouteMutationImplementation<
           error: "Table not found",
         },
       };
+    }
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Delete",
+      details: `Table ${table.name} deleted at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Supplier",
+      entityId: `${tableID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
     }
 
     const deleted = await tableRepository.delete(tableID);

@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.roleMutationHandler = exports.removeRole = exports.updateRole = exports.createRole = void 0;
 const role_repository_1 = __importDefault(require("../../repository/role.repository"));
+const log_repository_1 = __importDefault(require("../../repository/log.repository"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const createRole = async ({ req }) => {
     try {
         console.log("[CREATE ROLE] BODY:", req.body);
@@ -31,6 +33,19 @@ const createRole = async ({ req }) => {
             isActive,
         });
         console.log("[CREATE ROLE] CREATED ROLE ID:", created?._id);
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Create",
+            details: `Role created at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Role",
+            entityId: `${created._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 201,
             body: {
@@ -97,6 +112,19 @@ const updateRole = async ({ req }) => {
             isActive,
         });
         console.log("[UPDATE ROLE] UPDATED SUCCESSFULLY:", roleID);
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `Role updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Role",
+            entityId: `${roleID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {
@@ -139,6 +167,19 @@ const removeRole = async ({ req }) => {
             };
         }
         console.log("[DELETE ROLE] DELETING ROLE...");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Delete",
+            details: `Role deleted at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Role",
+            entityId: `${roleID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         await role_repository_1.default.delete(roleID);
         console.log("[DELETE ROLE] DELETED SUCCESSFULLY:", roleID);
         return {

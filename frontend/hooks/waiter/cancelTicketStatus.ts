@@ -7,7 +7,7 @@ export const useCancelTicketStatus = () => {
 
   return useMutation({
     mutationFn: async (ticketID: string) => {
-      const response = await ticketApi.updateticketStatusApi(
+      const response = await ticketApi.updateTicketStatusApi(
         ticketID,
         "served",
       );

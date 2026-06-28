@@ -29,6 +29,10 @@ import { orderApi } from "@/lib/api/order.api";
 import { useAuth } from "@/context/auth-context";
 import ScrollToggleButton from "@/components/dashboard/flotable-button";
 import Image from "next/image";
+import { useTicketByTableId } from "@/hooks/waiter/getTicketByTableId";
+import { TTicket } from "@/lib/types/ticket.types";
+import { Edit } from "lucide-react";
+import { ticketApi } from "@/lib/api/ticket.api";
 
 export default function WaiterMenuPage() {
   const { user } = useAuth();
@@ -36,6 +40,9 @@ export default function WaiterMenuPage() {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  const [creatingOrder, setCreatingOrder] = useState(false);
+  const [editingTicket, setEditingTicket] = useState<any | null>(null);
 
   const tableId = searchParams.get("tableId");
 
@@ -45,6 +52,13 @@ export default function WaiterMenuPage() {
 
   const { data: menuData } = useAllMenuItems({});
   const menuItems = menuData?.data ?? [];
+
+  const { data: ticketData } = useTicketByTableId(tableId || "");
+  const tickets = ticketData?.data ?? ticketData;
+
+  const hasActiveTickets = (tickets?.length ?? 0) > 0;
+
+  console.log(tickets);
 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [search, setSearch] = useState("");
@@ -175,6 +189,39 @@ export default function WaiterMenuPage() {
     });
   };
 
+  const startEditing = (ticket: TTicket) => {
+    setEditingTicket(ticket);
+
+    const q: Record<string, number> = {};
+
+    ticket.items.forEach((item) => {
+      q[item.menuItemId] = item.quantity;
+    });
+
+    setQuantities(q);
+
+    setCreatingOrder(true);
+  };
+
+  const { mutate: updateTicket, isPending: isUpdatingTicket } = useMutation({
+    mutationFn: ticketApi.updateTicketItemApi,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ticket-by-table", tableId],
+      });
+
+      toast({
+        title: "Ticket updated",
+        description: "Kitchen ticket updated successfully.",
+      });
+
+      setEditingTicket(null);
+      setCreatingOrder(false);
+      setQuantities({});
+    },
+  });
+
   const onSubmit = (data: any) => {
     if (!selectedTable) {
       toast({
@@ -194,6 +241,15 @@ export default function WaiterMenuPage() {
       return;
     }
 
+    if (editingTicket) {
+      updateTicket({
+        ticketID: editingTicket._id,
+        items: data.items,
+      });
+
+      return;
+    }
+
     mutate({
       tableId: data.tableId,
       customerName: data.customerName || "Guest",
@@ -210,240 +266,317 @@ export default function WaiterMenuPage() {
         description={`Creating order for Table ${selectedTable?.name ?? ""} ${selectedTable?.section ?? ""}`}
       />
 
-      <ScrollToggleButton targetId="checkout" />
-      <div
-        className={
-          selectedTable
-            ? "grid gap-6 xl:grid-cols-[1.6fr_1fr]"
-            : "flex flex-col gap-6"
-        }
-      >
-        <div className="space-y-4">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle className="text-foreground">Menu items</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div className="md:flex gap-2 md:items-center grid md:grid-cols-[1fr_auto]">
-                <Input
-                  className="flex-1"
-                  placeholder="Search menu items..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <Select
-                  value={categoryFilter}
-                  onValueChange={(v) => setCategoryFilter(v)}
-                >
-                  <SelectTrigger className="md:w-44 w-auto">
-                    <SelectValue>
-                      {categoryFilter === "all"
-                        ? "All categories"
-                        : mockCategories.find(
-                            (c: TMenuCategory) => c._id === categoryFilter,
-                          )?.name}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All categories</SelectItem>
-                    {mockCategories.map((c: TMenuCategory) => (
-                      <SelectItem key={c._id} value={c._id}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+      {hasActiveTickets && !creatingOrder && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>{selectedTable?.name} • Occupied</span>
 
-              {filteredAvailableMenuItems.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  No menu items match your search.
-                </p>
-              ) : (
-                <div
-                  className={`grid gap-4 ${selectedTable ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}
-                >
-                  {filteredAvailableMenuItems.map((menuItem: TMenuItem) => (
-                    <div
-                      key={menuItem._id}
-                      className="rounded-3xl border border-border p-4 flex flex-col"
+              <Badge>Occupied</Badge>
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {tickets.map((ticket: any) => (
+                <Card key={ticket._id}>
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-center">
+                      <CardTitle className="text-sm">
+                        Ticket #{ticket.ticketNumber}
+                      </CardTitle>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant={
+                            ticket.status === "served" ? "secondary" : "default"
+                          }
+                        >
+                          {ticket.status}
+                        </Badge>
+
+                        <button
+                          onClick={() => startEditing(ticket)}
+                          className="flex items center text-green-600 hover:text-green-700 p-1 rounded"
+                        >
+                          <Edit className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent>
+                    <div className="space-y-2">
+                      {ticket.items.map((item: any) => (
+                        <div
+                          key={item.menuItemId}
+                          className="flex justify-between text-sm"
+                        >
+                          <span>{item.name}</span>
+
+                          <span>x{item.quantity}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <Button onClick={() => setCreatingOrder(true)}>
+                Create New Order
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {(!hasActiveTickets || creatingOrder) && (
+        <div>
+          <ScrollToggleButton targetId="checkout" />
+          <div
+            className={
+              selectedTable
+                ? "grid gap-6 xl:grid-cols-[1.6fr_1fr]"
+                : "flex flex-col gap-6"
+            }
+          >
+            <div className="space-y-4">
+              <Card className="border-border">
+                <CardHeader>
+                  <CardTitle className="text-foreground">Menu items</CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-4">
+                  <div className="md:flex gap-2 md:items-center grid md:grid-cols-[1fr_auto]">
+                    <Input
+                      className="flex-1"
+                      placeholder="Search menu items..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <Select
+                      value={categoryFilter}
+                      onValueChange={(v) => setCategoryFilter(v)}
                     >
-                      <div className="mb-3 overflow-hidden rounded-md">
-                        <Image
-                          src={menuItem.image ?? "/placeholder.jpg"}
-                          alt={menuItem.name}
-                          width={400}
-                          height={250}
-                          className="w-full h-40 object-cover"
-                          loading="lazy"
-                          sizes="(max-width: 768px) 100vw,
+                      <SelectTrigger className="md:w-44 w-auto">
+                        <SelectValue>
+                          {categoryFilter === "all"
+                            ? "All categories"
+                            : mockCategories.find(
+                                (c: TMenuCategory) => c._id === categoryFilter,
+                              )?.name}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All categories</SelectItem>
+                        {mockCategories.map((c: TMenuCategory) => (
+                          <SelectItem key={c._id} value={c._id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {filteredAvailableMenuItems.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      No menu items match your search.
+                    </p>
+                  ) : (
+                    <div
+                      className={`grid gap-4 ${selectedTable ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"}`}
+                    >
+                      {filteredAvailableMenuItems.map((menuItem: TMenuItem) => (
+                        <div
+                          key={menuItem._id}
+                          className="rounded-3xl border border-border p-4 flex flex-col"
+                        >
+                          <div className="mb-3 overflow-hidden rounded-md">
+                            <Image
+                              src={menuItem.image ?? "/placeholder.jpg"}
+                              alt={menuItem.name}
+                              width={400}
+                              height={250}
+                              className="w-full h-40 object-cover"
+                              loading="lazy"
+                              sizes="(max-width: 768px) 100vw,
          (max-width: 1200px) 50vw,
          25vw"
-                        />
-                      </div>
-                      <div className="flex flex-1 flex-col justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">
-                            {menuItem.name}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {menuItem.description}
-                          </p>
-                          <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                            <Badge variant="outline">
-                              Rs {menuItem.price.toFixed(2)}
-                            </Badge>
-                            <Badge variant="outline">
-                              {menuItem.status.charAt(0).toUpperCase() +
-                                menuItem.status.slice(1)}
-                            </Badge>
+                            />
+                          </div>
+                          <div className="flex flex-1 flex-col justify-between gap-3">
+                            <div>
+                              <p className="text-sm font-semibold text-foreground">
+                                {menuItem.name}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {menuItem.description}
+                              </p>
+                              <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                                <Badge variant="outline">
+                                  Rs {menuItem.price.toFixed(2)}
+                                </Badge>
+                                <Badge variant="outline">
+                                  {menuItem.status.charAt(0).toUpperCase() +
+                                    menuItem.status.slice(1)}
+                                </Badge>
+                              </div>
+                            </div>
+                            {selectedTable && (
+                              <div className="mt-3 flex items-center justify-center gap-2 rounded-md border border-border bg-muted/20 px-3 py-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => decreaseQuantity(menuItem)}
+                                >
+                                  -
+                                </Button>
+                                <span className="min-w-6 text-center text-sm font-semibold">
+                                  {quantities[menuItem._id] ?? 0}
+                                </span>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => increaseQuantity(menuItem)}
+                                >
+                                  +
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         </div>
-                        {selectedTable && (
-                          <div className="mt-3 flex items-center justify-center gap-2 rounded-md border border-border bg-muted/20 px-3 py-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => decreaseQuantity(menuItem)}
-                            >
-                              -
-                            </Button>
-                            <span className="min-w-6 text-center text-sm font-semibold">
-                              {quantities[menuItem._id] ?? 0}
-                            </span>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => increaseQuantity(menuItem)}
-                            >
-                              +
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {tableId && (
-          <div id="checkout" className="space-y-4">
-            <Card className="border-border">
-              <CardHeader>
-                <CardTitle className="text-foreground">Order summary</CardTitle>
-              </CardHeader>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2 rounded-3xl border border-border bg-muted/50 p-4">
-                    <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>Table</span>
-                      <span>{selectedTable?.name}</span>
-                    </div>
-                    <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>Section</span>
-                      <span>{selectedTable?.section}</span>
-                    </div>
-                    <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>Status</span>
-                      <span className="capitalize">
-                        {selectedTable?.status}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    {selectedItems.map((item: TMenuItem) => (
-                      <div
-                        key={item._id}
-                        className="flex items-center justify-between"
-                      >
-                        <span className="text-sm text-muted-foreground">
-                          {item.name} x {quantities[item._id]}
-                        </span>
-                        <span className="text-sm font-semibold text-foreground">
-                          Rs{" "}
-                          {(item.price * (quantities[item._id] ?? 0)).toFixed(
-                            2,
-                          )}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    <div className="flex justify-between">
-                      <span>Subtotal</span>
-                      <span>Rs {subtotal.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Tax</span>
-                      <span>Rs {tax.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between font-semibold text-foreground">
-                      <span>Total</span>
-                      <span>Rs {total.toFixed(2)}</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="customerName">Customer Name</Label>
-                    <Input
-                      id="customerName"
-                      {...register("customerName")}
-                      placeholder="Enter customer name"
-                    />
-                    {errors.customerName && (
-                      <p className="text-xs text-destructive">
-                        {errors.customerName.message?.toString()}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="notes">Order notes</Label>
-                    <Textarea
-                      id="notes"
-                      {...register("notes")}
-                      placeholder="Add special requests or instructions"
-                      rows={4}
-                    />
-                    {errors.notes && (
-                      <p className="text-xs text-destructive">
-                        {errors.notes.message?.toString()}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* 3. Added helpful error alerts at bottom if anything fails schema rules */}
-                  {Object.keys(errors).length > 0 && (
-                    <div className="p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg text-xs space-y-1">
-                      <p className="font-semibold">Something went wrong:</p>
-                      {errors.tableId && <p>• Table selection is missing.</p>}
-                      {errors.items && (
-                        <p>• You must add menu items to the order.</p>
-                      )}
+                      ))}
                     </div>
                   )}
-
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="w-full"
-                    disabled={isCreatingOrder}
-                  >
-                    {isCreatingOrder ? "Creating..." : "Create Order"}
-                  </Button>
                 </CardContent>
-              </form>
-            </Card>
+              </Card>
+            </div>
+
+            {tableId && (
+              <div id="checkout" className="space-y-4">
+                <Card className="border-border">
+                  <CardHeader>
+                    <CardTitle className="text-foreground">
+                      Order summary
+                    </CardTitle>
+                  </CardHeader>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-2 rounded-3xl border border-border bg-muted/50 p-4">
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Table</span>
+                          <span>{selectedTable?.name}</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Section</span>
+                          <span>{selectedTable?.section}</span>
+                        </div>
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>Status</span>
+                          <span className="capitalize">
+                            {selectedTable?.status}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        {selectedItems.map((item: TMenuItem) => (
+                          <div
+                            key={item._id}
+                            className="flex items-center justify-between"
+                          >
+                            <span className="text-sm text-muted-foreground">
+                              {item.name} x {quantities[item._id]}
+                            </span>
+                            <span className="text-sm font-semibold text-foreground">
+                              Rs{" "}
+                              {(
+                                item.price * (quantities[item._id] ?? 0)
+                              ).toFixed(2)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <Separator />
+
+                      <div className="space-y-2 text-sm text-muted-foreground">
+                        <div className="flex justify-between">
+                          <span>Subtotal</span>
+                          <span>Rs {subtotal.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Tax</span>
+                          <span>Rs {tax.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between font-semibold text-foreground">
+                          <span>Total</span>
+                          <span>Rs {total.toFixed(2)}</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="customerName">Customer Name</Label>
+                        <Input
+                          id="customerName"
+                          {...register("customerName")}
+                          placeholder="Enter customer name"
+                        />
+                        {errors.customerName && (
+                          <p className="text-xs text-destructive">
+                            {errors.customerName.message?.toString()}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="notes">Order notes</Label>
+                        <Textarea
+                          id="notes"
+                          {...register("notes")}
+                          placeholder="Add special requests or instructions"
+                          rows={4}
+                        />
+                        {errors.notes && (
+                          <p className="text-xs text-destructive">
+                            {errors.notes.message?.toString()}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* 3. Added helpful error alerts at bottom if anything fails schema rules */}
+                      {Object.keys(errors).length > 0 && (
+                        <div className="p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg text-xs space-y-1">
+                          <p className="font-semibold">Something went wrong:</p>
+                          {errors.tableId && (
+                            <p>• Table selection is missing.</p>
+                          )}
+                          {errors.items && (
+                            <p>• You must add menu items to the order.</p>
+                          )}
+                        </div>
+                      )}
+
+                      <Button
+                        type="submit"
+                        size="lg"
+                        className="w-full"
+                        disabled={isCreatingOrder || isUpdatingTicket}
+                      >
+                        {editingTicket
+                          ? "Update Ticket"
+                          : isCreatingOrder
+                            ? "Creating..."
+                            : "Create Order"}
+                      </Button>
+                    </CardContent>
+                  </form>
+                </Card>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

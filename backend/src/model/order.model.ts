@@ -20,7 +20,10 @@ export interface IOrder extends Document {
   orderType: "dine-in" | "takeaway";
   subtotal: number;
   tax: number;
+  discount: number; // NEW
   total: number;
+
+  paymentMethod: "cash" | "online" | "credit"; // NEW
   ticketCount: number;
   status: OrderStatus;
   paymentStatus: "pending" | "paid" | "partial";
@@ -115,10 +118,22 @@ const OrderSchema = new Schema<IOrder>(
       default: 0,
     },
 
+    discount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
     total: {
       type: Number,
       required: true,
       default: 0,
+    },
+
+    paymentMethod: {
+      type: String,
+      enum: ["cash", "online", "credit"],
+      default: "cash",
     },
 
     ticketCount: {

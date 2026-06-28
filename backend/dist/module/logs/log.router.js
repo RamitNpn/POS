@@ -17,7 +17,7 @@ exports.activityLogRouter = s.router(log_contract_1.activityLogContract, {
         handler: log_mutation_1.activityLogMutationHandler.deleteActivityLog,
     },
     getAllActivityLogs: {
-        middleware: [auth_middleware_1.verifyToken, (0, auth_middleware_1.authorizeRoles)("admin")],
+        middleware: [auth_middleware_1.verifyToken, (0, auth_middleware_1.authorizeRoles)("waiter", "cashier", "admin")],
         handler: log_query_1.activityLogQueryHandler.getAllActivityLogs,
     },
     getActivityLogByID: {

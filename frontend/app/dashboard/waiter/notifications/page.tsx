@@ -1,31 +1,35 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import { DashboardHeader } from '@/components/layout/dashboard-header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { api } from '@/lib/api/mock-data';
-import type { Order } from '@/lib/types';
-
-function getNotificationText(order: Order) {
-  switch (order.status) {
-    case 'pending':
-      return `New order ${order.orderNumber} has been sent to the kitchen.`;
-    case 'preparing':
-      return `Order ${order.orderNumber} is being prepared.`;
-    case 'ready':
-      return `Order ${order.orderNumber} is ready for pickup.`;
-    case 'served':
-      return `Order ${order.orderNumber} has been served.`;
-    default:
-      return `Order ${order.orderNumber} was updated.`;
-  }
-}
+import { DashboardHeader } from "@/components/layout/dashboard-header";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { useActivityLogs } from "@/hooks/admin/log/getAllLogs";
+import { TNotificationLog } from "@/lib/types/log.types";
 
 export default function WaiterNotificationsPage() {
-  const { data: activeOrders } = useQuery({
-    queryKey: ['active-orders'],
-    queryFn: api.getActiveOrders,
+  const [page, setPage] = useState(1);
+  const { data: logData } = useActivityLogs({
+    page: page,
+    limit: 10,
+    module: "Kitchen",
+  });
+
+  const logs = logData?.data ?? [];
+
+  const notifications = logs.map((log: TNotificationLog) => {
+    let entity = null;
+
+    try {
+      entity = log.entityId ? JSON.parse(log.entityId) : null;
+    } catch {
+      entity = null;
+    }
+
+    return {
+      ...log,
+      entity,
+    };
   });
 
   return (
@@ -35,25 +39,34 @@ export default function WaiterNotificationsPage() {
         description="Keep track of kitchen updates for your waiter orders."
       />
 
-      {activeOrders?.length ? (
+      {notifications.length ? (
         <div className="space-y-4">
-          {activeOrders.map((order) => (
-            <Card key={order.id} className="border-border">
+          {notifications.map((log: TNotificationLog) => (
+            <Card key={log._id} className="border-border">
               <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <CardTitle className="text-foreground">{order.orderNumber}</CardTitle>
-                  <p className="text-sm text-muted-foreground">Table {order.table.number} — {order.table.section}</p>
+                  <CardTitle className="text-foreground">
+                    Order #{log.entityType?.orderNumber ?? "-"}
+                  </CardTitle>
+
+                  <p className="text-sm text-muted-foreground">
+                    Table {log.entityType?.tableId} •{" "}
+                    {new Date(log.createdAt).toLocaleString()}
+                  </p>
                 </div>
-                <Badge variant="outline" className="capitalize">
-                  {order.status}
-                </Badge>
+
+                <Badge variant="outline">{log.action}</Badge>
               </CardHeader>
+
               <CardContent className="space-y-3 pt-0">
-                <p className="text-sm text-muted-foreground">{getNotificationText(order)}</p>
+                <p className="text-sm text-muted-foreground">{log.details}</p>
+
                 <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
-                  <span>{order.items.length} items</span>
-                  <span>Server: {order.waiter.name}</span>
-                  <span>Total: ${order.total.toFixed(2)}</span>
+                  <span>{log.entityType?.items?.length ?? 0} items</span>
+
+                  <span>Customer: {log.entityType?.customerName}</span>
+
+                  <span>Rs. {log.entityType?.total}</span>
                 </div>
               </CardContent>
             </Card>
@@ -62,7 +75,9 @@ export default function WaiterNotificationsPage() {
       ) : (
         <Card className="border-border">
           <CardContent>
-            <p className="text-center text-muted-foreground">No waiter notifications available yet.</p>
+            <p className="text-center text-muted-foreground">
+              No waiter notifications available yet.
+            </p>
           </CardContent>
         </Card>
       )}

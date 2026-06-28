@@ -104,10 +104,20 @@ const OrderSchema = new mongoose_1.Schema({
         required: true,
         default: 0,
     },
+    discount: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
     total: {
         type: Number,
         required: true,
         default: 0,
+    },
+    paymentMethod: {
+        type: String,
+        enum: ["cash", "online", "credit"],
+        default: "cash",
     },
     ticketCount: {
         type: Number,

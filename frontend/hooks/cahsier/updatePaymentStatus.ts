@@ -6,12 +6,25 @@ export const useUpdatePaymentStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (orderID: string) => {
-      const response = await orderApi.updatePaymentStatusApi(
-        orderID,
-        "completed",
-        "paid",
-      );
+    mutationFn: async ({
+      orderId,
+      status,
+      paymentStatus,
+      paymentMethod,
+      discount,
+    }: {
+      orderId: string;
+      status: string;
+      paymentStatus: string;
+      paymentMethod: string;
+      discount: number;
+    }) => {
+      const response = await orderApi.updatePaymentStatusApi(orderId, {
+        status,
+        paymentStatus,
+        paymentMethod,
+        discount,
+      });
 
       if (!response.success) {
         throw new Error(response.error || "Failed to update payment");
@@ -22,14 +35,15 @@ export const useUpdatePaymentStatus = () => {
 
     onSuccess: () => {
       toast({
-        title: "Update Payment Status",
-        description: `Payment marked as paid`,
+        title: "Payment Updated",
+        description: "Payment updated successfully.",
       });
 
       queryClient.invalidateQueries({
         queryKey: ["payments"],
       });
     },
+
     onError: (error: any) => {
       toast({
         variant: "destructive",
@@ -38,7 +52,7 @@ export const useUpdatePaymentStatus = () => {
           error?.response?.data?.error ||
           error?.response?.data?.message ||
           error?.message ||
-          "Failed to mark payment.",
+          "Failed to update payment.",
       });
     },
   });

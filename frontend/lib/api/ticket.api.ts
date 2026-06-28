@@ -24,12 +24,17 @@ const getTicketByIdApi = async (ticketId: TGetTicketByIdSchema["_id"]) => {
   return response.data;
 };
 
-const getTicketsByOrderApi = async (tableId: string) => {
-  const response = await apiClient.get(`/ticket/table/${tableId}`);
+const getTicketByTableIdApi = async (ticketId: TGetTicketByIdSchema["_id"]) => {
+  const response = await apiClient.get(`/ticket/table/${ticketId}`);
   return response.data;
 };
 
-const updateticketStatusApi = async (ticketId: string, status: string) => {
+const getTicketsByOrderApi = async (tableId: string) => {
+  const response = await apiClient.get(`/ticket/order/${tableId}`);
+  return response.data;
+};
+
+const updateTicketStatusApi = async (ticketId: string, status: string) => {
   const response = await apiClient.put(`/ticket/${ticketId}`, {
     status,
   });
@@ -37,7 +42,28 @@ const updateticketStatusApi = async (ticketId: string, status: string) => {
   return response.data;
 };
 
-const deleteticketApi = async (ticketId: TDeleteTicketSchema["_id"]) => {
+type UpdateTicketPayload = {
+  ticketID: string;
+  items: {
+    menuItemId: string;
+    name: string;
+    quantity: number;
+    price: number;
+  }[];
+};
+
+const updateTicketItemApi = async ({
+  ticketID,
+  items,
+}: UpdateTicketPayload) => {
+  const res = await apiClient.put(`/ticket/update/${ticketID}`, {
+    items,
+  });
+
+  return res.data;
+};
+
+const deleteTicketApi = async (ticketId: TDeleteTicketSchema["_id"]) => {
   const response = await apiClient.delete(`/ticket/${ticketId}`);
   return response.data;
 };
@@ -46,7 +72,9 @@ export const ticketApi = {
   getAllTicketsApi,
   getLiveTicketsApi,
   getTicketByIdApi,
-  updateticketStatusApi,
-  deleteticketApi,
+  getTicketByTableIdApi,
+  updateTicketStatusApi,
+  updateTicketItemApi,
+  deleteTicketApi,
   getTicketsByOrderApi,
 };

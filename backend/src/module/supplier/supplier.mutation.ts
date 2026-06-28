@@ -1,6 +1,8 @@
 import { AppRouteMutationImplementation } from "@ts-rest/express";
 import supplierRepository from "../../repository/supplier.repository";
 import { supplierContract } from "../../contract/supplier/supplier.contract";
+import logRepository from "../../repository/log.repository";
+import mongoose from "mongoose";
 
 export const createSupplier: AppRouteMutationImplementation<
   typeof supplierContract.createSupplier
@@ -40,6 +42,21 @@ export const createSupplier: AppRouteMutationImplementation<
     const created = await supplierRepository.create(req.body);
 
     console.log("[createSupplier] created supplier:", created);
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Create",
+      details: `Supplier ${created.name} added at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "Supplier",
+      entityId: `${created._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 201,
@@ -89,6 +106,21 @@ export const updateSupplier: AppRouteMutationImplementation<
 
     console.log("[updateSupplier] update successful");
 
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `Supplier ${supplier.name} updated at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "Supplier",
+      entityId: `${supplierId}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
+
     return {
       status: 200,
       body: {
@@ -130,6 +162,21 @@ export const deleteSupplier: AppRouteMutationImplementation<
           error: "Supplier not found",
         },
       };
+    }
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Delete",
+      details: `Supplier ${supplier.name} deleted at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "Supplier",
+      entityId: `${supplierId}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
     }
 
     await supplierRepository.delete(supplierId);

@@ -8,6 +8,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const table_repository_1 = __importDefault(require("../../repository/table.repository"));
 const ticket_repository_1 = __importDefault(require("../../repository/ticket.repository"));
 const reservation_repository_1 = __importDefault(require("../../repository/reservation.repository"));
+const log_repository_1 = __importDefault(require("../../repository/log.repository"));
+const node_console_1 = require("node:console");
 const createTable = async ({ req }) => {
     try {
         console.log("[createTable] request body:", req.body);
@@ -30,6 +32,19 @@ const createTable = async ({ req }) => {
         console.log("[createTable] create payload:", payload);
         const created = await table_repository_1.default.create(payload);
         console.log("[createTable] created table:", created);
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Create",
+            details: `Table ${node_console_1.table.name} created at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Table",
+            entityId: `${created._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 201,
             body: {
@@ -91,6 +106,19 @@ const updateTable = async ({ req }) => {
         console.log("[updateTable] update payload:", payload);
         const updated = await table_repository_1.default.update(tableID, payload);
         console.log("[updateTable] updated table:", updated);
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `Table ${table.name} updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Table",
+            entityId: `${tableID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {
@@ -173,6 +201,19 @@ const updateTableStatus = async ({ req }) => {
         }
         const updated = await table_repository_1.default.updateStatus(tableID, status);
         console.log("[updateTableStatus] updated result:", updated);
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `Table ${table.name} status updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Table",
+            entityId: `${tableID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {
@@ -209,6 +250,19 @@ const removeTable = async ({ req }) => {
                     error: "Table not found",
                 },
             };
+        }
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Delete",
+            details: `Table ${table.name} deleted at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Supplier",
+            entityId: `${tableID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
         }
         const deleted = await table_repository_1.default.delete(tableID);
         console.log("[removeTable] delete result:", deleted);

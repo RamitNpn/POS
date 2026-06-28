@@ -3,7 +3,7 @@ import ingredientRepository from "../../repository/ingredient.repository";
 import { ingredientContract } from "../../contract/ingredient/ingredient.contract";
 import stockMovementRepository from "../../repository/stock-movement.repository";
 import logRepository from "../../repository/log.repository";
-import userRepository from "../../repository/user.repository";
+import mongoose from "mongoose";
 
 export const createIngredient: AppRouteMutationImplementation<
   typeof ingredientContract.createIngredient
@@ -37,42 +37,82 @@ export const createIngredient: AppRouteMutationImplementation<
         req.body.currentStock,
       );
 
-      await stockMovementRepository.create({
+      const stock = await stockMovementRepository.create({
         ingredientId: ingredient._id,
         type: "INITIAL_STOCK",
         quantity: req.body.currentStock,
         referenceType: "SYSTEM",
       });
 
-      await ingredientRepository.update(ingredient._id.toString(), {
-        lastStockInDate: new Date(),
-      });
+      if (stock) {
+        const stockLog = await logRepository.create({
+          userId: new mongoose.Types.ObjectId(req.user?.id),
+          action: "Create",
+          details: `Stock recorded for ${ingredient?.name} at ${new Date().toLocaleString(
+            "en-US",
+            {
+              timeZone: "Asia/Kathmandu",
+            },
+          )}`,
+          module: "Stock",
+          entityId: `${stock._id}`,
+          entityType: "Ingredient",
+        });
+
+        if (!stockLog) {
+          console.log("User log not created", stockLog);
+        }
+      }
+
+      const stockUpdate = await ingredientRepository.update(
+        ingredient._id.toString(),
+        {
+          lastStockInDate: new Date(),
+        },
+      );
+
+      if (stockUpdate) {
+        const stockUpdatelog = await logRepository.create({
+          userId: new mongoose.Types.ObjectId(req.user?.id),
+          action: "Create",
+          details: `Stock updated in ${ingredient?.name} at ${new Date().toLocaleString(
+            "en-US",
+            {
+              timeZone: "Asia/Kathmandu",
+            },
+          )}`,
+          module: "Stock",
+          entityId: `${ingredient._id}`,
+          entityType: "Stock",
+        });
+
+        if (!stockUpdatelog) {
+          console.log("User log not created", stockUpdatelog);
+        }
+      }
 
       console.log("[CREATE INGREDIENT] STOCK & LAST STOCK DATE UPDATED");
     }
 
-    const admins = await userRepository.getByRole("admin");
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Create",
+      details: `${ingredient?.name} created at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Ingredient",
+      entityId: `${ingredient._id}`,
+      entityType: "Ingredient",
+    });
 
-    console.log("[CREATE INGREDIENT] ADMINS FOUND:", admins?.length);
-
-    const admin = admins?.[0];
-
-    if (admin) {
-      console.log("[CREATE INGREDIENT] LOGGING ADMIN ACTION:", admin._id);
-
-      await logRepository.create({
-        userId: admin._id,
-        action: "Ingredient Create",
-        details: `${admin.name} added an ingredient in ${ingredient.category}`,
-        module: "Ingredient",
-        entityId: `${ingredient._id}`,
-        entityType: "Ingredient",
-      });
-
-      console.log("[CREATE INGREDIENT] LOG CREATED");
-    } else {
-      console.log("[CREATE INGREDIENT] NO ADMIN FOUND");
+    if (!log) {
+      console.log("User log not created", log);
     }
+
+    console.log("[CREATE INGREDIENT] LOG CREATED");
 
     return {
       status: 201,
@@ -127,30 +167,25 @@ export const updateIngredient: AppRouteMutationImplementation<
 
     console.log("[UPDATE INGREDIENT] UPDATED:", ingredient);
 
-    const admins = await userRepository.getByRole("admin");
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `${ingredient?.name} updated at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Ingredient",
+      entityId: `${ingredient?._id}`,
+      entityType: "Ingredient",
+    });
 
-    console.log("[UPDATE INGREDIENT] ADMINS FOUND:", admins?.length);
-
-    const admin = admins?.[0];
-
-    if (admin) {
-      console.log("[UPDATE INGREDIENT] LOGGING ADMIN ACTION:", admin._id);
-
-      await logRepository.create({
-        userId: admin._id,
-        action: "Ingredient Update",
-        details: `${admin.name} updated an ingredient in ${
-          ingredient?.category || "list"
-        }`,
-        module: "Ingredient",
-        entityId: `${ingredient?._id}`,
-        entityType: "Ingredient",
-      });
-
-      console.log("[UPDATE INGREDIENT] LOG CREATED");
-    } else {
-      console.log("[UPDATE INGREDIENT] NO ADMIN FOUND");
+    if (!log) {
+      console.log("User log not created", log);
     }
+
+    console.log("[UPDATE INGREDIENT] LOG CREATED");
 
     return {
       status: 200,
@@ -202,30 +237,25 @@ export const deleteIngredient: AppRouteMutationImplementation<
 
     console.log("[DELETE INGREDIENT] DELETED:", ingredient);
 
-    const admins = await userRepository.getByRole("admin");
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Delete",
+      details: `${ingredient?.name} deleted at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Ingredient",
+      entityId: `${ingredient?._id}`,
+      entityType: "Ingredient",
+    });
 
-    console.log("[DELETE INGREDIENT] ADMINS FOUND:", admins?.length);
-
-    const admin = admins?.[0];
-
-    if (admin) {
-      console.log("[DELETE INGREDIENT] LOGGING ADMIN ACTION:", admin._id);
-
-      await logRepository.create({
-        userId: admin._id,
-        action: "Ingredient Delete",
-        details: `${admin.name} deleted an ingredient from ${
-          ingredient?.category || "list"
-        }`,
-        module: "Ingredient",
-        entityId: `${ingredient?._id}`,
-        entityType: "Ingredient",
-      });
-
-      console.log("[DELETE INGREDIENT] LOG CREATED");
-    } else {
-      console.log("[DELETE INGREDIENT] NO ADMIN FOUND");
+    if (!log) {
+      console.log("User log not created", log);
     }
+
+    console.log("[DELETE INGREDIENT] LOG CREATED");
 
     return {
       status: 200,

@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userMutationHandler = exports.removeUser = exports.updateUser = void 0;
 const user_repository_1 = __importDefault(require("../../repository/user.repository"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const log_repository_1 = __importDefault(require("../../repository/log.repository"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const createUser = async ({ req }) => {
     try {
         const { name, email, role, phone, status } = req.body;
@@ -49,6 +51,19 @@ const createUser = async ({ req }) => {
             email: created?.email,
             role: created?.role,
         });
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(created._id),
+            action: "Create",
+            details: `${name} created at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "User",
+            entityId: `${created._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 201,
             body: {
@@ -128,6 +143,19 @@ const updateUser = async ({ req }) => {
                 },
             };
         }
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(userID),
+            action: "Update",
+            details: `${name} updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "User",
+            entityId: `${userID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {
@@ -163,6 +191,19 @@ const removeUser = async ({ req }) => {
                     error: "User not found",
                 },
             };
+        }
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(userID),
+            action: "Delete",
+            details: `${existingUser.name} deleted at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "User",
+            entityId: `${userID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
         }
         const deleted = await user_repository_1.default.delete(userID);
         console.log("[removeUser] delete result:", deleted);

@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.reportMutationHandler = exports.generateDailyReport = void 0;
 const report_repository_1 = require("../../repository/report.repository");
 const order_model_1 = __importDefault(require("../../model/order.model"));
+const log_repository_1 = __importDefault(require("../../repository/log.repository"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const generateDailyReport = async () => {
     const start = new Date();
     console.log("[DAILY REPORT] START INIT:", start);
@@ -46,7 +48,7 @@ const generateDailyReport = async () => {
             totalOrders,
         });
         console.log("[DAILY REPORT] CREATING REPORT IN DB...");
-        await report_repository_1.dailyReportRepository.create({
+        const reports = await report_repository_1.dailyReportRepository.create({
             reportDate: start,
             totalRevenue,
             totalOrders,
@@ -56,6 +58,19 @@ const generateDailyReport = async () => {
             totalTax: 0,
         });
         console.log("[DAILY REPORT] REPORT CREATED SUCCESSFULLY");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(reports._id),
+            action: "Daily Reports",
+            details: `Daily report generated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Report",
+            entityId: "",
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {

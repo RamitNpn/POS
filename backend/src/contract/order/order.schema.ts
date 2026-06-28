@@ -4,6 +4,8 @@ export const orderStatusEnum = z.enum(["active", "completed", "cancelled"]);
 
 export const paymentStatusEnum = z.enum(["pending", "partial", "paid"]);
 
+export const paymentMethodEnum = z.enum(["cash", "online", "credit"]);
+
 export const orderItemSchema = z.object({
   menuItemId: z.string(),
   name: z.string(),
@@ -30,9 +32,11 @@ export const orderSchema = z.object({
   items: z.array(orderItemSchema),
   subtotal: z.number(),
   tax: z.number(),
+  discount: z.number().default(0),
   total: z.number(),
   ticketCount: z.number(),
   status: orderStatusEnum,
+  paymentMethod: paymentMethodEnum,
   paymentStatus: paymentStatusEnum,
   createdAt: z.date().optional(),
 });
@@ -49,9 +53,10 @@ export const updateOrderSchema = z.object({
 });
 
 export const updatePaymentSchema = z.object({
-  printed: z.boolean().optional(),
-  status: orderStatusEnum.optional(),
-  paymentStatus: paymentStatusEnum.optional(),
+  paymentMethod: paymentMethodEnum,
+  discount: z.number().min(0).max(10).default(0),
+  paymentStatus: paymentStatusEnum,
+  status: orderStatusEnum,
 });
 
 export const deleteOrderSchema = z.object({

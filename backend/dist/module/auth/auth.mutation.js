@@ -72,12 +72,12 @@ const login = async ({ req, res }) => {
         });
         const log = await log_repository_1.default.create({
             userId: new mongoose_1.default.Types.ObjectId(userId),
-            action: "User Login",
+            action: "Login",
             details: `${user.name} logged in at ${new Date().toLocaleString("en-US", {
                 timeZone: "Asia/Kathmandu",
             })}`,
             module: "Auth",
-            entityId: "",
+            entityId: `${userId}`,
             entityType: "",
         });
         if (!log) {
@@ -127,16 +127,16 @@ const logout = async ({ req, res }) => {
     res.clearCookie("token", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "none",
     });
     const log = await log_repository_1.default.create({
         userId: new mongoose_1.default.Types.ObjectId(userId),
-        action: "User Log Out",
+        action: "LogOut",
         details: `${user.name} logged out at ${new Date().toLocaleString("en-US", {
             timeZone: "Asia/Kathmandu",
         })}`,
         module: "Auth",
-        entityId: "",
+        entityId: `${userId}`,
         entityType: "",
     });
     if (!log) {

@@ -2,6 +2,8 @@ export type OrderStatus = "active" | "completed" | "cancelled";
 
 export type PaymentStatus = "pending" | "partial" | "paid";
 
+export type PaymentMethod = "cash" | "online" | "credit";
+
 export interface TOrder {
   _id: string;
   orderNumber: string;
@@ -44,6 +46,7 @@ export interface TOrder {
   ticketCount: number;
   status: OrderStatus;
   paymentStatus: PaymentStatus;
+  paymentMethod: PaymentMethod;
   createdAt: Date | string;
   updatedAt: Date | string;
 }

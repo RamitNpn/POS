@@ -200,7 +200,7 @@ export default function DailyReportsPage() {
         title="Daily Reports"
         description="Review top performing categories and item volumes."
       />
-      <div className="flex flex-col xl:flex-row gap-4 xl:items-end">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-[1fr_auto_auto_auto]">
         <SearchField
           id="report-search"
           value={search}
@@ -209,7 +209,7 @@ export default function DailyReportsPage() {
           className="w-full"
         />
 
-        <div className="flex flex-col gap-1 w-full xl:w-auto">
+        <div className="flex flex-col gap-1">
           <label className="text-sm text-muted-foreground">From</label>
 
           <input
@@ -220,7 +220,7 @@ export default function DailyReportsPage() {
           />
         </div>
 
-        <div className="flex flex-col gap-1 w-full xl:w-auto">
+        <div className="flex flex-col gap-1">
           <label className="text-sm text-muted-foreground">To</label>
 
           <input
@@ -233,11 +233,11 @@ export default function DailyReportsPage() {
 
         <Button
           variant="default"
-          className="bg-green-600 hover:bg-green-700 text-white"
           onClick={downloadReports}
+          className="w-full self-end bg-green-600 text-white hover:bg-green-700 md:w-auto"
         >
+          <Download className="mr-2 h-4 w-4" />
           Export
-          <Download className="h-4 w-4" />
         </Button>
       </div>
       <PageSection title="Daily Reports">
@@ -252,7 +252,7 @@ export default function DailyReportsPage() {
               <TableHead>Discount</TableHead>
               <TableHead>Tax</TableHead>
               <TableHead>Generated At</TableHead>
-              <TableHead>Action</TableHead>
+              {/* <TableHead>Action</TableHead> */}
             </TableRow>
           </TableHeader>
 
@@ -281,7 +281,7 @@ export default function DailyReportsPage() {
                   <TableCell>Rs {report.totalTax.toFixed(2)}</TableCell>
 
                   <TableCell>{formatDate(report.generatedAt)}</TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     <div className="flex gap-3">
                       <button className="flex items center text-primary/90 hover:text-primary/80 justify-center p-1 rounded">
                         <Eye className="h-5 w-5" />
@@ -293,7 +293,7 @@ export default function DailyReportsPage() {
                         <Download className="h-4 w-4" />
                       </button>
                     </div>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))
             )}

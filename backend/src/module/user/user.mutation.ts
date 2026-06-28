@@ -5,6 +5,8 @@ import {
   AppRouteQueryImplementation,
 } from "@ts-rest/express";
 import bcrypt from "bcryptjs";
+import logRepository from "../../repository/log.repository";
+import mongoose from "mongoose";
 
 const createUser: AppRouteMutationImplementation<
   typeof userContract.createUser
@@ -66,6 +68,21 @@ const createUser: AppRouteMutationImplementation<
       email: created?.email,
       role: created?.role,
     });
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(created._id),
+      action: "Create",
+      details: `${name} created at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "User",
+      entityId: `${created._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 201,
@@ -163,6 +180,21 @@ export const updateUser: AppRouteMutationImplementation<
       };
     }
 
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(userID),
+      action: "Update",
+      details: `${name} updated at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "User",
+      entityId: `${userID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
+
     return {
       status: 200,
       body: {
@@ -205,6 +237,21 @@ export const removeUser: AppRouteMutationImplementation<
           error: "User not found",
         },
       };
+    }
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(userID),
+      action: "Delete",
+      details: `${existingUser.name} deleted at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "User",
+      entityId: `${userID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
     }
 
     const deleted = await userRepository.delete(userID);

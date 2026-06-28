@@ -9,6 +9,8 @@ const ticket_repository_1 = __importDefault(require("../../repository/ticket.rep
 const table_model_1 = __importDefault(require("../../model/table.model"));
 const menu_item_model_1 = __importDefault(require("../../model/menu-item.model"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const log_repository_1 = __importDefault(require("../../repository/log.repository"));
+const totalAmountCalculator_1 = require("../../utils/totalAmountCalculator");
 const createOrder = async ({ req }) => {
     try {
         console.log("[CREATE ORDER] REQUEST BODY:", req.body);
@@ -53,6 +55,20 @@ const createOrder = async ({ req }) => {
             tax,
             total,
         });
+        const entityType = JSON.stringify({
+            orderNumber: order?.orderNumber,
+            tableId,
+            customerName: customerName || "Guest",
+            subtotal,
+            tax,
+            total,
+            items: resolvedItems.map((i) => ({
+                name: i.name,
+                quantity: i.quantity,
+                price: i.price,
+                total: i.total,
+            })),
+        });
         if (!order) {
             console.log("[CREATE ORDER] CREATING NEW ORDER");
             const orderNumber = await order_repository_1.default.generateOrderNumber();
@@ -67,12 +83,24 @@ const createOrder = async ({ req }) => {
                 subtotal,
                 tax,
                 total,
+                discount: 0, // NEW
+                paymentMethod: "cash",
                 ticketCount: 1,
                 status: "active",
                 paymentStatus: "pending",
             });
             console.log("[CREATE ORDER] ORDER CREATED:", order._id);
-            await ticket_repository_1.default.create({
+            await log_repository_1.default.create({
+                userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+                action: "Create",
+                details: `Order #${order.orderNumber} created for ${customerName || "Guest"} on table ${tableId} with ${resolvedItems.length} item(s). Total: Rs. ${total} at ${new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Kathmandu",
+                })}`,
+                module: "Order",
+                entityId: `${order._id}`,
+                entityType: entityType,
+            });
+            const kitchenTicket = await ticket_repository_1.default.create({
                 orderId: order._id,
                 tableId: new mongoose_1.default.Types.ObjectId(tableId),
                 ticketNumber: 1,
@@ -86,6 +114,18 @@ const createOrder = async ({ req }) => {
                 status: "pending",
             });
             console.log("[CREATE ORDER] KITCHEN TICKET CREATED");
+            if (kitchenTicket) {
+                await log_repository_1.default.create({
+                    userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+                    action: "Create",
+                    details: `Kitchen Ticket #${kitchenTicket.ticketNumber} created for Order #${order.orderNumber} at ${new Date().toLocaleString("en-US", {
+                        timeZone: "Asia/Kathmandu",
+                    })}`,
+                    module: "Kitchen",
+                    entityId: `${kitchenTicket._id}`,
+                    entityType: entityType,
+                });
+            }
             await table_model_1.default.findByIdAndUpdate(new mongoose_1.default.Types.ObjectId(tableId), {
                 status: "occupied",
             });
@@ -106,8 +146,7 @@ const createOrder = async ({ req }) => {
             if (existingItem) {
                 console.log("[CREATE ORDER] UPDATING EXISTING ITEM:", newItem.name);
                 existingItem.quantity += newItem.quantity;
-                existingItem.total =
-                    existingItem.quantity * existingItem.price;
+                existingItem.total = existingItem.quantity * existingItem.price;
             }
             else {
                 console.log("[CREATE ORDER] ADDING NEW ITEM:", newItem.name);
@@ -115,18 +154,31 @@ const createOrder = async ({ req }) => {
             }
         }
         order.subtotal += subtotal;
-        order.tax += tax;
-        order.total += total;
+        order.tax = Number((order.subtotal * 0.13).toFixed(2));
+        order.total = (0, totalAmountCalculator_1.calculateOrderTotal)(order.subtotal, order.tax, order.discount ?? 0);
         order.ticketCount += 1;
         console.log("[CREATE ORDER] UPDATED ORDER TOTALS:", {
             subtotal: order.subtotal,
             tax: order.tax,
+            discount: order.discount,
             total: order.total,
             ticketCount: order.ticketCount,
         });
-        await order.save();
+        const reorderDone = await order.save();
         console.log("[CREATE ORDER] ORDER SAVED");
-        await ticket_repository_1.default.create({
+        if (reorderDone) {
+            await log_repository_1.default.create({
+                userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+                action: "Update",
+                details: `Order #${order.orderNumber} updated with Ticket #${order.ticketCount}. ${resolvedItems.length} additional item(s) added. New total: Rs. ${order.total} at ${new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Kathmandu",
+                })}`,
+                module: "Order",
+                entityId: `${order._id}`,
+                entityType: entityType,
+            });
+        }
+        const reorderKitchenTicket = await ticket_repository_1.default.create({
             orderId: order._id,
             tableId: new mongoose_1.default.Types.ObjectId(tableId),
             ticketNumber: order.ticketCount,
@@ -140,6 +192,18 @@ const createOrder = async ({ req }) => {
             status: "pending",
         });
         console.log("[CREATE ORDER] KITCHEN TICKET CREATED (REORDER)");
+        if (reorderKitchenTicket) {
+            await log_repository_1.default.create({
+                userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+                action: "Create",
+                details: `Kitchen Ticket #${reorderKitchenTicket.ticketNumber} created for Order #${order.orderNumber} (Reorder) at ${new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Kathmandu",
+                })}`,
+                module: "Kitchen",
+                entityId: `${reorderKitchenTicket._id}`,
+                entityType: entityType,
+            });
+        }
         return {
             status: 200,
             body: {
@@ -166,33 +230,51 @@ const updatePaymentStatus = async ({ req }) => {
         console.log("[UPDATE PAYMENT] PARAMS:", req.params);
         console.log("[UPDATE PAYMENT] BODY:", req.body);
         const { orderID } = req.params;
-        const { status, paymentStatus } = req.body;
-        const Payment = await order_repository_1.default.getByID(orderID);
-        console.log("[UPDATE PAYMENT] EXISTING ORDER:", Payment);
-        if (!Payment) {
-            console.log("[UPDATE PAYMENT] NOT FOUND:", orderID);
+        const { status, paymentStatus, paymentMethod, discount } = req.body;
+        const order = await order_repository_1.default.getByID(orderID);
+        console.log("[UPDATE PAYMENT] EXISTING ORDER:", order);
+        if (!order) {
             return {
                 status: 404,
                 body: {
                     success: false,
-                    error: "Payment not found",
+                    error: "Order not found",
                 },
             };
         }
-        const updated = await order_repository_1.default.updateStatus(orderID, status, paymentStatus);
+        const total = (0, totalAmountCalculator_1.calculateOrderTotal)(order.subtotal, order.tax, discount);
+        const updated = await order_repository_1.default.updateStatus(orderID, {
+            status,
+            paymentStatus,
+            paymentMethod,
+            discount,
+            total,
+        });
         console.log("[UPDATE PAYMENT] UPDATED:", updated);
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `Order ${order.orderNumber} payment status updated as ${status} at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Order",
+            entityId: `${orderID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {
                 success: true,
-                message: "Payment updated",
+                message: "Payment updated successfully",
                 data: updated,
             },
         };
     }
     catch (error) {
         console.error("[UPDATE PAYMENT] ERROR:", error);
-        console.error("[UPDATE PAYMENT] PARAMS:", req.params);
         return {
             status: 500,
             body: {
@@ -218,6 +300,19 @@ const removeOrder = async ({ req }) => {
                     error: "Order not found",
                 },
             };
+        }
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Delete",
+            details: `Order ${order.orderNumber} deleted at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Order",
+            entityId: `${orderID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
         }
         const deletedOrder = await order_repository_1.default.delete(orderID);
         console.log("[DELETE ORDER] DELETED ORDER:", deletedOrder);

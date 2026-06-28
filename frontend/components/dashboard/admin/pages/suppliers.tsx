@@ -354,9 +354,9 @@ export default function SuppliersPage() {
 
                     <TableCell className="text-right">
                       <div className="flex items-center gap-4">
-                        <button className="flex items center text-primary/90 hover:text-primary/80 justify-center p-1 rounded">
+                        {/* <button className="flex items center text-primary/90 hover:text-primary/80 justify-center p-1 rounded">
                           <Eye className="h-5 w-5" />
-                        </button>
+                        </button> */}
                         <button
                           onClick={() => setEditId(supplier._id)}
                           className="flex items center text-green-600 hover:text-green-700 p-1 rounded"

@@ -2,6 +2,7 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { menuItemContract } from "../../contract/menu-item/menu-item.contract";
 import menuItemRepository from "../../repository/menu-item-repository";
 import mongoose from "mongoose";
+import logRepository from "../../repository/log.repository";
 
 export const createMenuItem: AppRouteMutationImplementation<
   typeof menuItemContract.createMenuItem
@@ -46,7 +47,7 @@ export const createMenuItem: AppRouteMutationImplementation<
       image: profileUrl,
     });
 
-    await menuItemRepository.create({
+    const menuItem = await menuItemRepository.create({
       ...req.body,
       categoryId: req.body.categoryId
         ? new mongoose.Types.ObjectId(req.body.categoryId)
@@ -56,6 +57,24 @@ export const createMenuItem: AppRouteMutationImplementation<
     });
 
     console.log("[CREATE MENU ITEM] SUCCESS CREATED");
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Create",
+      details: `${menuItem?.name} created at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "MenuItem",
+      entityId: `${menuItem?._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 201,
@@ -156,9 +175,27 @@ export const updateMenuItem: AppRouteMutationImplementation<
 
     console.log("[UPDATE MENU ITEM] FINAL UPDATE PAYLOAD:", updatePayload);
 
-    await menuItemRepository.update(itemID, updatePayload);
+    const menuItem = await menuItemRepository.update(itemID, updatePayload);
 
     console.log("[UPDATE MENU ITEM] SUCCESS UPDATED");
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `${menuItem?.name} updated at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "MenuItem",
+      entityId: `${menuItem?._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 200,
@@ -207,6 +244,21 @@ export const removeMenuItem: AppRouteMutationImplementation<
     }
 
     console.log("[DELETE MENU ITEM] DELETING ITEM...");
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `${item?.name} updated at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "MenuItem",
+      entityId: `${item?._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     await menuItemRepository.delete(itemID);
 

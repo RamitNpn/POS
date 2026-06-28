@@ -103,8 +103,17 @@ class KitchenTicketRepository {
     async getByTableID(tableId) {
         try {
             return await this.model
-                .find({ tableId })
+                .find({
+                tableId,
+                status: "pending",
+            })
                 .populate("tableId")
+                .populate({
+                path: "orderId",
+                populate: {
+                    path: "waiterId",
+                },
+            })
                 .sort({ ticketNumber: 1 });
         }
         catch (error) {
@@ -183,6 +192,21 @@ class KitchenTicketRepository {
         }
         catch (error) {
             throw new Error(`Error updating ticket: ${error}`);
+        }
+    }
+    async updateTicketItems(ticketId, items) {
+        try {
+            return await this.model.findByIdAndUpdate(ticketId, {
+                $set: {
+                    items,
+                },
+            }, {
+                new: true,
+                runValidators: true,
+            });
+        }
+        catch (error) {
+            throw new Error(`Error updating ticket items: ${error}`);
         }
     }
     async delete(id) {

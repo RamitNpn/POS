@@ -52,7 +52,7 @@ export default function TaxReportsPage() {
 
       "Subtotal (Rs)",
       "Tax (Rs)",
-      "Discount (Rs)",
+      "Discount (%)",
       "Service Charge (Rs)",
       "Total (Rs)",
       "Status",
@@ -198,7 +198,7 @@ export default function TaxReportsPage() {
                   <TableCell>{order.customerName}</TableCell>
                   <TableCell>Rs {order.subtotal.toFixed(2)}</TableCell>
                   <TableCell>Rs {order.tax.toFixed(2)}</TableCell>
-                  <TableCell>Rs {(order.discount || 0).toFixed(2)}</TableCell>
+                  <TableCell>{(order.discount || 0).toFixed(2)} %</TableCell>
                   <TableCell>
                     Rs {(order.serviceCharge || 0).toFixed(2)}
                   </TableCell>

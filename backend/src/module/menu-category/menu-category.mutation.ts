@@ -3,6 +3,8 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { menuCategoryContract } from "../../contract/menu-category/menu-category.contract";
 import menuCategoryRepository from "../../repository/menu-category.repository";
 import menuItemRepository from "../../repository/menu-item-repository";
+import logRepository from "../../repository/log.repository";
+import mongoose from "mongoose";
 
 export const createMenuCategory: AppRouteMutationImplementation<
   typeof menuCategoryContract.createMenuCategory
@@ -28,9 +30,27 @@ export const createMenuCategory: AppRouteMutationImplementation<
 
     console.log("[CREATE MENU CATEGORY] CREATING CATEGORY...");
 
-    await menuCategoryRepository.create(req.body);
+    const menuCategoryData = await menuCategoryRepository.create(req.body);
 
     console.log("[CREATE MENU CATEGORY] SUCCESS CREATED");
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `${menuCategoryData.name} updated at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "MCategory",
+      entityId: `${menuCategoryData._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 201,
@@ -100,9 +120,30 @@ export const updateMenuCategory: AppRouteMutationImplementation<
 
     console.log("[UPDATE MENU CATEGORY] UPDATING CATEGORY...");
 
-    await menuCategoryRepository.update(categoryID, req.body);
+    const menuCategoryData = await menuCategoryRepository.update(
+      categoryID,
+      req.body,
+    );
 
     console.log("[UPDATE MENU CATEGORY] SUCCESS UPDATED");
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `${menuCategoryData?.name} updated at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "MCategory",
+      entityId: `${menuCategoryData?._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 200,
@@ -151,6 +192,24 @@ export const removeMenuCategory: AppRouteMutationImplementation<
     }
 
     console.log("[DELETE MENU CATEGORY] DELETING CATEGORY...");
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Delete",
+      details: `${category?.name} deleted at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "MCategory",
+      entityId: `${category?._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     await menuCategoryRepository.delete(categoryID);
 

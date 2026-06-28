@@ -40,13 +40,27 @@ exports.ticketContract = c.router({
     },
     getTicketByID: {
         method: "GET",
-        path: "/ticket/order/:ticketID",
+        path: "/ticket/:ticketID",
         summary: "Get kitchen ticket by ID",
         pathParams: zod_1.z.object({
             ticketID: zod_1.z.string(),
         }),
         responses: {
             200: ticket_schema_1.getKitchenTicketByIdSchema,
+            404: commonSchema_1.errorSchema,
+        },
+    },
+    getTicketByTableID: {
+        method: "GET",
+        path: "/ticket/table/:tableID",
+        summary: "Get kitchen ticket by table ID",
+        pathParams: zod_1.z.object({
+            tableID: zod_1.z.string(),
+        }),
+        responses: {
+            200: zod_1.z.object({
+                data: ticket_schema_1.getKitchenTicketBytableIdSchema,
+            }),
             404: commonSchema_1.errorSchema,
         },
     },
@@ -75,6 +89,20 @@ exports.ticketContract = c.router({
         responses: {
             200: commonSchema_1.successSchema,
             404: commonSchema_1.errorSchema,
+        },
+    },
+    updateTicketItems: {
+        method: "PUT",
+        path: "/ticket/update/:ticketID",
+        summary: "Update ticket items",
+        pathParams: zod_1.z.object({
+            ticketID: zod_1.z.string(),
+        }),
+        body: ticket_schema_1.updateKitchenTicketItemsSchema,
+        responses: {
+            200: commonSchema_1.successSchema,
+            404: commonSchema_1.errorSchema,
+            500: commonSchema_1.errorSchema,
         },
     },
     removeTicket: {

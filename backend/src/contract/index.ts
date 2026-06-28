@@ -19,6 +19,7 @@ import { reportContract } from "./daily-report/report.contract";
 import { roleContract } from "./role/role.contract";
 import { branchContract } from "./branch/branch.contract";
 import { salesContract } from "./sales/sales.contract";
+import { ledgerContract } from "./ledger/ledger.contract";
 
 const c = initContract();
 
@@ -43,4 +44,5 @@ export const contract = c.router({
     role: roleContract,
     branch: branchContract,
     sales: salesContract,
+    ledger: ledgerContract,
 });

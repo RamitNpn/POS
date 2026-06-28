@@ -3,6 +3,7 @@ import reservationRepository from "../../repository/reservation.repository";
 import { reservationContract } from "../../contract/reservation/reservation.contract";
 import mongoose from "mongoose";
 import tableRepository from "../../repository/table.repository";
+import logRepository from "../../repository/log.repository";
 
 export const createReservation: AppRouteMutationImplementation<
   typeof reservationContract.createReservation
@@ -38,6 +39,23 @@ export const createReservation: AppRouteMutationImplementation<
 
     console.log("[CREATE RESERVATION] CREATED:", data?._id);
 
+    if (data) {
+      const log = await logRepository.create({
+        userId: new mongoose.Types.ObjectId(req.user?.id),
+        action: "Reservation Create",
+        details: `Reservation created at ${new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Kathmandu",
+        })}`,
+        module: "Reservation",
+        entityId: `${data._id}`,
+        entityType: "",
+      });
+
+      if (!log) {
+        console.log("User log not created", log);
+      }
+    }
+
     const status = "reserved";
 
     console.log("[CREATE RESERVATION] UPDATING TABLE STATUS:", {
@@ -64,6 +82,23 @@ export const createReservation: AppRouteMutationImplementation<
     }
 
     console.log("[CREATE RESERVATION] SUCCESS");
+
+    if (updated) {
+      const log = await logRepository.create({
+        userId: new mongoose.Types.ObjectId(req.user?.id),
+        action: "Update",
+        details: `Table ${updated.name} reserved at ${new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Kathmandu",
+        })}`,
+        module: "Table",
+        entityId: `${req.body.tableId}`,
+        entityType: "",
+      });
+
+      if (!log) {
+        console.log("User log not created", log);
+      }
+    }
 
     return {
       status: 201,
@@ -93,6 +128,29 @@ export const updateReservation: AppRouteMutationImplementation<
     console.log("[UPDATE RESERVATION] PARAMS:", req.params);
     console.log("[UPDATE RESERVATION] BODY:", req.body);
 
+    const reservation = await reservationRepository.getByID(
+      req.params.reservationId,
+    );
+
+    console.log("[UPDATE RESERVATION] EXISTING RESERVATION:", {
+      found: !!reservation,
+    });
+
+    if (!reservation) {
+      console.warn(
+        "[UPDATE RESERVATION] RESERVATION NOT FOUND:",
+        req.params.reservationId,
+      );
+
+      return {
+        status: 404,
+        body: {
+          success: false,
+          error: "Reservation not found",
+        },
+      };
+    }
+
     const data = await reservationRepository.update(req.params.reservationId, {
       ...req.body,
       tableId: new mongoose.Types.ObjectId(req.body.tableId),
@@ -111,6 +169,21 @@ export const updateReservation: AppRouteMutationImplementation<
     }
 
     console.warn("[UPDATE RESERVATION] NOT FOUND:", req.params.reservationId);
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Create",
+      details: `Reservation created at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "Reservation",
+      entityId: `${req.params.reservationId}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 401,
@@ -138,6 +211,21 @@ export const deleteReservation: AppRouteMutationImplementation<
 > = async ({ req }) => {
   try {
     console.log("[DELETE RESERVATION] PARAMS:", req.params);
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Delete",
+      details: `Reservation deleted at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "Reservation",
+      entityId: `${req.params.reservationId}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     const result = await reservationRepository.delete(req.params.reservationId);
 

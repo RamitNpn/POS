@@ -2,6 +2,8 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { reportContract } from "../../contract/daily-report/report.contract";
 import { dailyReportRepository } from "../../repository/report.repository";
 import OrderModel from "../../model/order.model";
+import logRepository from "../../repository/log.repository";
+import mongoose from "mongoose";
 
 export const generateDailyReport: AppRouteMutationImplementation<
   typeof reportContract.generateDailyReport
@@ -62,7 +64,7 @@ export const generateDailyReport: AppRouteMutationImplementation<
 
     console.log("[DAILY REPORT] CREATING REPORT IN DB...");
 
-    await dailyReportRepository.create({
+    const reports = await dailyReportRepository.create({
       reportDate: start,
       totalRevenue,
       totalOrders,
@@ -73,6 +75,21 @@ export const generateDailyReport: AppRouteMutationImplementation<
     });
 
     console.log("[DAILY REPORT] REPORT CREATED SUCCESSFULLY");
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(reports._id),
+      action: "Daily Reports",
+      details: `Daily report generated at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "Report",
+      entityId: "",
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 200,

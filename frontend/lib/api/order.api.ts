@@ -32,7 +32,7 @@ const getActiveOrderByTableApi = async (tableId: string) => {
 const getOrderByDateApi = async (params: { dateReport: string }) => {
   const response = await apiClient.get("/order/date-report", {
     params: {
-      dateReport: params.dateReport // Explicitly bind the exact string key expected by Zod
+      dateReport: params.dateReport, // Explicitly bind the exact string key expected by Zod
     },
   });
   return response.data;
@@ -44,14 +44,16 @@ const updateOrderApi = async (OrderId: string, formData: FormData) => {
 };
 
 const updatePaymentStatusApi = async (
-  OrderId: string,
-  status: string,
-  paymentStatus: string,
+  orderId: string,
+  data: {
+    status: string;
+    paymentStatus: string;
+    paymentMethod: string;
+    discount: number;
+  },
 ) => {
-  const response = await apiClient.put(`/order/payment/${OrderId}`, {
-    status,
-    paymentStatus,
-  });
+  const response = await apiClient.put(`/order/payment/${orderId}`, data);
+
   return response.data;
 };
 

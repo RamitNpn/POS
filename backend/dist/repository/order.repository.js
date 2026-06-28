@@ -6,6 +6,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const order_model_1 = __importDefault(require("../model/order.model"));
 class OrderRepository {
     constructor() {
+        this.updateStatus = async (orderID, data) => {
+            return await order_model_1.default.findByIdAndUpdate(orderID, {
+                $set: {
+                    ...(data.status && { status: data.status }),
+                    ...(data.paymentStatus && {
+                        paymentStatus: data.paymentStatus,
+                    }),
+                    ...(data.paymentMethod && {
+                        paymentMethod: data.paymentMethod,
+                    }),
+                    ...(data.discount !== undefined && {
+                        discount: data.discount,
+                    }),
+                    ...(data.total && {
+                        total: data.total,
+                    }),
+                },
+            }, {
+                new: true,
+            });
+        };
         this.model = order_model_1.default;
     }
     async create(data) {
@@ -134,19 +155,6 @@ class OrderRepository {
         }
         catch (error) {
             throw new Error(`Error updating order: ${error}`);
-        }
-    }
-    async updateStatus(ticketId, status, paymentStatus) {
-        try {
-            return await this.model.findByIdAndUpdate(ticketId, {
-                status,
-                paymentStatus,
-            }, {
-                new: true,
-            });
-        }
-        catch (error) {
-            throw new Error(`Error updating ticket status: ${error}`);
         }
     }
     async delete(id) {

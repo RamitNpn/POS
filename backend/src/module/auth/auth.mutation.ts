@@ -90,12 +90,12 @@ export const login: AppRouteMutationImplementation<
 
     const log = await logRepository.create({
       userId: new mongoose.Types.ObjectId(userId),
-      action: "User Login",
+      action: "Login",
       details: `${user.name} logged in at ${new Date().toLocaleString("en-US", {
         timeZone: "Asia/Kathmandu",
       })}`,
       module: "Auth",
-      entityId: "",
+      entityId: `${userId}`,
       entityType: "",
     });
 
@@ -152,17 +152,17 @@ export const logout: AppRouteMutationImplementation<
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "none",
   });
 
   const log = await logRepository.create({
     userId: new mongoose.Types.ObjectId(userId),
-    action: "User Log Out",
+    action: "LogOut",
     details: `${user.name} logged out at ${new Date().toLocaleString("en-US", {
       timeZone: "Asia/Kathmandu",
     })}`,
     module: "Auth",
-    entityId: "",
+    entityId: `${userId}`,
     entityType: "",
   });
 

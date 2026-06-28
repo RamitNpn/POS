@@ -1,6 +1,8 @@
 import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { roleContract } from "../../contract/role/role.contract";
 import roleRepository from "../../repository/role.repository";
+import logRepository from "../../repository/log.repository";
+import mongoose from "mongoose";
 
 export const createRole: AppRouteMutationImplementation<
   typeof roleContract.createRole
@@ -38,6 +40,21 @@ export const createRole: AppRouteMutationImplementation<
     });
 
     console.log("[CREATE ROLE] CREATED ROLE ID:", created?._id);
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Create",
+      details: `Role created at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "Role",
+      entityId: `${created._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 201,
@@ -121,6 +138,21 @@ export const updateRole: AppRouteMutationImplementation<
 
     console.log("[UPDATE ROLE] UPDATED SUCCESSFULLY:", roleID);
 
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `Role updated at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "Role",
+      entityId: `${roleID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
+
     return {
       status: 200,
       body: {
@@ -171,6 +203,21 @@ export const removeRole: AppRouteMutationImplementation<
     }
 
     console.log("[DELETE ROLE] DELETING ROLE...");
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Delete",
+      details: `Role deleted at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "Role",
+      entityId: `${roleID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     await roleRepository.delete(roleID);
 

@@ -6,6 +6,8 @@ import kitchenTicketRepository from "../../repository/ticket.repository";
 import TableModel from "../../model/table.model";
 import MenuItem from "../../model/menu-item.model";
 import mongoose from "mongoose";
+import logRepository from "../../repository/log.repository";
+import { calculateOrderTotal } from "../../utils/totalAmountCalculator";
 
 const createOrder: AppRouteMutationImplementation<
   typeof orderContract.createOrder
@@ -70,6 +72,21 @@ const createOrder: AppRouteMutationImplementation<
       total,
     });
 
+    const entityType = JSON.stringify({
+      orderNumber: order?.orderNumber,
+      tableId,
+      customerName: customerName || "Guest",
+      subtotal,
+      tax,
+      total,
+      items: resolvedItems.map((i) => ({
+        name: i.name,
+        quantity: i.quantity,
+        price: i.price,
+        total: i.total,
+      })),
+    });
+
     if (!order) {
       console.log("[CREATE ORDER] CREATING NEW ORDER");
 
@@ -87,6 +104,8 @@ const createOrder: AppRouteMutationImplementation<
         subtotal,
         tax,
         total,
+        discount: 0, // NEW
+        paymentMethod: "cash",
         ticketCount: 1,
         status: "active",
         paymentStatus: "pending",
@@ -94,7 +113,21 @@ const createOrder: AppRouteMutationImplementation<
 
       console.log("[CREATE ORDER] ORDER CREATED:", order._id);
 
-      await kitchenTicketRepository.create({
+      await logRepository.create({
+        userId: new mongoose.Types.ObjectId(req.user?.id),
+        action: "Create",
+        details: `Order #${order.orderNumber} created for ${customerName || "Guest"} on table ${tableId} with ${resolvedItems.length} item(s). Total: Rs. ${total} at ${new Date().toLocaleString(
+          "en-US",
+          {
+            timeZone: "Asia/Kathmandu",
+          },
+        )}`,
+        module: "Order",
+        entityId: `${order._id}`,
+        entityType: entityType,
+      });
+
+      const kitchenTicket = await kitchenTicketRepository.create({
         orderId: order._id,
         tableId: new mongoose.Types.ObjectId(tableId),
         ticketNumber: 1,
@@ -110,12 +143,25 @@ const createOrder: AppRouteMutationImplementation<
 
       console.log("[CREATE ORDER] KITCHEN TICKET CREATED");
 
-      await TableModel.findByIdAndUpdate(
-        new mongoose.Types.ObjectId(tableId),
-        {
-          status: "occupied",
-        },
-      );
+      if (kitchenTicket) {
+        await logRepository.create({
+          userId: new mongoose.Types.ObjectId(req.user?.id),
+          action: "Create",
+          details: `Kitchen Ticket #${kitchenTicket.ticketNumber} created for Order #${order.orderNumber} at ${new Date().toLocaleString(
+            "en-US",
+            {
+              timeZone: "Asia/Kathmandu",
+            },
+          )}`,
+          module: "Kitchen",
+          entityId: `${kitchenTicket._id}`,
+          entityType: entityType,
+        });
+      }
+
+      await TableModel.findByIdAndUpdate(new mongoose.Types.ObjectId(tableId), {
+        status: "occupied",
+      });
 
       console.log("[CREATE ORDER] TABLE MARKED OCCUPIED");
 
@@ -135,16 +181,14 @@ const createOrder: AppRouteMutationImplementation<
 
     for (const newItem of resolvedItems) {
       const existingItem = order.items.find(
-        (i: any) =>
-          i.menuItemId.toString() === newItem.menuItemId.toString(),
+        (i: any) => i.menuItemId.toString() === newItem.menuItemId.toString(),
       );
 
       if (existingItem) {
         console.log("[CREATE ORDER] UPDATING EXISTING ITEM:", newItem.name);
 
         existingItem.quantity += newItem.quantity;
-        existingItem.total =
-          existingItem.quantity * existingItem.price;
+        existingItem.total = existingItem.quantity * existingItem.price;
       } else {
         console.log("[CREATE ORDER] ADDING NEW ITEM:", newItem.name);
 
@@ -153,23 +197,44 @@ const createOrder: AppRouteMutationImplementation<
     }
 
     order.subtotal += subtotal;
-    order.tax += tax;
-    order.total += total;
+    order.tax = Number((order.subtotal * 0.13).toFixed(2));
+    order.total = calculateOrderTotal(
+      order.subtotal,
+      order.tax,
+      order.discount ?? 0,
+    );
 
     order.ticketCount += 1;
 
     console.log("[CREATE ORDER] UPDATED ORDER TOTALS:", {
       subtotal: order.subtotal,
       tax: order.tax,
+      discount: order.discount,
       total: order.total,
       ticketCount: order.ticketCount,
     });
 
-    await order.save();
+    const reorderDone = await order.save();
 
     console.log("[CREATE ORDER] ORDER SAVED");
 
-    await kitchenTicketRepository.create({
+    if (reorderDone) {
+      await logRepository.create({
+        userId: new mongoose.Types.ObjectId(req.user?.id),
+        action: "Update",
+        details: `Order #${order.orderNumber} updated with Ticket #${order.ticketCount}. ${resolvedItems.length} additional item(s) added. New total: Rs. ${order.total} at ${new Date().toLocaleString(
+          "en-US",
+          {
+            timeZone: "Asia/Kathmandu",
+          },
+        )}`,
+        module: "Order",
+        entityId: `${order._id}`,
+        entityType: entityType,
+      });
+    }
+
+    const reorderKitchenTicket = await kitchenTicketRepository.create({
       orderId: order._id,
       tableId: new mongoose.Types.ObjectId(tableId),
       ticketNumber: order.ticketCount,
@@ -184,6 +249,22 @@ const createOrder: AppRouteMutationImplementation<
     });
 
     console.log("[CREATE ORDER] KITCHEN TICKET CREATED (REORDER)");
+
+    if (reorderKitchenTicket) {
+      await logRepository.create({
+        userId: new mongoose.Types.ObjectId(req.user?.id),
+        action: "Create",
+        details: `Kitchen Ticket #${reorderKitchenTicket.ticketNumber} created for Order #${order.orderNumber} (Reorder) at ${new Date().toLocaleString(
+          "en-US",
+          {
+            timeZone: "Asia/Kathmandu",
+          },
+        )}`,
+        module: "Kitchen",
+        entityId: `${reorderKitchenTicket._id}`,
+        entityType: entityType,
+      });
+    }
 
     return {
       status: 200,
@@ -215,43 +296,63 @@ export const updatePaymentStatus: AppRouteMutationImplementation<
     console.log("[UPDATE PAYMENT] BODY:", req.body);
 
     const { orderID } = req.params;
-    const { status, paymentStatus } = req.body;
 
-    const Payment = await orderRepository.getByID(orderID);
+    const { status, paymentStatus, paymentMethod, discount } = req.body;
 
-    console.log("[UPDATE PAYMENT] EXISTING ORDER:", Payment);
+    const order = await orderRepository.getByID(orderID);
 
-    if (!Payment) {
-      console.log("[UPDATE PAYMENT] NOT FOUND:", orderID);
+    console.log("[UPDATE PAYMENT] EXISTING ORDER:", order);
 
+    if (!order) {
       return {
         status: 404,
         body: {
           success: false,
-          error: "Payment not found",
+          error: "Order not found",
         },
       };
     }
 
-    const updated = await orderRepository.updateStatus(
-      orderID,
+    const total = calculateOrderTotal(order.subtotal, order.tax, discount);
+
+    const updated = await orderRepository.updateStatus(orderID, {
       status,
       paymentStatus,
-    );
+      paymentMethod,
+      discount,
+      total,
+    });
 
     console.log("[UPDATE PAYMENT] UPDATED:", updated);
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `Order ${order.orderNumber} payment status updated as ${status} at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Order",
+      entityId: `${orderID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 200,
       body: {
         success: true,
-        message: "Payment updated",
+        message: "Payment updated successfully",
         data: updated,
       },
     };
   } catch (error) {
     console.error("[UPDATE PAYMENT] ERROR:", error);
-    console.error("[UPDATE PAYMENT] PARAMS:", req.params);
 
     return {
       status: 500,
@@ -285,6 +386,24 @@ export const removeOrder: AppRouteMutationImplementation<
           error: "Order not found",
         },
       };
+    }
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Delete",
+      details: `Order ${order.orderNumber} deleted at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Order",
+      entityId: `${orderID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
     }
 
     const deletedOrder = await orderRepository.delete(orderID);

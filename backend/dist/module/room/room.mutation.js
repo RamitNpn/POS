@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.roomMutationHandler = exports.removeRoom = exports.updateRoom = exports.createRoom = void 0;
 const room_repository_1 = __importDefault(require("../../repository/room.repository"));
+const log_repository_1 = __importDefault(require("../../repository/log.repository"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const createRoom = async ({ req }) => {
     try {
         console.log("[CREATE ROOM] BODY:", req.body);
@@ -31,6 +33,19 @@ const createRoom = async ({ req }) => {
             isActive,
         });
         console.log("[CREATE ROOM] CREATED ROOM ID:", created?._id);
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Create",
+            details: `Room ${created.name} created at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Room",
+            entityId: `${created._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 201,
             body: {
@@ -97,6 +112,19 @@ const updateRoom = async ({ req }) => {
             isActive,
         });
         console.log("[UPDATE ROOM] UPDATED SUCCESSFULLY:", roomID);
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `Room ${room.name} updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Room",
+            entityId: `${roomID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {
@@ -139,6 +167,19 @@ const removeRoom = async ({ req }) => {
             };
         }
         console.log("[DELETE ROOM] DELETING...");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Delete",
+            details: `Room ${room.name} deleted at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Room",
+            entityId: `${roomID}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         await room_repository_1.default.delete(roomID);
         console.log("[DELETE ROOM] DELETED:", roomID);
         return {

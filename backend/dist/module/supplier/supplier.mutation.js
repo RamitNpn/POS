@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.supplierMutationHandler = exports.deleteSupplier = exports.updateSupplier = exports.createSupplier = void 0;
 const supplier_repository_1 = __importDefault(require("../../repository/supplier.repository"));
+const log_repository_1 = __importDefault(require("../../repository/log.repository"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const createSupplier = async ({ req }) => {
     try {
         console.log("[createSupplier] request body:", req.body);
@@ -34,6 +36,19 @@ const createSupplier = async ({ req }) => {
         }
         const created = await supplier_repository_1.default.create(req.body);
         console.log("[createSupplier] created supplier:", created);
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Create",
+            details: `Supplier ${created.name} added at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Supplier",
+            entityId: `${created._id}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 201,
             body: {
@@ -73,6 +88,19 @@ const updateSupplier = async ({ req }) => {
         }
         await supplier_repository_1.default.update(supplierId, req.body);
         console.log("[updateSupplier] update successful");
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Update",
+            details: `Supplier ${supplier.name} updated at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Supplier",
+            entityId: `${supplierId}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
+        }
         return {
             status: 200,
             body: {
@@ -108,6 +136,19 @@ const deleteSupplier = async ({ req }) => {
                     error: "Supplier not found",
                 },
             };
+        }
+        const log = await log_repository_1.default.create({
+            userId: new mongoose_1.default.Types.ObjectId(req.user?.id),
+            action: "Delete",
+            details: `Supplier ${supplier.name} deleted at ${new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kathmandu",
+            })}`,
+            module: "Supplier",
+            entityId: `${supplierId}`,
+            entityType: "",
+        });
+        if (!log) {
+            console.log("User log not created", log);
         }
         await supplier_repository_1.default.delete(supplierId);
         console.log("[deleteSupplier] deletion successful");

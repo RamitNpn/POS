@@ -19,3 +19,37 @@ export interface TActivityLog {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface TActivityEntityItem {
+  menuItemId: string;
+  name: string;
+  quantity: number;
+  price: number;
+  total: number;
+}
+
+export interface TActivityEntity {
+  orderNumber?: number;
+  tableId?: string;
+  customerName?: string;
+  subtotal?: number;
+  tax?: number;
+  total?: number;
+  items?: TActivityEntityItem[];
+}
+
+export interface TNotificationLog {
+  _id: string;
+  userId: string;
+  user: User;
+  action: string;
+  details: string;
+  module?: string;
+  entityId?: string;
+
+  entityType?: TActivityEntity;
+
+  ipAddress?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

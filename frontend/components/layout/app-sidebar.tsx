@@ -35,6 +35,7 @@ import {
   Activity,
   ScrollText,
   ChevronDown,
+  CreditCard,
 } from "lucide-react";
 
 import { useAuth } from "@/context/auth-context";
@@ -209,6 +210,12 @@ const adminNavGroups: NavGroup[] = [
     roles: ["admin"],
     items: [
       {
+        title: "Customer Ledger",
+        href: "/dashboard/admin/finance/ledger",
+        icon: CreditCard,
+        roles: ["admin"],
+      },
+      {
         title: "Revenue",
         href: "/dashboard/admin/finance/revenue",
         icon: DollarSign,
@@ -317,7 +324,6 @@ export function AppSidebar() {
   if (!user) return null;
 
   const roleDisplay = getRoleDisplayName(user.role);
-
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">

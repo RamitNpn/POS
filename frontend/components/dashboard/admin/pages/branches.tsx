@@ -1,10 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
-import { RevenueChart } from "@/components/dashboard/revenue-chart";
-import { api } from "@/lib/api/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,43 +15,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Card,
-  CardContent,
-  CardDescription,
   CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   statusStyle,
-  MetricCard,
   PageSection,
   SearchField,
   TableBadge,
   formatDate,
 } from "@/components/dashboard/admin/shared";
-import type {
-  AdminDashboardStats,
-  Branch,
-  Expense,
-  Ingredient,
-  MenuCategory,
-  MenuItem,
-  MenuModifier,
-  Notification,
-  Order,
-  PurchaseOrder,
-  Reservation,
-  Role,
-  SalesByCategory,
-  StaffMember,
-  StockMovement,
-  Supplier,
-  Table as DiningTable,
-  TableSection,
-  ManagedUser,
-  RevenueData,
-} from "@/lib/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/hooks/use-toast";

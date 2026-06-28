@@ -40,9 +40,11 @@ const mapOrder = (order: any) => {
     waiter: order.waiterId,
 
     paymentStatus: order.paymentStatus,
+    paymentMethod: order.paymentMethod,
     orderType: order.orderType,
 
     subtotal: order.subtotal,
+    discount: order.discount,
     tax: order.tax,
     total: order.total,
 
@@ -213,10 +215,12 @@ export const getActiveOrderByTable: AppRouteQueryImplementation<
         })),
         subtotal: order.subtotal,
         tax: order.tax,
+        discount: order.discount,
         total: order.total,
         ticketCount: order.ticketCount,
         status: order.status,
         paymentStatus: order.paymentStatus,
+        paymentMethod: order.paymentMethod,
         createdAt: order.createdAt,
       },
     };

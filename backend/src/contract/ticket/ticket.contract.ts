@@ -6,6 +6,8 @@ import {
   getKitchenTicketByIdSchema,
   getAllKitchenTicketsSchema,
   updateKitchenTicketSchema,
+  getKitchenTicketBytableIdSchema,
+  updateKitchenTicketItemsSchema,
 } from "./ticket.schema";
 
 import { successSchema, errorSchema } from "../commonSchema";
@@ -48,13 +50,28 @@ export const ticketContract = c.router({
 
   getTicketByID: {
     method: "GET",
-    path: "/ticket/order/:ticketID",
+    path: "/ticket/:ticketID",
     summary: "Get kitchen ticket by ID",
     pathParams: z.object({
       ticketID: z.string(),
     }),
     responses: {
       200: getKitchenTicketByIdSchema,
+      404: errorSchema,
+    },
+  },
+
+  getTicketByTableID: {
+    method: "GET",
+    path: "/ticket/table/:tableID",
+    summary: "Get kitchen ticket by table ID",
+    pathParams: z.object({
+      tableID: z.string(),
+    }),
+    responses: {
+      200: z.object({
+        data: getKitchenTicketBytableIdSchema,
+      }),
       404: errorSchema,
     },
   },
@@ -85,6 +102,21 @@ export const ticketContract = c.router({
     responses: {
       200: successSchema,
       404: errorSchema,
+    },
+  },
+
+  updateTicketItems: {
+    method: "PUT",
+    path: "/ticket/update/:ticketID",
+    summary: "Update ticket items",
+    pathParams: z.object({
+      ticketID: z.string(),
+    }),
+    body: updateKitchenTicketItemsSchema,
+    responses: {
+      200: successSchema,
+      404: errorSchema,
+      500: errorSchema,
     },
   },
 

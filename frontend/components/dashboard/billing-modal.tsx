@@ -1,24 +1,21 @@
 "use client";
 
-export default function PrintInvoice({ order }: any) {
+import Image from "next/image";
 
+export default function PrintInvoice({ order }: any) {
   if (!order) return null;
 
-  console.log(order);
-
   const paymentLabel =
-    order.paymentMethod === "mobile"
-      ? "Mobile Payment"
-      : order.paymentMethod === "card"
-        ? "Card"
-        : order.paymentMethod === "cash"
-          ? "Cash"
-          : order.paymentMethod === "split"
-            ? "Split Payment"
-            : "Unknown";
+    order.paymentMethod === "cash"
+      ? "Cash Payment"
+      : order.paymentMethod === "online"
+        ? "Online Payment"
+        : order.paymentMethod === "credit"
+          ? "Credit to Account"
+          : "Unknown";
 
   return (
-    <div className="hidden print:block">
+    <div className="hidden print:flex print:min-h-screen print:justify-center">
       <div className="receipt-print w-[80mm] bg-white text-black px-3 py-2 text-xs font-sans m-[10px] border border-dashed border-gray-600 rounded">
         {/* Header */}
         <div className="text-center border-b border-gray-200 pb-2">
@@ -27,9 +24,7 @@ export default function PrintInvoice({ order }: any) {
             <span>PAN: 123S34Ft-V21</span>
           </div>
           <h1 className="text-xl font-bold tracking-wider">Local Vibes</h1>
-          <p className="text-[10px] text-gray-600">
-            Butwal 10, Kalikanagar
-          </p>
+          <p className="text-[10px] text-gray-600">Butwal 10, Kalikanagar</p>
         </div>
 
         {/* Invoice Info */}
@@ -58,18 +53,8 @@ export default function PrintInvoice({ order }: any) {
           </div>
 
           <div className="flex justify-between">
-            <span>Waiter</span>
-            <span>{order.waiter?.name}</span>
-          </div>
-
-          <div className="flex justify-between">
             <span>Method</span>
             <span>{paymentLabel}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span>Status</span>
-            <span className="capitalize">{order.paymentStatus}</span>
           </div>
         </div>
 
@@ -84,7 +69,7 @@ export default function PrintInvoice({ order }: any) {
 
           {order.items?.map((item: any) => (
             <div key={item.menuItemId} className="grid grid-cols-12 py-1">
-              <span className="col-span-5 truncate">{item.menuItem}</span>
+              <span className="col-span-5">{item.menuItem}</span>
 
               <span className="col-span-2 text-center">{item.quantity}</span>
 
@@ -111,6 +96,11 @@ export default function PrintInvoice({ order }: any) {
             <span>Rs. {order.tax.toFixed(2)}</span>
           </div>
 
+          <div className="flex justify-between text-[13px]">
+            <span>Discount</span>
+            <span>{order?.discount || 0}%</span>
+          </div>
+
           <div className="flex justify-between font-bold text-[14px] text-base mt-1">
             <span>TOTAL</span>
             <span>Rs. {order.total.toFixed(2)}</span>
@@ -118,15 +108,29 @@ export default function PrintInvoice({ order }: any) {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-4 space-y-1">
-          <p className="font-semibold">Thank You For Visiting!</p>
+        <div className="border-b border-gray-200 py-2 flex gap-2 items-center">
+          <div>
+            <Image
+              src="/local-vibes-menu.png"
+              alt="Menu QR Code"
+              width={60}
+              height={60}
+              className="mx-auto"
+              priority
+            />
+          </div>
+          <div className="text-center mt-4 space-y-1">
+            <p className="font-semibold">Thank You For Visiting!</p>
 
-          <p className="text-[10px] text-gray-600">Please Visit Again</p>
+            <p className="text-[10px] text-gray-600">Please Visit Again</p>
 
-          <div className="border-t border-gray-200 mt-2 pt-2 text-[9px]">
-            Powered by DineFlow
+            <div className="border-t border-gray-200 mt-2 pt-2 text-[9px]">
+              Powered by DineFlow
+            </div>
           </div>
         </div>
+
+        {/* Footer */}
       </div>
     </div>
   );

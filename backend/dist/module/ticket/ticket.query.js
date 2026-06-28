@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ticketQueryHandler = exports.getTicketsByOrder = exports.getTicketById = exports.getLiveTickets = exports.getAllTickets = void 0;
+exports.ticketQueryHandler = exports.getTicketsByOrder = exports.getTicketByTableId = exports.getTicketById = exports.getLiveTickets = exports.getAllTickets = void 0;
 const ticket_repository_1 = __importDefault(require("../../repository/ticket.repository"));
 const mapTicket = (ticket) => {
     console.log("[mapTicket] raw ticket:", {
@@ -162,6 +162,41 @@ const getTicketById = async ({ req }) => {
     }
 };
 exports.getTicketById = getTicketById;
+const getTicketByTableId = async ({ req }) => {
+    try {
+        const { tableID } = req.params;
+        console.log("[getTicketById] tableID:", tableID);
+        const ticket = await ticket_repository_1.default.getByTableID(tableID);
+        console.log("[getTicketById] ticket:", ticket);
+        if (!ticket) {
+            console.log("[getTicketById] ticket not found");
+            return {
+                status: 404,
+                body: {
+                    success: false,
+                    error: "Ticket not found",
+                },
+            };
+        }
+        return {
+            status: 200,
+            body: {
+                data: ticket.map(mapTicket),
+            },
+        };
+    }
+    catch (error) {
+        console.error("[getTicketById] error:", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Failed to fetch ticket",
+            },
+        };
+    }
+};
+exports.getTicketByTableId = getTicketByTableId;
 const getTicketsByOrder = async ({ req }) => {
     try {
         const { orderID } = req.params;
@@ -202,4 +237,5 @@ exports.ticketQueryHandler = {
     getTicketById: exports.getTicketById,
     getLiveTickets: exports.getLiveTickets,
     getTicketsByOrder: exports.getTicketsByOrder,
+    getTicketByTableId: exports.getTicketByTableId,
 };

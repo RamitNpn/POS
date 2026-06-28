@@ -14,7 +14,7 @@ export const useUpdateTicketStatus = () => {
 
   return useMutation({
     mutationFn: async ({ ticketID, status }: UpdateTicketStatusPayload) => {
-      const response = await ticketApi.updateticketStatusApi(ticketID, status);
+      const response = await ticketApi.updateTicketStatusApi(ticketID, status);
 
       if (!response.success) {
         throw new Error(response.error || "Failed to update order");

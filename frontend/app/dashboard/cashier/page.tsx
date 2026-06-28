@@ -129,7 +129,7 @@ export default function CashierDashboard() {
       </div>
 
       <div className="grid gap-6">
-        <div className="space-y-4">
+          <div className="space-y-4 w-full min-w-0">
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle>Order Filter</CardTitle>
@@ -191,7 +191,7 @@ export default function CashierDashboard() {
             <CardHeader>
               <CardTitle>Ticket Records</CardTitle>
             </CardHeader>
-            <CardContent className="w-[280px] md:w-[700px] lg:w-full overflow-x-scroll">
+            <CardContent>
               <TicketTable
                 tickets={filteredTickets}
                 onView={setSelectedTicket}

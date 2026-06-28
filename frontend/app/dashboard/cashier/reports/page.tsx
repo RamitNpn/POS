@@ -21,7 +21,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import type { PaymentMethod } from "@/lib/types";
 import {
   Dialog,
   DialogContent,
@@ -32,13 +31,13 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useAllOrders } from "@/hooks/admin/orders/getAllOrders";
-import { PaymentStatus, TOrder } from "@/lib/types/order.types";
+import { PaymentMethod, PaymentStatus, TOrder } from "@/lib/types/order.types";
 import { useReactToPrint } from "react-to-print";
 import { CreditCard, Download, Eye } from "lucide-react";
 import { formatDate } from "@/components/dashboard/admin/shared";
-import { useUpdatePaymentStatus } from "@/hooks/cahsier/updatePaymentStatus";
 import TablePagination from "@/components/shared/pagination";
 import PrintInvoice from "@/components/dashboard/billing-modal";
+import PaymentUpdateForm from "@/components/dashboard/cashier/updatePaymentMethod";
 
 const paymentStatusOptions: { value: PaymentStatus | "all"; label: string }[] =
   [
@@ -52,15 +51,17 @@ const paymentMethodOptions: { value: PaymentMethod | "all"; label: string }[] =
   [
     { value: "all", label: "All methods" },
     { value: "cash", label: "Cash" },
-    { value: "card", label: "Card" },
-    { value: "mobile", label: "Mobile" },
-    { value: "split", label: "Split" },
+    { value: "online", label: "Online" },
+    { value: "credit", label: "Credit" },
   ];
 
 export default function CashierReportsPage() {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedOrder, setSelectedOrder] = useState<TOrder | null>(null);
+  const [editingPaymentOrderId, setEditingPaymentOrderId] = useState<
+    string | null
+  >(null);
   const [statusFilter, setStatusFilter] = useState<PaymentStatus | "all">(
     "all",
   );
@@ -90,19 +91,20 @@ export default function CashierReportsPage() {
     return orders.filter((order: TOrder) => {
       const matchesSearch =
         !q ||
-        (order.customerName || "").toString().toLowerCase().includes(q) ||
-        (order.orderNumber || "").toString().toLowerCase().includes(q) ||
-        (order.table?.name || "").toString().toLowerCase().includes(q) ||
-        (order.waiter?.name || "").toString().toLowerCase().includes(q);
+        (order.customerName || "").toLowerCase().includes(q) ||
+        (order.orderNumber || "").toLowerCase().includes(q) ||
+        (order.table?.name || "").toLowerCase().includes(q) ||
+        (order.waiter?.name || "").toLowerCase().includes(q);
 
       const matchesStatus =
         statusFilter === "all" || order.paymentStatus === statusFilter;
 
-      return matchesSearch && matchesStatus;
+      const matchesMethod =
+        methodFilter === "all" || order.paymentMethod === methodFilter;
+
+      return matchesSearch && matchesStatus && matchesMethod;
     });
   }, [orders, searchTerm, statusFilter, methodFilter]);
-
-  const { mutate: updateOrderStatus, isPending } = useUpdatePaymentStatus();
 
   const downloadRecords = () => {
     if (!PrintOrder.data?.length) return;
@@ -133,7 +135,7 @@ export default function CashierReportsPage() {
       // Financials
       "Subtotal (Rs)",
       "Tax (Rs)",
-      "Discount (Rs)",
+      "Discount (%)",
       "Service Charge (Rs)",
       "Total (Rs)",
 
@@ -395,7 +397,7 @@ export default function CashierReportsPage() {
                           variant="secondary"
                           className="text-gray-300 cursor-pointer hover:bg-green-700 hover:text-white"
                           size="icon"
-                          onClick={() => updateOrderStatus(order._id)}
+                          onClick={() => setEditingPaymentOrderId(order._id)}
                         >
                           <CreditCard className="h-4 w-4" />
                         </Button>
@@ -424,23 +426,25 @@ export default function CashierReportsPage() {
             if (!open) setSelectedOrder(null);
           }}
         >
-          <DialogContent className="h-auto overflow-y-scroll">
+          <DialogContent className="h-[90vh] overflow-y-scroll">
             <DialogHeader>
               <DialogTitle>Order {selectedOrder.orderNumber}</DialogTitle>
               <DialogDescription>Complete checkout details</DialogDescription>
             </DialogHeader>
             <div className="space-y-3 mt-2">
-              <div>
-                Customer: {/* @ts-ignore */}
-                {(selectedOrder as any).customerName || "-"}
+              <div className="grid grid-cols-2 space-x-2 pb-2 border-b border-bray-200">
+                <span>
+                  Customer: {/* @ts-ignore */}
+                  {(selectedOrder as any).customerName || "-"}
+                </span>
+                <span>Table: {selectedOrder.table?.name}</span>
+                <span>Server: {selectedOrder.waiter?.name}</span>
+                <span>Status: {selectedOrder.paymentStatus}</span>
               </div>
-              <div>Table: {selectedOrder.table?.name}</div>
-              <div>Server: {selectedOrder.waiter?.name}</div>
-              <div>Status: {selectedOrder.paymentStatus}</div>
 
               <div>
                 <h4 className="font-semibold">Items</h4>
-                <div className="space-y-2 mt-2">
+                <div className="space-y-2 mt-2 text-[13px]">
                   {selectedOrder.items?.map((it) => (
                     <div
                       key={it.menuItem}
@@ -482,6 +486,12 @@ export default function CashierReportsPage() {
             </div>
           </DialogContent>
         </Dialog>
+      )}
+      {editingPaymentOrderId && (
+        <PaymentUpdateForm
+          orderId={editingPaymentOrderId}
+          onClose={() => setEditingPaymentOrderId(null)}
+        />
       )}
       <div
         style={{

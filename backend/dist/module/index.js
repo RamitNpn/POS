@@ -23,6 +23,7 @@ const report_router_1 = require("./daily-report/report.router");
 const role_router_1 = require("./role/role.router");
 const branch_router_1 = require("./branch/branch.router");
 const sales_router_1 = require("./sales/sales.router");
+const ledger_router_1 = require("./ledger/ledger.router");
 const s = (0, express_1.initServer)();
 exports.router = s.router(contract_1.contract, {
     auth: auth_router_1.authRouter,
@@ -45,4 +46,5 @@ exports.router = s.router(contract_1.contract, {
     role: role_router_1.roleRouter,
     branch: branch_router_1.branchRouter,
     sales: sales_router_1.salesRouter,
+    ledger: ledger_router_1.creditLedgerRouter,
 });

@@ -1,4 +1,7 @@
-import KitchenTicketModel, { IKitchenTicket } from "../model/ticket.model";
+import KitchenTicketModel, {
+  IKitchenTicket,
+  IKitchenTicketItem,
+} from "../model/ticket.model";
 
 class KitchenTicketRepository {
   private model;
@@ -117,8 +120,17 @@ class KitchenTicketRepository {
   async getByTableID(tableId: string) {
     try {
       return await this.model
-        .find({ tableId })
+        .find({
+          tableId,
+          status: "pending",
+        })
         .populate("tableId")
+        .populate({
+          path: "orderId",
+          populate: {
+            path: "waiterId",
+          },
+        })
         .sort({ ticketNumber: 1 });
     } catch (error) {
       throw new Error(`Error fetching order tickets: ${error}`);
@@ -210,6 +222,33 @@ class KitchenTicketRepository {
       });
     } catch (error) {
       throw new Error(`Error updating ticket: ${error}`);
+    }
+  }
+
+  async updateTicketItems(
+    ticketId: string,
+    items: {
+      menuItemId: string;
+      name: string;
+      quantity: number;
+      price: number;
+    }[],
+  ) {
+    try {
+      return await this.model.findByIdAndUpdate(
+        ticketId,
+        {
+          $set: {
+            items,
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+        },
+      );
+    } catch (error) {
+      throw new Error(`Error updating ticket items: ${error}`);
     }
   }
 

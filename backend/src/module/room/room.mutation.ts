@@ -1,6 +1,8 @@
 import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { roomContract } from "../../contract/room/room.contract";
 import roomRepository from "../../repository/room.repository";
+import logRepository from "../../repository/log.repository";
+import mongoose from "mongoose";
 
 export const createRoom: AppRouteMutationImplementation<
   typeof roomContract.createRoom
@@ -38,6 +40,24 @@ export const createRoom: AppRouteMutationImplementation<
     });
 
     console.log("[CREATE ROOM] CREATED ROOM ID:", created?._id);
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Create",
+      details: `Room ${created.name} created at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Room",
+      entityId: `${created._id}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     return {
       status: 201,
@@ -121,6 +141,24 @@ export const updateRoom: AppRouteMutationImplementation<
 
     console.log("[UPDATE ROOM] UPDATED SUCCESSFULLY:", roomID);
 
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Update",
+      details: `Room ${room.name} updated at ${new Date().toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Kathmandu",
+        },
+      )}`,
+      module: "Room",
+      entityId: `${roomID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
+
     return {
       status: 200,
       body: {
@@ -171,6 +209,21 @@ export const removeRoom: AppRouteMutationImplementation<
     }
 
     console.log("[DELETE ROOM] DELETING...");
+
+    const log = await logRepository.create({
+      userId: new mongoose.Types.ObjectId(req.user?.id),
+      action: "Delete",
+      details: `Room ${room.name} deleted at ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kathmandu",
+      })}`,
+      module: "Room",
+      entityId: `${roomID}`,
+      entityType: "",
+    });
+
+    if (!log) {
+      console.log("User log not created", log);
+    }
 
     await roomRepository.delete(roomID);
 

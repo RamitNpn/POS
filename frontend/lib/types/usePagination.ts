@@ -12,4 +12,5 @@ export interface UsePaginationParams {
   from?: string;
   to?: string;
   dateReport?: string;
+  type?: string;
 }
