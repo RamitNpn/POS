@@ -21,7 +21,7 @@ export interface TActivityLog {
 }
 
 export interface TActivityEntityItem {
-  menuItemId: string;
+  menuItemId?: string;
   name: string;
   quantity: number;
   price: number;
@@ -29,7 +29,7 @@ export interface TActivityEntityItem {
 }
 
 export interface TActivityEntity {
-  orderNumber?: number;
+  orderNumber?: string;
   tableId?: string;
   customerName?: string;
   subtotal?: number;
@@ -47,9 +47,13 @@ export interface TNotificationLog {
   module?: string;
   entityId?: string;
 
-  entityType?: TActivityEntity;
+  entityType?: string;
 
   ipAddress?: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface TParsedNotificationLog extends TNotificationLog {
+  entity: TActivityEntity | null;
 }

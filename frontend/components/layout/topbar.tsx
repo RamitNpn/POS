@@ -43,11 +43,16 @@ export function Topbar({ title }: TopbarProps) {
 
   const { data: logData } = useActivityLogs({
     page: 1,
-    limit: 5,
+    limit: 3,
     ...(user.role === "waiter" ? { module: "Order" } : {}),
   });
 
   const logs = logData?.data ?? [];
+
+  const notificationRoute =
+    user.role === "admin"
+      ? "/dashboard/admin/notifications"
+      : "/dashboard/waiter/notifications";
 
   return (
     <>
@@ -81,50 +86,47 @@ export function Topbar({ title }: TopbarProps) {
           )}
 
           <div className="ml-auto flex items-center gap-2">
-            {user.role === "admin" ||
-              (user.role === "waiter" && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="relative touch-target"
+            {(user.role === "admin" || user.role === "waiter") && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="relative touch-target"
+                  >
+                    <Bell className="size-5" />
+                    <Badge
+                      variant="destructive"
+                      className="absolute -right-1 -top-1 size-5 rounded-full p-0 text-xs flex items-center justify-center"
                     >
-                      <Bell className="size-5" />
-                      <Badge
-                        variant="destructive"
-                        className="absolute -right-1 -top-1 size-5 rounded-full p-0 text-xs flex items-center justify-center"
-                      >
-                        3
-                      </Badge>
-                      <span className="sr-only">Notifications</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-80">
-                    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {logs.map((log: TActivityLog) => (
-                      <DropdownMenuItem
-                        key={log._id}
-                        className="flex flex-col items-start gap-1 hover:bg-gray-300 py-3"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{log.action}</span>
-                        </div>
-                        <span className="text-xs text-muted-foreground">
-                          {log.details}
-                        </span>
-                      </DropdownMenuItem>
-                    ))}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="justify-center text-primary">
-                      <Link href={`/dashboard/admin/notifications`}>
-                        View all notifications
-                      </Link>
+                      3
+                    </Badge>
+                    <span className="sr-only">Notifications</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-80">
+                  <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {logs.map((log: TActivityLog) => (
+                    <DropdownMenuItem
+                      key={log._id}
+                      className="flex flex-col items-start gap-1 hover:bg-gray-300 py-3"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{log.action}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        {log.details}
+                      </span>
                     </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ))}
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="justify-center text-primary">
+                    <Link href={notificationRoute}>View all notifications</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
 
             <div className="md:flex items-center px-2">
               <button

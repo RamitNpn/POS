@@ -5,32 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { useActivityLogs } from "@/hooks/admin/log/getAllLogs";
-import { TNotificationLog } from "@/lib/types/log.types";
+import { TNotificationLog, TParsedNotificationLog } from "@/lib/types/log.types";
 
 export default function WaiterNotificationsPage() {
-  const [page, setPage] = useState(1);
+  const [page] = useState(1);
+
   const { data: logData } = useActivityLogs({
-    page: page,
+    page,
     limit: 10,
     module: "Kitchen",
   });
 
   const logs = logData?.data ?? [];
 
-  const notifications = logs.map((log: TNotificationLog) => {
-    let entity = null;
-
-    try {
-      entity = log.entityId ? JSON.parse(log.entityId) : null;
-    } catch {
-      entity = null;
-    }
-
-    return {
-      ...log,
-      entity,
-    };
-  });
+const notifications: TParsedNotificationLog[] = logs.map((log: TNotificationLog) => ({
+  ...log,
+  entity: log.entityType ? JSON.parse(log.entityType) : null,
+}));
 
   return (
     <div className="space-y-6">
@@ -39,18 +30,18 @@ export default function WaiterNotificationsPage() {
         description="Keep track of kitchen updates for your waiter orders."
       />
 
-      {notifications.length ? (
+      {notifications.length > 0 ? (
         <div className="space-y-4">
-          {notifications.map((log: TNotificationLog) => (
+          {notifications.map((log) => (
             <Card key={log._id} className="border-border">
               <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <CardTitle className="text-foreground">
-                    Order #{log.entityType?.orderNumber ?? "-"}
+                    Order #{log.entity?.orderNumber ?? "-"}
                   </CardTitle>
 
                   <p className="text-sm text-muted-foreground">
-                    Table {log.entityType?.tableId} •{" "}
+                    Table {log.entity?.tableId ?? "-"} •{" "}
                     {new Date(log.createdAt).toLocaleString()}
                   </p>
                 </div>
@@ -59,14 +50,23 @@ export default function WaiterNotificationsPage() {
               </CardHeader>
 
               <CardContent className="space-y-3 pt-0">
-                <p className="text-sm text-muted-foreground">{log.details}</p>
+                <p className="text-sm text-muted-foreground">
+                  {log.details}
+                </p>
 
-                <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
-                  <span>{log.entityType?.items?.length ?? 0} items</span>
+                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                  <span>
+                    {log.entity?.items?.length ?? 0} item
+                    {(log.entity?.items?.length ?? 0) !== 1 ? "s" : ""}
+                  </span>
 
-                  <span>Customer: {log.entityType?.customerName}</span>
+                  <span>
+                    Customer: {log.entity?.customerName ?? "-"}
+                  </span>
 
-                  <span>Rs. {log.entityType?.total}</span>
+                  <span>
+                    Rs. {log.entity?.total?.toFixed(2) ?? "0.00"}
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -74,7 +74,7 @@ export default function WaiterNotificationsPage() {
         </div>
       ) : (
         <Card className="border-border">
-          <CardContent>
+          <CardContent className="py-10">
             <p className="text-center text-muted-foreground">
               No waiter notifications available yet.
             </p>
