@@ -119,10 +119,19 @@ class KitchenTicketRepository {
 
   async getByTableID(tableId: string) {
     try {
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
+
       return await this.model
         .find({
           tableId,
-          status: "pending",
+          createdAt: {
+            $gte: startOfDay,
+            $lte: endOfDay,
+          },
         })
         .populate("tableId")
         .populate({
@@ -141,10 +150,12 @@ class KitchenTicketRepository {
     skip,
     limit,
     search,
+    status,
   }: {
     skip: number;
     limit: number;
     search?: string;
+    status?: string;
   }) {
     try {
       const startOfDay = new Date();
@@ -158,8 +169,11 @@ class KitchenTicketRepository {
           $gte: startOfDay,
           $lte: endOfDay,
         },
-        status: "pending",
       };
+
+      if (status !== "all") {
+        query.status = status;
+      }
 
       if (search) {
         query.$or = [

@@ -17,7 +17,7 @@ const env: TEnv = {
     process.env.MONGO_URI ||
     "mongodb+srv://gauravkarki0927:gauravkarki0927@cluster0.lp3l6vb.mongodb.net/local-vibes?appName=Cluster0",
   DB_NAME: process.env.DB_NAME || "local-vibes",
-  frontend_url: process.env.FRONTEND_URL || "https://localvibes.cornortech.com",
+  frontend_url: process.env.FRONTEND_URL || "https://atithi.cornortech.com",
   cloud_name: process.env.CLOUD_NAME || "dvl63bq6z",
   api_key: process.env.API_KEY || "823567279581777",
   api_secret: process.env.API_SECRET || "G0GoDOQK8qUoQt94rPRCtvDom-E",

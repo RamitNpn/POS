@@ -8,20 +8,23 @@ const report_repository_1 = require("../../repository/report.repository");
 const order_model_1 = __importDefault(require("../../model/order.model"));
 const log_repository_1 = __importDefault(require("../../repository/log.repository"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const expenses_model_1 = __importDefault(require("../../model/expenses.model"));
+const date_fns_tz_1 = require("date-fns-tz");
+const date_fns_1 = require("date-fns");
 const generateDailyReport = async () => {
-    const start = new Date();
-    console.log("[DAILY REPORT] START INIT:", start);
-    start.setDate(start.getDate() - 1);
-    start.setHours(0, 0, 0, 0);
-    console.log("[DAILY REPORT] REPORT START DATE:", start);
-    const end = new Date(start);
-    end.setHours(23, 59, 59, 999);
-    console.log("[DAILY REPORT] REPORT END DATE:", end);
+    const TIMEZONE = "Asia/Kathmandu";
+    const now = new Date();
+    const nowInNepal = (0, date_fns_tz_1.toZonedTime)(now, TIMEZONE);
+    const startNepal = (0, date_fns_1.startOfDay)(nowInNepal);
+    const start = (0, date_fns_tz_1.fromZonedTime)(startNepal, TIMEZONE);
+    const end = now;
+    console.log("[DAILY REPORT] Nepal Start:", startNepal);
+    console.log("[DAILY REPORT] UTC Start:", start);
+    console.log("[DAILY REPORT] UTC End:", end);
     try {
         const existing = await report_repository_1.dailyReportRepository.getByDate(start);
-        console.log("[DAILY REPORT] EXISTING REPORT:", existing);
         if (existing) {
-            console.log("[DAILY REPORT] SKIPPED - REPORT ALREADY EXISTS");
+            console.log("[DAILY REPORT] Report already exists.");
             return {
                 status: 200,
                 body: {
@@ -30,63 +33,85 @@ const generateDailyReport = async () => {
                 },
             };
         }
-        console.log("[DAILY REPORT] FETCHING ORDERS...");
+        console.log("[DAILY REPORT] Fetching completed orders...");
         const orders = await order_model_1.default.find({
-            status: "completed",
+            paymentStatus: "paid",
             createdAt: {
                 $gte: start,
                 $lte: end,
             },
         });
-        console.log("[DAILY REPORT] ORDERS FOUND:", {
-            count: orders.length,
+        console.log(`[DAILY REPORT] ${orders.length} completed orders found.`);
+        const expenses = await expenses_model_1.default.find({
+            createdAt: {
+                $gte: start,
+                $lte: end,
+            },
         });
-        const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+        console.log(`[DAILY REPORT] ${expenses.length} expenses found.`);
+        const totalRevenue = orders.reduce((sum, order) => sum + (order.total ?? 0), 0);
         const totalOrders = orders.length;
-        console.log("[DAILY REPORT] CALCULATED METRICS:", {
+        const cashSales = orders
+            .filter((o) => o.paymentMethod === "cash")
+            .reduce((sum, o) => sum + (o.total ?? 0), 0);
+        const onlineSales = orders
+            .filter((o) => o.paymentMethod === "online")
+            .reduce((sum, o) => sum + (o.total ?? 0), 0);
+        const totalDiscount = orders.reduce((sum, o) => sum + (o.discount ?? 0), 0);
+        const totalTax = orders.reduce((sum, o) => sum + (o.tax ?? 0), 0);
+        const totalExpense = expenses.reduce((sum, expense) => sum + (expense.amount ?? 0), 0);
+        console.log("[DAILY REPORT] Metrics:", {
             totalRevenue,
             totalOrders,
+            totalExpense,
+            cashSales,
+            onlineSales,
+            totalDiscount,
+            totalTax,
         });
-        console.log("[DAILY REPORT] CREATING REPORT IN DB...");
-        const reports = await report_repository_1.dailyReportRepository.create({
+        const report = await report_repository_1.dailyReportRepository.create({
             reportDate: start,
             totalRevenue,
             totalOrders,
-            cashSales: 0,
-            onlineSales: 0,
-            totalDiscount: 0,
-            totalTax: 0,
+            totalExpense,
+            cashSales,
+            onlineSales,
+            totalDiscount,
+            totalTax,
         });
-        console.log("[DAILY REPORT] REPORT CREATED SUCCESSFULLY");
+        console.log("[DAILY REPORT] Report saved successfully.");
         const log = await log_repository_1.default.create({
-            userId: new mongoose_1.default.Types.ObjectId(reports._id),
+            userId: new mongoose_1.default.Types.ObjectId(report._id),
             action: "Daily Reports",
             details: `Daily report generated at ${new Date().toLocaleString("en-US", {
                 timeZone: "Asia/Kathmandu",
             })}`,
             module: "Report",
-            entityId: "",
-            entityType: "",
+            entityId: report._id.toString(),
+            entityType: "DailyReport",
         });
         if (!log) {
-            console.log("User log not created", log);
+            console.log("[DAILY REPORT] Failed to create activity log.");
         }
         return {
             status: 200,
             body: {
                 success: true,
-                message: "Daily report generated.",
+                message: "Daily report generated successfully.",
             },
         };
     }
     catch (error) {
         console.error("[DAILY REPORT] ERROR:", error);
-        console.error("[DAILY REPORT] DATE RANGE:", { start, end });
+        console.error("[DAILY REPORT] DATE RANGE:", {
+            start,
+            end,
+        });
         return {
             status: 500,
             body: {
                 success: false,
-                error: "Failed to generate daily report",
+                error: "Failed to generate daily report.",
             },
         };
     }

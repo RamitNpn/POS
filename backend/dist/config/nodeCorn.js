@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_cron_1 = __importDefault(require("node-cron"));
 const report_mutation_1 = require("../module/daily-report/report.mutation");
-node_cron_1.default.schedule("5 0 * * *", async () => {
+node_cron_1.default.schedule("52 15 * * *", async () => {
     try {
         await (0, report_mutation_1.generateDailyReport)({
             body: undefined,

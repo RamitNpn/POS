@@ -6,6 +6,8 @@ export interface IDailyReport extends Document {
   totalRevenue: number;
   totalOrders: number;
 
+  totalExpense: number;
+
   cashSales: number;
   onlineSales: number;
 
@@ -31,6 +33,12 @@ const DailyReportSchema = new mongoose.Schema<IDailyReport>(
     },
 
     totalOrders: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+
+    totalExpense: {
       type: Number,
       required: true,
       default: 0,

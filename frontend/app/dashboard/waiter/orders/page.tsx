@@ -9,6 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+
 import { PageSection } from "@/components/dashboard/admin/shared";
 import { TicketTable } from "@/components/shared/ticketTable";
 import { Status } from "@/lib/types/ticket.types";
@@ -27,8 +36,13 @@ export default function WaiterOrdersPage() {
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
 
+  const [statusFilter, setStatusFilter] = useState("pending");
+
   const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
   const [printedTicket, setPrintedTicket] = useState<any | null>(null);
+
+  const { data: ticketData } = useLiveTickets({ status: statusFilter });
+  const tickets = ticketData?.data ?? [];
 
   const filterTicketsByDateRange = (tickets: any[]) => {
     if (!fromDate && !toDate) return tickets;
@@ -52,8 +66,6 @@ export default function WaiterOrdersPage() {
     });
   };
 
-  const { data: ticketData } = useLiveTickets({});
-  const tickets = ticketData?.data ?? [];
   const filteredTickets = filterTicketsByDateRange(tickets);
 
   return (
@@ -73,6 +85,20 @@ export default function WaiterOrdersPage() {
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:gap-3">
+          <Select
+            value={statusFilter}
+            onValueChange={(v) => setStatusFilter(v)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="All statuses" />
+              <SelectContent>
+                <SelectItem value="pending"> Active </SelectItem>
+                <SelectItem value="served"> Served </SelectItem>
+                <SelectItem value="cancelled"> Cancelled </SelectItem>
+                <SelectItem value="completed"> Completed </SelectItem>
+              </SelectContent>
+            </SelectTrigger>
+          </Select>
           <div className="flex flex-col gap-1">
             <label className="text-sm text-muted-foreground">From</label>
             <input
@@ -120,6 +146,40 @@ export default function WaiterOrdersPage() {
           />
         </PageSection>
       </div>
+      {selectedTicket && (
+        <Dialog
+          open={!!selectedTicket}
+          onOpenChange={(open) => {
+            if (!open) setSelectedTicket(null);
+          }}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Order {selectedTicket.orderNumber}</DialogTitle>
+              <DialogDescription>Complete checkout details</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-3 mt-2">
+              <div>Order: {selectedTicket.orderNumber}</div>
+              <div>Customer: {selectedTicket.customerName || "-"}</div>
+              <div>Table: {selectedTicket.table?.tableName || "-"}</div>
+              <div>Waiter: {selectedTicket.waiter?.name || "-"}</div>
+              <div>Status: {selectedTicket.status}</div>
+              <div className="border-t pt-3">
+                <h4 className="font-semibold">Items</h4>
+                <div className="space-y-2 mt-2">
+                  {selectedTicket.items?.map((it: any) => (
+                    <div key={it.menuItemId} className="flex justify-between">
+                      <div>
+                        {it.name} × {it.quantity}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

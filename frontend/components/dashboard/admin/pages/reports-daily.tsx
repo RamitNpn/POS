@@ -45,6 +45,7 @@ export default function DailyReportsPage() {
         "Report Date",
         "Revenue",
         "Orders",
+        "Expense",
         "Cash Sales",
         "Online Sales",
         "Discount",
@@ -55,6 +56,7 @@ export default function DailyReportsPage() {
         r.reportDate,
         r.totalRevenue,
         r.totalOrders,
+        r.totalExpense,
         r.cashSales,
         r.onlineSales,
         r.totalDiscount,
@@ -247,6 +249,7 @@ export default function DailyReportsPage() {
               <TableHead>Report Date</TableHead>
               <TableHead>Total Revenue</TableHead>
               <TableHead>Total Orders</TableHead>
+              <TableHead>Total Expense</TableHead>
               <TableHead>Cash Sales</TableHead>
               <TableHead>Online Sales</TableHead>
               <TableHead>Discount</TableHead>
@@ -272,11 +275,13 @@ export default function DailyReportsPage() {
 
                   <TableCell>{report.totalOrders}</TableCell>
 
+                  <TableCell>Rs {report.totalExpense.toFixed(2)}</TableCell>
+
                   <TableCell>Rs {report.cashSales.toFixed(2)}</TableCell>
 
                   <TableCell>Rs {report.onlineSales.toFixed(2)}</TableCell>
 
-                  <TableCell>Rs {report.totalDiscount.toFixed(2)}</TableCell>
+                  <TableCell>{report.totalDiscount}%</TableCell>
 
                   <TableCell>Rs {report.totalTax.toFixed(2)}</TableCell>
 

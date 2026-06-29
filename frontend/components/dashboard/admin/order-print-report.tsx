@@ -200,7 +200,7 @@ export default function OrderPrintReport({ order }: Props) {
 
         <ReportRow
           label="Discount"
-          value={`Rs ${(order.discount || 0).toFixed(2)}`}
+          value={`${order.discount || 0}%`}
         />
 
         <ReportRow

@@ -39,6 +39,7 @@ export const ticketContract = c.router({
     summary: "Get all live kitchen tickets",
     query: z.object({
       search: z.string().optional(),
+      status: z.string().optional(),
     }),
     responses: {
       200: z.object({

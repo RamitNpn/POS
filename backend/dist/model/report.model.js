@@ -21,6 +21,11 @@ const DailyReportSchema = new mongoose_1.default.Schema({
         required: true,
         default: 0,
     },
+    totalExpense: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
     cashSales: {
         type: Number,
         default: 0,

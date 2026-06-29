@@ -46,6 +46,7 @@ export const getDailyReports: AppRouteQueryImplementation<
       reportDate: report.reportDate.toISOString(),
       totalRevenue: report.totalRevenue,
       totalOrders: report.totalOrders,
+      totalExpense: report.totalExpense,
       cashSales: report.cashSales,
       onlineSales: report.onlineSales,
       totalDiscount: report.totalDiscount,

@@ -39,11 +39,12 @@ export function Topbar({ title }: TopbarProps) {
   if (!user) return null;
 
   const roleDisplay = getRoleDisplayName(user.role);
-  const isAdmin = roleDisplay.includes("Administrator");
+  const isAdmin = user.role === "admin";
 
   const { data: logData } = useActivityLogs({
     page: 1,
     limit: 5,
+    ...(user.role === "waiter" ? { module: "Order" } : {}),
   });
 
   const logs = logData?.data ?? [];
@@ -65,7 +66,7 @@ export function Topbar({ title }: TopbarProps) {
                 </div>
                 <div className="flex flex-col group-data-[collapsible=icon]:hidden">
                   <span className="text-sm font-semibold text-sidebar-foreground">
-                    DineFlow
+                    atiThi
                   </span>
                   <span className="text-xs text-muted-foreground">
                     {roleDisplay}
@@ -80,49 +81,50 @@ export function Topbar({ title }: TopbarProps) {
           )}
 
           <div className="ml-auto flex items-center gap-2">
-            {/* Notifications */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative touch-target"
-                >
-                  <Bell className="size-5" />
-                  <Badge
-                    variant="destructive"
-                    className="absolute -right-1 -top-1 size-5 rounded-full p-0 text-xs flex items-center justify-center"
-                  >
-                    3
-                  </Badge>
-                  <span className="sr-only">Notifications</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80">
-                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {logs.map((log: TActivityLog) => (
-                  <DropdownMenuItem
-                    key={log._id}
-                    className="flex flex-col items-start gap-1 hover:bg-gray-300 py-3"
-                  >
-                    <div className="flex items-center gap-2">
-                      {/* <span className="size-2 rounded-full bg-success" /> */}
-                      <span className="font-medium">{log.action}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      {log.details}
-                    </span>
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="justify-center text-primary">
-                  <Link href={`/dashboard/admin/notifications`}>
-                    View all notifications
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {user.role === "admin" ||
+              (user.role === "waiter" && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="relative touch-target"
+                    >
+                      <Bell className="size-5" />
+                      <Badge
+                        variant="destructive"
+                        className="absolute -right-1 -top-1 size-5 rounded-full p-0 text-xs flex items-center justify-center"
+                      >
+                        3
+                      </Badge>
+                      <span className="sr-only">Notifications</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-80">
+                    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {logs.map((log: TActivityLog) => (
+                      <DropdownMenuItem
+                        key={log._id}
+                        className="flex flex-col items-start gap-1 hover:bg-gray-300 py-3"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{log.action}</span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {log.details}
+                        </span>
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="justify-center text-primary">
+                      <Link href={`/dashboard/admin/notifications`}>
+                        View all notifications
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ))}
 
             <div className="md:flex items-center px-2">
               <button
@@ -132,17 +134,6 @@ export function Topbar({ title }: TopbarProps) {
                 <LogOut className="size-5 text-yellow-500" />
               </button>
             </div>
-
-            {/* Mobile search button */}
-            {/* <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden touch-target"
-              onClick={() => setShowMobileSearch((prev) => !prev)}
-            >
-              <Search className="size-5" />
-              <span className="sr-only">Search</span>
-            </Button> */}
           </div>
         </div>
       </header>

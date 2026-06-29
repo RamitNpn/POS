@@ -156,7 +156,7 @@ export default function OrderDetailsModal({ open, onClose, order }: Props) {
 
                 <div className="flex justify-between">
                   <span>Discount</span>
-                  <span>Rs {order.discount?.toFixed(2) || "0.00"}</span>
+                  <span>{order.discount || "0"}%</span>
                 </div>
 
                 <div className="flex justify-between">

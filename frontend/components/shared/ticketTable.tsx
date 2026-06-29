@@ -8,11 +8,21 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "@/components/ui/button";
-import { Eye, Printer } from "lucide-react";
+import {
+  CheckIcon,
+  CircleCheckBigIcon,
+  Eye,
+  Printer,
+  RefreshCcw,
+  SquareX,
+  SquareXIcon,
+  TicketCheckIcon,
+} from "lucide-react";
 
 import { formatDate, statusStyle } from "@/components/dashboard/admin/shared";
 import { useUpdateTicketStatus } from "@/hooks/waiter/updateTicketStatus";
 import { useAuth } from "@/context/auth-context";
+import { useRouter } from "next/navigation";
 
 interface Props {
   tickets: any[];
@@ -38,7 +48,8 @@ export function formatTimeAgo(date: string | Date) {
 }
 
 export function TicketTable({ tickets, onView, onPrint }: Props) {
-    const { user } = useAuth();
+  const { user } = useAuth();
+  const router = useRouter();
 
   const { mutate: markServed, isPending } = useUpdateTicketStatus();
 
@@ -104,32 +115,61 @@ export function TicketTable({ tickets, onView, onPrint }: Props) {
                 {user?.role === "waiter" ? (
                   <div className="flex gap-2">
                     <Button
-                      variant="secondary"
-                      disabled={ticket.status === "served" || isPending}
-                      onClick={() =>
-                        markServed({
-                          ticketID: ticket._id,
-                          status: "served",
-                        })
-                      }
-                      className="cursor-pointer text-white hover:bg-green-600 bg-green-700 rounded-md"
+                      variant="default"
+                      size="icon"
+                      onClick={() => onView(ticket)}
+                          className="cursor-pointer"
                     >
-                      {ticket.status === "served" ? "Served" : "Mark as Served"}
+                      <Eye className="h-4 w-4" />
                     </Button>
+
+                    {ticket.status === "pending" && (
+                      <>
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          disabled={isPending}
+                          onClick={() =>
+                            markServed({
+                              ticketID: ticket._id,
+                              status: "served",
+                            })
+                          }
+                          className="cursor-pointer text-white bg-green-700 hover:bg-green-600"
+                        >
+                          <CircleCheckBigIcon className="h-4 w-4" />
+                        </Button>
+
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          onClick={() =>
+                            markServed({
+                              ticketID: ticket._id,
+                              status: "cancelled",
+                            })
+                          }
+                          className="cursor-pointer text-white bg-red-700 hover:bg-red-600"
+                        >
+                          <SquareX className="h-4 w-4" />
+                        </Button>
+                      </>
+                    )}
+
                     <Button
                       variant="secondary"
-                      className="cursor-pointer text-white hover:bg-red-600 bg-red-700 rounded-md"
+                      size="icon"
                       onClick={() =>
-                        markServed({
-                          ticketID: ticket._id,
-                          status: "cancelled",
-                        })
+                        router.push(
+                          `/dashboard/waiter/menu?tableId=${ticket.table.tableId}`,
+                        )
                       }
+                          className="cursor-pointer text-white bg-blue-700 hover:bg-blue-600"
                     >
-                      Cancel Order
+                      <RefreshCcw className="h-4 w-4" />
                     </Button>
                   </div>
-                ) : (
+                ) : user?.role === "cashier" ? (
                   <div className="flex gap-2">
                     <Button
                       variant="secondary"
@@ -147,7 +187,7 @@ export function TicketTable({ tickets, onView, onPrint }: Props) {
                       <Printer className="h-4 w-4" />
                     </Button>
                   </div>
-                )}
+                ) : null}
               </TableCell>
             </TableRow>
           ))

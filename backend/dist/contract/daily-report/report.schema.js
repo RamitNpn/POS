@@ -7,6 +7,7 @@ exports.dailyReportSchema = zod_1.z.object({
     reportDate: zod_1.z.string(),
     totalRevenue: zod_1.z.number(),
     totalOrders: zod_1.z.number(),
+    totalExpense: zod_1.z.number(),
     cashSales: zod_1.z.number(),
     onlineSales: zod_1.z.number(),
     totalDiscount: zod_1.z.number(),

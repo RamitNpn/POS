@@ -119,11 +119,13 @@ export const getLiveTickets: AppRouteQueryImplementation<
     console.log("[getLiveTickets] query:", req.query);
 
     const search = req.query.search as string | undefined;
+    const status = req.query.status as string | undefined;
 
     const tickets = await kitchenTicketRepository.getLatestTickets({
       skip: 0,
       limit: 100,
       search,
+      status,
     });
 
     console.log("[getLiveTickets] repository result:", {

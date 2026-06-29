@@ -102,10 +102,17 @@ class KitchenTicketRepository {
     }
     async getByTableID(tableId) {
         try {
+            const startOfDay = new Date();
+            startOfDay.setHours(0, 0, 0, 0);
+            const endOfDay = new Date();
+            endOfDay.setHours(23, 59, 59, 999);
             return await this.model
                 .find({
                 tableId,
-                status: "pending",
+                createdAt: {
+                    $gte: startOfDay,
+                    $lte: endOfDay,
+                },
             })
                 .populate("tableId")
                 .populate({
@@ -120,7 +127,7 @@ class KitchenTicketRepository {
             throw new Error(`Error fetching order tickets: ${error}`);
         }
     }
-    async getLatestTickets({ skip, limit, search, }) {
+    async getLatestTickets({ skip, limit, search, status, }) {
         try {
             const startOfDay = new Date();
             startOfDay.setHours(0, 0, 0, 0);
@@ -131,8 +138,10 @@ class KitchenTicketRepository {
                     $gte: startOfDay,
                     $lte: endOfDay,
                 },
-                status: "pending",
             };
+            if (status !== "all") {
+                query.status = status;
+            }
             if (search) {
                 query.$or = [
                     {

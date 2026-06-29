@@ -30,6 +30,7 @@ exports.ticketContract = c.router({
         summary: "Get all live kitchen tickets",
         query: zod_1.z.object({
             search: zod_1.z.string().optional(),
+            status: zod_1.z.string().optional(),
         }),
         responses: {
             200: zod_1.z.object({

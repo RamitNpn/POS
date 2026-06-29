@@ -33,6 +33,9 @@ import { useTicketByTableId } from "@/hooks/waiter/getTicketByTableId";
 import { TTicket } from "@/lib/types/ticket.types";
 import { Edit } from "lucide-react";
 import { ticketApi } from "@/lib/api/ticket.api";
+import { formatTimeAgo } from "@/components/shared/ticketTable";
+import { formatDate } from "@/components/dashboard/admin/shared";
+import { cn } from "@/lib/utils";
 
 export default function WaiterMenuPage() {
   const { user } = useAuth();
@@ -287,9 +290,14 @@ export default function WaiterMenuPage() {
                       </CardTitle>
                       <div className="flex items-center gap-2">
                         <Badge
-                          variant={
-                            ticket.status === "served" ? "secondary" : "default"
-                          }
+                          className={cn(
+                            ticket.status === "served" &&
+                              "bg-green-600 text-white",
+                            ticket.status === "pending" &&
+                              "bg-primary text-white",
+                            ticket.status === "cancelled" &&
+                              "bg-red-600 text-white",
+                          )}
                         >
                           {ticket.status}
                         </Badge>
@@ -304,7 +312,7 @@ export default function WaiterMenuPage() {
                     </div>
                   </CardHeader>
 
-                  <CardContent>
+                  <CardContent className="flex flex-col h-full">
                     <div className="space-y-2">
                       {ticket.items.map((item: any) => (
                         <div
@@ -312,10 +320,14 @@ export default function WaiterMenuPage() {
                           className="flex justify-between text-sm"
                         >
                           <span>{item.name}</span>
-
                           <span>x{item.quantity}</span>
                         </div>
                       ))}
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t text-xs text-muted-foreground text-right">
+                      {formatTimeAgo(ticket.createdAt)} •{" "}
+                      {formatDate(ticket.createdAt)}
                     </div>
                   </CardContent>
                 </Card>

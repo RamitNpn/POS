@@ -3,6 +3,7 @@ export interface TSalesReport {
   reportDate: string;
   totalRevenue: number;
   totalOrders: number;
+  totalExpense: number;
   cashSales: number;
   onlineSales: number;
   totalDiscount: number;

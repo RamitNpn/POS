@@ -8,5 +8,5 @@ exports.openApiDocument = (0, open_api_1.generateOpenApi)(contract_1.contract, {
         title: "Local Vibes API",
         version: "1.0.0",
     },
-    baseUrl: "http://localhost:4000",
+    baseUrl: "https://pos-backend-q4r0.onrender.com",
 });

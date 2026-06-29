@@ -5,6 +5,7 @@ export const dailyReportSchema = z.object({
   reportDate: z.string(),
   totalRevenue: z.number(),
   totalOrders: z.number(),
+  totalExpense: z.number(),
   cashSales: z.number(),
   onlineSales: z.number(),
   totalDiscount: z.number(),

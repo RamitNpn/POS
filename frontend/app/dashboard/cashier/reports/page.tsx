@@ -380,6 +380,19 @@ export default function CashierReportsPage() {
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
+                        {order.paymentStatus === "pending" &&
+                          order.status != "completed" && (
+                            <Button
+                              variant="secondary"
+                              className="text-gray-300 cursor-pointer hover:bg-green-700 hover:text-white"
+                              size="icon"
+                              onClick={() =>
+                                setEditingPaymentOrderId(order._id)
+                              }
+                            >
+                              <CreditCard className="h-4 w-4" />
+                            </Button>
+                          )}
                         <Button
                           variant="secondary"
                           className="text-gray-300 cursor-pointer hover:text-white"
@@ -392,14 +405,6 @@ export default function CashierReportsPage() {
                           }}
                         >
                           <Download className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          className="text-gray-300 cursor-pointer hover:bg-green-700 hover:text-white"
-                          size="icon"
-                          onClick={() => setEditingPaymentOrderId(order._id)}
-                        >
-                          <CreditCard className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>
@@ -426,7 +431,7 @@ export default function CashierReportsPage() {
             if (!open) setSelectedOrder(null);
           }}
         >
-          <DialogContent className="h-[90vh] overflow-y-scroll">
+          <DialogContent className="h-auto overflow-y-scroll">
             <DialogHeader>
               <DialogTitle>Order {selectedOrder.orderNumber}</DialogTitle>
               <DialogDescription>Complete checkout details</DialogDescription>

@@ -101,10 +101,12 @@ const getLiveTickets = async (req) => {
     try {
         console.log("[getLiveTickets] query:", req.query);
         const search = req.query.search;
+        const status = req.query.status;
         const tickets = await ticket_repository_1.default.getLatestTickets({
             skip: 0,
             limit: 100,
             search,
+            status,
         });
         console.log("[getLiveTickets] repository result:", {
             totalRecords: tickets.data.length,
