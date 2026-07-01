@@ -32,7 +32,7 @@ export default function CashierDashboard() {
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
 
-  const { data: ticketData } = useLiveTickets({});
+  const { data: ticketData } = useLiveTickets({ status: "all" });
 
   const tickets = ticketData?.data ?? [];
 
